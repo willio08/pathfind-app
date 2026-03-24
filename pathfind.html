@@ -23,6 +23,57 @@
     .nav-links a:hover{color:var(--forest);}
     .nav-cta{background:var(--forest);color:#fff !important;padding:.45rem 1.1rem;border-radius:20px;font-weight:bold !important;}
     .nav-cta:hover{background:var(--moss) !important;}
+    .nav-fav-btn{display:flex;align-items:center;gap:.4rem;background:none;border:1px solid var(--border);border-radius:20px;padding:.4rem .9rem;cursor:pointer;font-family:Arial,sans-serif;font-size:.85rem;color:var(--muted);transition:all .2s;}
+    .nav-fav-btn:hover{border-color:var(--sage);color:var(--forest);}
+    .nav-fav-btn .fav-count{background:var(--forest);color:#fff;border-radius:10px;padding:.1rem .4rem;font-size:.7rem;font-weight:bold;display:none;}
+    .nav-fav-btn .fav-count.has-items{display:inline;}
+
+    /* ── Heart / Favorites ── */
+    .btn-fav{position:absolute;top:.55rem;right:.55rem;width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.88);backdrop-filter:blur(4px);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform .18s,background .18s;z-index:2;}
+    .btn-fav:hover{transform:scale(1.15);}
+    .btn-fav svg{width:16px;height:16px;transition:fill .18s,stroke .18s;}
+    .btn-fav.loved svg{fill:#e53935;stroke:#e53935;}
+    .btn-fav:not(.loved) svg{fill:none;stroke:#555;}
+
+    /* ── Favorites Panel ── */
+    #fav-panel{position:fixed;top:0;right:-420px;width:400px;height:100%;background:var(--cream);border-left:1px solid var(--border);box-shadow:-8px 0 40px rgba(44,36,22,.15);z-index:1100;display:flex;flex-direction:column;transition:right .3s cubic-bezier(.4,0,.2,1);overflow:hidden;}
+    #fav-panel.open{right:0;}
+    .fav-panel-header{padding:1.2rem 1.2rem .9rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+    .fav-panel-title{font-size:1.1rem;color:var(--forest);display:flex;align-items:center;gap:.5rem;}
+    .fav-close-btn{background:none;border:1px solid var(--border);border-radius:8px;padding:.3rem .6rem;cursor:pointer;color:var(--muted);font-family:Arial,sans-serif;font-size:.82rem;}
+    .fav-close-btn:hover{background:var(--border);}
+    .fav-list{flex:1;overflow-y:auto;padding:.8rem;}
+    .fav-item{background:#fff;border-radius:10px;border:1px solid var(--border);padding:.75rem;margin-bottom:.6rem;display:flex;gap:.75rem;align-items:center;cursor:pointer;transition:box-shadow .18s;}
+    .fav-item:hover{box-shadow:var(--shadow);}
+    .fav-thumb{width:52px;height:52px;border-radius:7px;object-fit:cover;flex-shrink:0;background:linear-gradient(135deg,var(--moss),var(--forest));}
+    .fav-info{flex:1;min-width:0;}
+    .fav-name{font-size:.88rem;font-weight:bold;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .fav-loc{font-size:.76rem;color:var(--muted);font-family:Arial,sans-serif;margin-top:.15rem;}
+    .fav-diff{font-size:.7rem;font-family:Arial,sans-serif;font-weight:bold;text-transform:uppercase;padding:.15rem .45rem;border-radius:5px;color:#fff;margin-top:.3rem;display:inline-block;}
+    .fav-remove{background:none;border:none;cursor:pointer;color:var(--muted);font-size:1rem;padding:.2rem;flex-shrink:0;transition:color .15s;}
+    .fav-remove:hover{color:#e53935;}
+    .fav-empty{text-align:center;padding:3rem 1rem;color:var(--muted);font-family:Arial,sans-serif;font-size:.88rem;}
+    .fav-empty svg{width:40px;height:40px;margin-bottom:.8rem;color:var(--tan);display:block;margin-left:auto;margin-right:auto;}
+    #fav-overlay{display:none;position:fixed;inset:0;background:rgba(44,36,22,.25);z-index:1099;backdrop-filter:blur(1px);}
+    #fav-overlay.open{display:block;}
+
+    /* ── AI streaming animations ── */
+    .ai-typing{display:inline-block;width:8px;height:14px;background:var(--moss);border-radius:2px;animation:blink .7s infinite;vertical-align:middle;}
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+    .ai-summary-loading{display:flex;gap:.35rem;align-items:center;font-family:Arial,sans-serif;font-size:.88rem;color:var(--moss);}
+    .ai-dot{width:6px;height:6px;border-radius:50%;background:var(--moss);animation:bounce .9s infinite;}
+    .ai-dot:nth-child(2){animation-delay:.15s;}
+    .ai-dot:nth-child(3){animation-delay:.3s;}
+    @keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+
+    /* ── AI guide block inside modal ── */
+    .modal-ai-block{background:linear-gradient(135deg,#f0f7ee,#e8f4e5);border:1px solid #c3ddbf;border-radius:10px;padding:.85rem 1rem;font-family:Arial,sans-serif;font-size:.88rem;color:var(--forest);line-height:1.65;margin-bottom:1rem;}
+
+    /* ── Modal fav button ── */
+    .modal-fav-btn{position:absolute;top:14px;right:58px;width:36px;height:36px;border-radius:50%;background:rgba(0,0,0,.4);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .18s;}
+    .modal-fav-btn:hover{background:rgba(0,0,0,.6);}
+    .modal-fav-btn svg{width:17px;height:17px;fill:none;stroke:#fff;transition:fill .18s,stroke .18s;}
+    .modal-fav-btn.loved svg{fill:#ff6b6b;stroke:#ff6b6b;}
 
     /* ── Trail Detail Modal ── */
     #trail-modal{position:fixed;inset:0;z-index:1000;display:flex;align-items:flex-end;justify-content:center;background:rgba(30,20,10,.55);backdrop-filter:blur(4px);opacity:0;pointer-events:none;transition:opacity .25s;}
@@ -231,9 +282,26 @@
   </a>
   <div class="nav-links">
     <a href="#">Explore</a><a href="#">Maps</a><a href="#">Community</a>
+    <button class="nav-fav-btn" onclick="openFavPanel()">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      Saved <span class="fav-count" id="nav-fav-count">0</span>
+    </button>
     <a href="#" class="nav-cta">Sign Up Free</a>
   </div>
 </nav>
+
+<!-- Favorites Overlay + Panel -->
+<div id="fav-overlay" onclick="closeFavPanel()"></div>
+<div id="fav-panel">
+  <div class="fav-panel-header">
+    <div class="fav-panel-title">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      Saved Trails
+    </div>
+    <button class="fav-close-btn" onclick="closeFavPanel()">&#10005; Close</button>
+  </div>
+  <div class="fav-list" id="fav-list"></div>
+</div>
 
 <!-- NPS key banner — visible until key is pasted -->
 <div id="nps-banner">
@@ -369,7 +437,10 @@
     <div class="modal-hero">
       <img id="modal-img" src="" alt="" />
       <div class="modal-hero-overlay"></div>
-      <button class="modal-close" onclick="closeTrailModal()">✕</button>
+      <button class="modal-close" onclick="closeTrailModal()">&#10005;</button>
+      <button class="modal-fav-btn" id="modal-fav-btn" onclick="toggleFavFromModal()">
+        <svg viewBox="0 0 24 24" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      </button>
       <div class="modal-hero-text">
         <h2 id="modal-name"></h2>
         <div class="modal-location" id="modal-location">
@@ -387,6 +458,10 @@
       </div>
       <div class="modal-section-title">About this trail</div>
       <div class="modal-desc" id="modal-desc"></div>
+      <div class="modal-section-title">&#10022; AI Trail Guide</div>
+      <div class="modal-ai-block" id="modal-ai-content">
+        <div class="ai-summary-loading"><span class="ai-dot"></span><span class="ai-dot"></span><span class="ai-dot"></span><span style="margin-left:.3rem;color:var(--muted)">Generating trail guide&hellip;</span></div>
+      </div>
       <div class="modal-section-title">Tags</div>
       <div class="modal-tags" id="modal-tags"></div>
       <div class="modal-rating-row">
@@ -424,6 +499,10 @@ const CONFIG = {
   MAX_RESULTS: 60,
   OSM_TIMEOUT: 25,
 };
+
+/* Hoisted early — referenced by renderCard before full init */
+let favorites = new Set(JSON.parse(localStorage.getItem('pf_favorites')||'[]'));
+let favTrailData = JSON.parse(localStorage.getItem('pf_fav_data')||'{}');
 
 function saveNPSKey() {
   const k = document.getElementById('nps-key-input').value.trim();
@@ -855,16 +934,21 @@ function renderCard(t, showAI=false) {
   const imgSrc = t.npsImage || photoURL(t.photo);
   const distBadge = t._dist!==undefined ? `<span class="dist-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a7 7 0 0 1 7 7c0 5-7 13-7 13S5 14 5 9a7 7 0 0 1 7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>${t._dist} mi away</span>` : '';
   const liveTag = t._live ? `<span class="osm-tag">OSM LIVE</span>` : '';
+  const idStr = String(t.id);
+  const loved = favorites.has(idStr);
   const _key = _trailStore.push(t) - 1;
-  return `<div class="trail-card" style="cursor:pointer" onclick="openTrailModal(_trailStore[${_key}])">`+`
-    <div class="trail-img">
+  return `<div class="trail-card" onclick="openTrailModal(_trailStore[${_key}])">
+    <div class="trail-img" style="position:relative">
       <img src="${imgSrc}" alt="${t.name}" loading="lazy" onerror="this.parentElement.style.background='linear-gradient(135deg,#4a7c3f,#2d5a27)';this.style.display='none'"/>
       ${liveTag}
       <div class="trail-img-overlay">
         <span class="difficulty-badge ${dc}">${t.difficulty}</span>
-        ${showAI ? `<span class="match-badge">⚡ ${t.match}%</span>` : ''}
+        ${showAI ? `<span class="match-badge">&#9889; ${t.match}%</span>` : ''}
         ${distBadge}
       </div>
+      <button class="btn-fav ${loved?'loved':''}" data-id="${idStr}" onclick="event.stopPropagation();toggleFav(this,'${idStr}')">
+        <svg viewBox="0 0 24 24" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      </button>
     </div>
     <div class="trail-body">
       <div class="trail-name">${t.name}</div>
@@ -876,7 +960,7 @@ function renderCard(t, showAI=false) {
       <div class="trail-tags">${t.tags.map(g=>`<span class="tag">${g}</span>`).join('')}</div>
       <div class="trail-footer">
         <div class="rating"><span class="stars">${stars}</span>${t.rating}<span class="rating-count">(${t.reviews.toLocaleString()})</span></div>
-        <button class="btn-view">View Trail →</button>
+        <button class="btn-view" onclick="event.stopPropagation();openTrailModal(_trailStore[${_key}])">View Trail &#8594;</button>
       </div>
     </div>
     ${showAI ? `<div class="ai-reason"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6Z"/></svg>${t.aiReason}</div>` : ''}
@@ -890,34 +974,31 @@ function renderResults(list) {
 }
 
 /* ═══════════════════════════════════════════════════════
-   AI SEARCH  (main entry point)
+   AI SEARCH SUMMARY  (Claude streaming)
 ═══════════════════════════════════════════════════════ */
-const summaries = {
-  default:  `Found <strong>{n} trails</strong>{loc}. Ranked by relevance — I matched trail names, features, difficulty, and managing agencies to your description.`,
-  waterfall:`Found <strong>{n} trails</strong>{loc} matching a <strong>waterfall</strong> experience. Prioritized confirmed falls and accessible approach trails.`,
-  camping:  `Found <strong>{n} trails</strong>{loc} with <strong>camping</strong> access. Check permit requirements and water source availability before heading out.`,
-  summit:   `Found <strong>{n} summit trails</strong>{loc}. East-facing peaks are ideal for sunrise — check conditions before any above-treeline hike.`,
-  fall:     `Found <strong>{n} trails</strong>{loc} known for <strong>fall foliage</strong>. Peak color at elevation typically runs late September–October.`,
-  snow:     `Found <strong>{n} winter-friendly trails</strong>{loc}. Bring microspikes and check avalanche and USFS snow depth reports.`,
-  coastal:  `Found <strong>{n} coastal trails</strong>{loc} with ocean access or views. Check tide tables for beach sections.`,
-  lake:     `Found <strong>{n} lake trails</strong>{loc}. Prioritized clear water, scenic shorelines, and good swimming access.`,
-};
-function getSummary(query, n, liveMode) {
-  const ql = query.toLowerCase();
-  let key = 'default';
-  if (ql.match(/waterfall|falls|cascade/)) key='waterfall';
-  else if (ql.match(/camp/)) key='camping';
-  else if (ql.match(/summit|sunrise|peak/)) key='summit';
-  else if (ql.match(/fall|foliage|autumn/)) key='fall';
-  else if (ql.match(/snow|winter|snowshoe/)) key='snow';
-  else if (ql.match(/coast|ocean|beach/)) key='coastal';
-  else if (ql.match(/lake|swim|pond/)) key='lake';
-  let locStr = '';
-  if (locationState.type==='state') locStr = ` in <strong>${locationState.label}</strong>`;
-  else if (locationState.type && locationState.radiusMi>0) locStr = ` within <strong>${locationState.radiusMi} mi of ${locationState.label}</strong>`;
-  else if (locationState.type) locStr = ` near <strong>${locationState.label}</strong>`;
-  const src = liveMode ? ' from live OpenStreetMap data' : ' from curated database';
-  return summaries[key].replace('{n}',n).replace(/{loc}/g, locStr) + src + '.';
+async function getAISummary(query, trails, liveMode) {
+  const locCtx = locationState.type === 'state'
+    ? `in ${locationState.label}`
+    : locationState.type && locationState.radiusMi > 0
+      ? `within ${locationState.radiusMi} miles of ${locationState.label}`
+      : locationState.type ? `near ${locationState.label}` : 'across the US';
+  const snippets = trails.slice(0,8).map(t=>`• ${t.name} (${t.difficulty}, ${t.distance}, ${t.elevation} gain) — ${t.tags.slice(0,3).join(', ')}`).join('\n');
+  const prompt = `You are PathFind, an expert trail guide AI. A hiker searched: "${query}" and you found ${trails.length} trails ${locCtx}. Source: ${liveMode?'live OpenStreetMap':'curated database'}.
+Top results:\n${snippets}\nWrite a 2-sentence enthusiastic summary under 60 words. Mention the count, highlight what matches the query, give one actionable tip. Use <strong> for key phrases. No markdown.`;
+  const el = document.getElementById('ai-summary-text');
+  el.innerHTML = `<div class="ai-summary-loading"><span class="ai-dot"></span><span class="ai-dot"></span><span class="ai-dot"></span><span style="margin-left:.3rem">Crafting summary&hellip;</span></div>`;
+  try {
+    const resp = await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,stream:true,messages:[{role:'user',content:prompt}]})});
+    if (!resp.ok) throw new Error('api');
+    const reader = resp.body.getReader(); const decoder = new TextDecoder(); let full=''; el.innerHTML='';
+    while(true){const{done,value}=await reader.read();if(done)break;const chunk=decoder.decode(value,{stream:true});for(const line of chunk.split('\n').filter(l=>l.startsWith('data:'))){try{const j=JSON.parse(line.slice(5));if(j.type==='content_block_delta'&&j.delta?.text){full+=j.delta.text;el.innerHTML=full;}}catch{}}}
+    if(!full)throw new Error('empty');
+  } catch {
+    const ql=query.toLowerCase(); let key='default';
+    const fb={default:`Found <strong>${trails.length} trails</strong>. Ranked by relevance — matched names, features, difficulty, and agencies to your search.`,waterfall:`Found <strong>${trails.length} waterfall trails</strong>. Bring water shoes for wet approaches.`,camping:`Found <strong>${trails.length} camping trails</strong>. Check permit requirements before heading out.`,summit:`Found <strong>${trails.length} summit trails</strong>. Check conditions before any above-treeline hike.`,lake:`Found <strong>${trails.length} lake trails</strong>. Prioritized scenic shorelines and swimming access.`,coastal:`Found <strong>${trails.length} coastal trails</strong>. Check tide tables for beach sections.`,fall:`Found <strong>${trails.length} fall foliage trails</strong>. Peak color at elevation runs late September–October.`,snow:`Found <strong>${trails.length} winter trails</strong>. Bring microspikes and check avalanche reports.`};
+    if(ql.match(/waterfall|falls|cascade/))key='waterfall';else if(ql.match(/camp/))key='camping';else if(ql.match(/summit|peak/))key='summit';else if(ql.match(/lake|swim/))key='lake';else if(ql.match(/coast|ocean|beach/))key='coastal';else if(ql.match(/fall|foliage/))key='fall';else if(ql.match(/snow|winter/))key='snow';
+    el.innerHTML=fb[key];
+  }
 }
 
 async function doSearch() {
@@ -955,7 +1036,6 @@ async function doSearch() {
     results = applyTypeFilter(applyQueryFilter(filterLocal(localTrails), query));
   }
 
-  // enrich with NPS data if key is available
   if (CONFIG.NPS_KEY && results.length > 0) {
     setLoadingMsg('Enriching results with NPS park data…');
     results = await enrichWithNPS(results);
@@ -966,17 +1046,17 @@ async function doSearch() {
 
   document.getElementById('loading-cards').classList.remove('visible');
 
-  // data source indicator
   const dsRow = document.getElementById('data-source-row');
   dsRow.innerHTML = liveMode
     ? `<span class="live-badge">Live OSM data</span> <span>${sorted.length} trails pulled from OpenStreetMap${CONFIG.NPS_KEY ? ' · NPS enriched' : ''}</span>`
     : `<span class="local-badge">Curated database</span> <span>Set a location to search hundreds of thousands of live trails</span>`;
 
-  document.getElementById('ai-summary-text').innerHTML = getSummary(query, sorted.length, liveMode);
+  document.getElementById('ai-summary-text').innerHTML = '';
   updateResultCount();
   renderResults(sorted);
   document.getElementById('results-section').classList.add('visible');
   document.getElementById('results-section').scrollIntoView({behavior:'smooth',block:'start'});
+  getAISummary(query, sorted, liveMode);
 }
 
 function setLoadingMsg(msg) {
@@ -1030,15 +1110,91 @@ buildStateGrid();
 document.getElementById('featured-grid').innerHTML = localTrails.filter(t=>t.featured).map(t=>renderCard(t,false)).join('');
 
 /* ═══════════════════════════════════════════════════════
+   FAVORITES
+═══════════════════════════════════════════════════════ */
+function saveFavorites() {
+  localStorage.setItem('pf_favorites', JSON.stringify([...favorites]));
+  localStorage.setItem('pf_fav_data', JSON.stringify(favTrailData));
+}
+
+function toggleFav(btn, idStr) {
+  if (favorites.has(idStr)) {
+    favorites.delete(idStr);
+    delete favTrailData[idStr];
+    btn && btn.classList.remove('loved');
+  } else {
+    favorites.add(idStr);
+    btn && btn.classList.add('loved');
+    const t = currentResults.find(x=>String(x.id)===idStr) || localTrails.find(x=>String(x.id)===idStr);
+    if (t) favTrailData[idStr] = t;
+  }
+  saveFavorites(); updateFavCount(); renderFavPanel();
+}
+
+function toggleFavFromModal() {
+  if (!_currentModalTrail) return;
+  const idStr = String(_currentModalTrail.id);
+  const btn = document.getElementById('modal-fav-btn');
+  if (favorites.has(idStr)) {
+    favorites.delete(idStr); delete favTrailData[idStr]; btn.classList.remove('loved');
+    document.querySelectorAll(`.btn-fav[data-id="${idStr}"]`).forEach(b=>b.classList.remove('loved'));
+  } else {
+    favorites.add(idStr); favTrailData[idStr] = _currentModalTrail; btn.classList.add('loved');
+    document.querySelectorAll(`.btn-fav[data-id="${idStr}"]`).forEach(b=>b.classList.add('loved'));
+  }
+  saveFavorites(); updateFavCount(); renderFavPanel();
+}
+
+function updateFavCount() {
+  const n = favorites.size;
+  const el = document.getElementById('nav-fav-count');
+  el.textContent = n;
+  el.classList.toggle('has-items', n > 0);
+}
+
+function openFavPanel() { renderFavPanel(); document.getElementById('fav-panel').classList.add('open'); document.getElementById('fav-overlay').classList.add('open'); }
+function closeFavPanel() { document.getElementById('fav-panel').classList.remove('open'); document.getElementById('fav-overlay').classList.remove('open'); }
+
+function renderFavPanel() {
+  const list = document.getElementById('fav-list');
+  if (favorites.size === 0) {
+    list.innerHTML = `<div class="fav-empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>No saved trails yet.<br/>Tap the &#9829; on any trail to save it here.</div>`;
+    return;
+  }
+  const dc = {easy:'#2e7d32',moderate:'#c67c00',hard:'#b83232'};
+  list.innerHTML = [...favorites].map(id => {
+    const t = favTrailData[id]; if (!t) return '';
+    const imgSrc = t.npsImage || photoURL(t.photo);
+    return `<div class="fav-item" onclick="closeFavPanel();openTrailModal(${JSON.stringify(t).replace(/"/g,'&quot;')})">
+      <img class="fav-thumb" src="${imgSrc}" alt="${t.name}" onerror="this.style.display='none'"/>
+      <div class="fav-info"><div class="fav-name">${t.name}</div><div class="fav-loc">${t.location}</div>
+      <span class="fav-diff" style="background:${dc[t.difficulty]||'#555'}">${t.difficulty}</span></div>
+      <button class="fav-remove" onclick="event.stopPropagation();removeFav('${id}')" title="Remove">&#10006;</button>
+    </div>`;
+  }).join('');
+}
+
+function removeFav(idStr) {
+  favorites.delete(idStr); delete favTrailData[idStr];
+  saveFavorites(); updateFavCount(); renderFavPanel();
+  document.querySelectorAll(`.btn-fav[data-id="${idStr}"]`).forEach(b=>b.classList.remove('loved'));
+  if (_currentModalTrail && String(_currentModalTrail.id)===idStr) document.getElementById('modal-fav-btn').classList.remove('loved');
+}
+
+updateFavCount(); renderFavPanel();
+
+/* ═══════════════════════════════════════════════════════
    TRAIL DETAIL MODAL
 ═══════════════════════════════════════════════════════ */
 let _currentModalTrail = null;
+let _aiCache = {};
 
 function openTrailModal(t) {
   _currentModalTrail = t;
+  const idStr = String(t.id);
   const modal = document.getElementById('trail-modal');
 
-  // Hero image
+  // Hero
   document.getElementById('modal-img').src = t.npsImage || photoURL(t.photo);
   document.getElementById('modal-name').textContent = t.name;
   document.getElementById('modal-location').querySelector('span').textContent = t.location;
@@ -1070,36 +1226,61 @@ function openTrailModal(t) {
   document.getElementById('modal-reviews').textContent = t.reviews ? `(${Number(t.reviews).toLocaleString()} reviews)` : '';
 
   // Map
-  const lat = t.lat || (t.center && t.center.lat) || 0;
-  const lng = t.lng || (t.center && t.center.lon) || 0;
+  const lat = t.lat || 0, lng = t.lng || 0;
   if (lat && lng) {
     const pad = 0.04;
-    document.getElementById('modal-map-frame').src =
-      `https://www.openstreetmap.org/export/embed.html?bbox=${lng-pad},${lat-pad},${lng+pad},${lat+pad}&layer=mapnik&marker=${lat},${lng}`;
-    document.getElementById('modal-directions').href =
-      `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
-    document.getElementById('modal-osm-link').href =
-      `https://www.openstreetmap.org/?mlat=${lat}&mlon=${lng}#map=13/${lat}/${lng}`;
+    document.getElementById('modal-map-frame').src = `https://www.openstreetmap.org/export/embed.html?bbox=${lng-pad},${lat-pad},${lng+pad},${lat+pad}&layer=mapnik&marker=${lat},${lng}`;
+    document.getElementById('modal-directions').href = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
+    document.getElementById('modal-osm-link').href = `https://www.openstreetmap.org/?mlat=${lat}&mlon=${lng}#map=13/${lat}/${lng}`;
   }
 
-  // Weather (Open-Meteo, free, no key needed)
+  // Weather
   document.getElementById('modal-weather').innerHTML = '<div class="weather-loading">Loading forecast…</div>';
   if (lat && lng) fetchWeather(lat, lng);
 
+  // Fav button
+  document.getElementById('modal-fav-btn').classList.toggle('loved', favorites.has(idStr));
+
   modal.classList.add('open');
   document.body.style.overflow = 'hidden';
+
+  // AI trail guide (streams in)
+  const aiEl = document.getElementById('modal-ai-content');
+  if (_aiCache[idStr]) { aiEl.innerHTML = _aiCache[idStr]; return; }
+  aiEl.innerHTML = `<div class="ai-summary-loading"><span class="ai-dot"></span><span class="ai-dot"></span><span class="ai-dot"></span><span style="margin-left:.3rem;color:var(--muted)">Generating trail guide&hellip;</span></div>`;
+
+  const prompt = `You are an expert trail guide. Write a helpful, enthusiastic guide for: "${t.name}" in ${t.location}.
+Details: ${t.distance} distance, ${t.elevation} elevation gain, ${t.difficulty} difficulty. Tags: ${(t.tags||[]).join(', ')}.
+${t.aiReason ? `Known for: ${t.aiReason}` : ''}
+Write 3 short paragraphs using only HTML: (1) what makes it special, (2) best time to visit, (3) what to bring and safety tips.
+Use <strong> for key phrases. Under 150 words total. No headers, no bullet points, no markdown.`;
+
+  (async () => {
+    try {
+      const resp = await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,stream:true,messages:[{role:'user',content:prompt}]})});
+      if (!resp.ok) throw new Error('api');
+      const reader = resp.body.getReader(); const decoder = new TextDecoder(); let full = ''; aiEl.innerHTML = '';
+      while(true){const{done,value}=await reader.read();if(done)break;const chunk=decoder.decode(value,{stream:true});for(const line of chunk.split('\n').filter(l=>l.startsWith('data:'))){try{const j=JSON.parse(line.slice(5));if(j.type==='content_block_delta'&&j.delta?.text){full+=j.delta.text;aiEl.innerHTML=full+'<span class="ai-typing"></span>';}}catch{}}}
+      aiEl.innerHTML = full; _aiCache[idStr] = full;
+    } catch {
+      aiEl.innerHTML = t.aiReason || `A ${t.difficulty} trail in ${t.location}. ${t.distance} with ${t.elevation} elevation gain.`;
+    }
+  })();
 }
 
 function closeTrailModal() {
   document.getElementById('trail-modal').classList.remove('open');
   document.body.style.overflow = '';
+  _currentModalTrail = null;
 }
 
 function handleModalBgClick(e) {
   if (e.target === document.getElementById('trail-modal')) closeTrailModal();
 }
 
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeTrailModal(); });
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { closeTrailModal(); closeFavPanel(); }
+});
 
 async function fetchWeather(lat, lng) {
   const WMO = {0:'☀️',1:'🌤',2:'⛅',3:'☁️',45:'🌫',48:'🌫',51:'🌦',53:'🌦',55:'🌧',61:'🌧',63:'🌧',65:'🌧',71:'🌨',73:'🌨',75:'❄️',80:'🌦',81:'🌧',82:'⛈',95:'⛈',96:'⛈',99:'⛈'};
@@ -1128,3 +1309,4 @@ async function fetchWeather(lat, lng) {
 </script>
 </body>
 </html>
+    
