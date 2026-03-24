@@ -72,67 +72,31 @@
     .search-submit svg { width:18px; height:18px; }
 
     /* ── Location row ── */
-    .location-row {
-      border-top: 1px solid var(--border);
-      padding: .65rem 1rem;
-      display: flex; align-items: center; gap: .6rem; flex-wrap: wrap;
-    }
+    .location-row { border-top:1px solid var(--border); padding:.65rem 1rem; display:flex; align-items:center; gap:.6rem; flex-wrap:wrap; }
     .loc-label { font-size:.75rem; font-family:Arial,sans-serif; color:var(--muted); white-space:nowrap; flex-shrink:0; }
-
-    .loc-input-wrap {
-      display:flex; align-items:center; gap:.35rem;
-      background:#f9f6f1; border:1px solid var(--border); border-radius:10px;
-      padding:.35rem .7rem; flex:1; min-width:160px; max-width:260px;
-      transition:border-color .2s;
-    }
+    .loc-input-wrap { display:flex; align-items:center; gap:.35rem; background:#f9f6f1; border:1px solid var(--border); border-radius:10px; padding:.35rem .7rem; flex:1; min-width:160px; max-width:260px; transition:border-color .2s; }
     .loc-input-wrap:focus-within { border-color:var(--sage); }
     .loc-input-wrap svg { width:14px; height:14px; color:var(--muted); flex-shrink:0; }
-    #location-input {
-      border:none; outline:none; background:transparent;
-      font-family:Arial,sans-serif; font-size:.82rem; color:var(--text);
-      width:100%;
-    }
+    #location-input { border:none; outline:none; background:transparent; font-family:Arial,sans-serif; font-size:.82rem; color:var(--text); width:100%; }
     #location-input::placeholder { color:#b0a898; }
     .loc-clear { background:none; border:none; cursor:pointer; color:var(--muted); font-size:.85rem; line-height:1; padding:0; display:none; }
     .loc-clear:hover { color:var(--earth); }
-
-    .loc-gps-btn {
-      display:flex; align-items:center; gap:.35rem;
-      background:#f0f7ee; border:1px solid #c3ddbf; border-radius:10px;
-      padding:.35rem .75rem; cursor:pointer;
-      font-family:Arial,sans-serif; font-size:.78rem; color:var(--forest);
-      white-space:nowrap; transition:background .2s;
-    }
+    .loc-gps-btn { display:flex; align-items:center; gap:.35rem; background:#f0f7ee; border:1px solid #c3ddbf; border-radius:10px; padding:.35rem .75rem; cursor:pointer; font-family:Arial,sans-serif; font-size:.78rem; color:var(--forest); white-space:nowrap; transition:background .2s; }
     .loc-gps-btn:hover { background:#e2f0df; }
     .loc-gps-btn.active { background:var(--forest); color:#fff; border-color:var(--forest); }
     .loc-gps-btn svg { width:13px; height:13px; }
-
     .loc-divider { font-size:.75rem; color:var(--muted); font-family:Arial,sans-serif; }
-
-    /* radius + state selects */
-    .loc-select {
-      font-family:Arial,sans-serif; font-size:.78rem; color:var(--text);
-      background:#f9f6f1; border:1px solid var(--border); border-radius:10px;
-      padding:.35rem .65rem; cursor:pointer; outline:none; transition:border-color .2s;
-    }
+    .loc-select { font-family:Arial,sans-serif; font-size:.78rem; color:var(--text); background:#f9f6f1; border:1px solid var(--border); border-radius:10px; padding:.35rem .65rem; cursor:pointer; outline:none; transition:border-color .2s; }
     .loc-select:focus { border-color:var(--sage); }
-
-    /* hints */
     .search-hints { border-top:1px solid var(--border); padding:.6rem 1rem; display:flex; flex-wrap:wrap; gap:.4rem; }
     .hint-chip { font-size:.75rem; font-family:Arial,sans-serif; color:var(--muted); background:var(--cream); border:1px solid var(--border); border-radius:12px; padding:.25rem .7rem; cursor:pointer; transition:background .2s,color .2s; white-space:nowrap; }
     .hint-chip:hover { background:var(--leaf); color:var(--forest); border-color:var(--sage); }
 
-    /* ── Active location banner ── */
-    #location-banner {
-      display:none; background:linear-gradient(90deg,#f0f7ee,#e8f4e5);
-      border-bottom:1px solid #c3ddbf; padding:.55rem 2rem;
-      font-family:Arial,sans-serif; font-size:.82rem; color:var(--forest);
-      align-items:center; gap:.5rem;
-    }
+    /* ── Location banner ── */
+    #location-banner { display:none; background:linear-gradient(90deg,#f0f7ee,#e8f4e5); border-bottom:1px solid #c3ddbf; padding:.55rem 2rem; font-family:Arial,sans-serif; font-size:.82rem; color:var(--forest); align-items:center; gap:.5rem; }
     #location-banner.visible { display:flex; }
     #location-banner svg { width:14px; height:14px; flex-shrink:0; }
     #location-banner button { margin-left:auto; background:none; border:none; cursor:pointer; color:var(--muted); font-size:.78rem; font-family:Arial,sans-serif; text-decoration:underline; }
-    #location-banner button:hover { color:var(--earth); }
 
     /* ── Stats ── */
     .stats-bar { display:flex; justify-content:center; gap:2.5rem; flex-wrap:wrap; padding:2.5rem 2rem 1rem; }
@@ -141,16 +105,10 @@
     .stat-label { font-size:.8rem; color:var(--muted); font-family:Arial,sans-serif; text-transform:uppercase; letter-spacing:.5px; }
 
     /* ── State explorer ── */
-    .state-explorer { padding:.5rem 0 2rem; }
     .section-label { font-size:.8rem; font-family:Arial,sans-serif; text-transform:uppercase; letter-spacing:.8px; color:var(--bark); margin-bottom:.5rem; }
     .section-title { font-size:1.4rem; color:var(--forest); margin-bottom:1rem; }
     .state-grid { display:flex; flex-wrap:wrap; gap:.45rem; }
-    .state-chip {
-      font-family:Arial,sans-serif; font-size:.78rem; color:var(--muted);
-      background:#fff; border:1px solid var(--border); border-radius:10px;
-      padding:.35rem .75rem; cursor:pointer; transition:all .18s;
-      display:flex; align-items:center; gap:.3rem;
-    }
+    .state-chip { font-family:Arial,sans-serif; font-size:.78rem; color:var(--muted); background:#fff; border:1px solid var(--border); border-radius:10px; padding:.35rem .75rem; cursor:pointer; transition:all .18s; display:flex; align-items:center; gap:.3rem; }
     .state-chip:hover { background:var(--forest); color:#fff; border-color:var(--forest); }
     .state-chip.active { background:var(--forest); color:#fff; border-color:var(--forest); }
     .state-chip .count { font-size:.68rem; opacity:.7; }
@@ -165,27 +123,38 @@
     .results-header h2 { font-size:1.2rem; color:var(--forest); }
     .results-header h2 span { color:var(--muted); font-weight:normal; font-size:.95rem; }
     .sort-select { font-family:Arial,sans-serif; font-size:.78rem; color:var(--text); background:#fff; border:1px solid var(--border); border-radius:8px; padding:.35rem .65rem; outline:none; cursor:pointer; }
-
     .filter-row { display:flex; gap:.45rem; flex-wrap:wrap; margin-bottom:1.2rem; }
     .filter-btn { font-family:Arial,sans-serif; font-size:.78rem; border:1px solid var(--border); background:#fff; color:var(--muted); padding:.35rem .85rem; border-radius:20px; cursor:pointer; transition:all .2s; }
     .filter-btn:hover, .filter-btn.active { background:var(--forest); color:#fff; border-color:var(--forest); }
-
     .ai-summary { background:linear-gradient(135deg,#f0f7ee,#e8f4e5); border:1px solid #c3ddbf; border-radius:12px; padding:.9rem 1.1rem; margin-bottom:1.4rem; display:flex; gap:.75rem; align-items:flex-start; }
     .ai-summary svg { width:18px; height:18px; color:var(--forest); flex-shrink:0; margin-top:2px; }
     .ai-summary p { font-family:Arial,sans-serif; font-size:.88rem; color:var(--forest); line-height:1.55; }
     .ai-summary strong { color:var(--earth); }
 
-    /* ── Cards ── */
+    /* ── Trail Cards ── */
     .trails-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(310px,1fr)); gap:1.2rem; }
     .trail-card { background:#fff; border-radius:14px; border:1px solid var(--border); overflow:hidden; box-shadow:var(--shadow); transition:transform .2s,box-shadow .2s; cursor:pointer; }
     .trail-card:hover { transform:translateY(-3px); box-shadow:var(--shadow-lg); }
-    .trail-img { width:100%; height:175px; position:relative; display:flex; align-items:flex-end; overflow:hidden; }
-    .trail-img svg { position:absolute; bottom:0; left:0; width:100%; height:100%; }
-    .trail-img-overlay { position:absolute; bottom:0; left:0; right:0; background:linear-gradient(transparent,rgba(0,0,0,.45)); padding:.55rem .8rem .45rem; display:flex; align-items:center; gap:.4rem; }
-    .difficulty-badge { font-size:.68rem; font-family:Arial,sans-serif; font-weight:bold; text-transform:uppercase; letter-spacing:.4px; padding:.18rem .5rem; border-radius:6px; color:#fff; }
-    .diff-easy { background:#3a8a3a; } .diff-moderate { background:#c67c00; } .diff-hard { background:#b83232; }
-    .match-badge { margin-left:auto; font-size:.68rem; font-family:Arial,sans-serif; font-weight:bold; color:#fff; background:rgba(255,255,255,.22); backdrop-filter:blur(4px); padding:.18rem .5rem; border-radius:6px; border:1px solid rgba(255,255,255,.35); }
-    .dist-badge { font-size:.68rem; font-family:Arial,sans-serif; color:#fff; background:rgba(0,0,0,.38); backdrop-filter:blur(4px); padding:.18rem .5rem; border-radius:6px; display:flex; align-items:center; gap:.25rem; }
+
+    /* ── Trail photo ── */
+    .trail-img {
+      width:100%; height:185px; position:relative; overflow:hidden;
+      background: linear-gradient(135deg, #4a7c3f 0%, #2d5a27 100%);
+    }
+    .trail-img img {
+      width:100%; height:100%; object-fit:cover; display:block;
+      transition: transform .3s ease;
+    }
+    .trail-card:hover .trail-img img { transform: scale(1.04); }
+    .trail-img-overlay {
+      position:absolute; bottom:0; left:0; right:0;
+      background:linear-gradient(transparent, rgba(0,0,0,.52));
+      padding:.6rem .8rem .5rem; display:flex; align-items:center; gap:.4rem;
+    }
+    .difficulty-badge { font-size:.68rem; font-family:Arial,sans-serif; font-weight:bold; text-transform:uppercase; letter-spacing:.4px; padding:.2rem .52rem; border-radius:6px; color:#fff; }
+    .diff-easy { background:#2e7d32; } .diff-moderate { background:#c67c00; } .diff-hard { background:#b83232; }
+    .match-badge { margin-left:auto; font-size:.68rem; font-family:Arial,sans-serif; font-weight:bold; color:#fff; background:rgba(255,255,255,.22); backdrop-filter:blur(4px); padding:.2rem .52rem; border-radius:6px; border:1px solid rgba(255,255,255,.35); }
+    .dist-badge { font-size:.68rem; font-family:Arial,sans-serif; color:#fff; background:rgba(0,0,0,.38); backdrop-filter:blur(4px); padding:.2rem .52rem; border-radius:6px; display:flex; align-items:center; gap:.25rem; }
     .dist-badge svg { width:10px; height:10px; }
 
     .trail-body { padding:1rem 1rem .85rem; }
@@ -207,7 +176,7 @@
     .ai-reason { font-family:Arial,sans-serif; font-size:.76rem; color:#4a7c3f; background:#f0f7ee; padding:.48rem .9rem; border-top:1px solid #c3ddbf; display:flex; align-items:flex-start; gap:.32rem; line-height:1.45; }
     .ai-reason svg { width:12px; height:12px; flex-shrink:0; margin-top:1px; }
 
-    /* ── Featured ── */
+    /* ── Featured / sections ── */
     #featured-section { margin-top:.5rem; }
 
     /* ── How it Works ── */
@@ -226,7 +195,7 @@
     .loading-cards { display:none; grid-template-columns:repeat(auto-fill,minmax(310px,1fr)); gap:1.2rem; }
     .loading-cards.visible { display:grid; }
     .skel-card { background:#fff; border-radius:14px; border:1px solid var(--border); overflow:hidden; }
-    .skel-img { height:175px; }
+    .skel-img { height:185px; }
     .skel-body { padding:1rem; }
     .skel-line { height:13px; margin-bottom:9px; }
 
@@ -264,10 +233,10 @@
   </div>
 </nav>
 
-<!-- Location banner (shown when location is active) -->
+<!-- Location banner -->
 <div id="location-banner">
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a7 7 0 0 1 7 7c0 5-7 13-7 13S5 14 5 9a7 7 0 0 1 7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
-  <span id="banner-text">Showing trails near <strong>your location</strong></span>
+  <span id="banner-text"></span>
   <button onclick="clearLocation()">Clear location</button>
 </div>
 
@@ -282,7 +251,6 @@
 
   <div class="search-container">
     <div class="search-box">
-      <!-- AI query -->
       <div class="search-top">
         <div class="ai-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6Z"/></svg>
@@ -292,24 +260,18 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </button>
       </div>
-
-      <!-- Location row -->
       <div class="location-row">
         <span class="loc-label">📍 Where?</span>
-
         <div class="loc-input-wrap">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
           <input id="location-input" type="text" placeholder="City, state, or zip..." autocomplete="off" oninput="onLocInput()" onkeydown="if(event.key==='Enter')applyManualLocation()" />
           <button class="loc-clear" id="loc-clear-btn" onclick="clearLocationInput()" title="Clear">✕</button>
         </div>
-
         <button class="loc-gps-btn" id="gps-btn" onclick="useMyLocation()">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/><circle cx="12" cy="12" r="9" stroke-dasharray="3 2"/></svg>
           Near Me
         </button>
-
         <span class="loc-divider">·</span>
-
         <select class="loc-select" id="radius-select" onchange="onRadiusChange()">
           <option value="0">Any distance</option>
           <option value="25">Within 25 mi</option>
@@ -317,13 +279,10 @@
           <option value="100">Within 100 mi</option>
           <option value="250">Within 250 mi</option>
         </select>
-
         <select class="loc-select" id="state-select" onchange="onStateChange()">
           <option value="">All states</option>
         </select>
       </div>
-
-      <!-- Quick hints -->
       <div class="search-hints">
         <span class="hint-chip" onclick="fillHint(this)">🌊 Waterfall hike, dog-friendly</span>
         <span class="hint-chip" onclick="fillHint(this)">⛺ Backcountry camping under 8 miles</span>
@@ -343,9 +302,7 @@
   <div class="stat"><span class="stat-num">4.9★</span><span class="stat-label">Avg. user rating</span></div>
 </div>
 
-<!-- Main -->
 <div class="main">
-
   <!-- Loading -->
   <div class="loading-cards" id="loading-cards">
     <div class="skel-card"><div class="skel-img skeleton"></div><div class="skel-body"><div class="skel-line skeleton" style="width:70%"></div><div class="skel-line skeleton" style="width:45%"></div><div class="skel-line skeleton" style="width:90%"></div></div></div>
@@ -380,14 +337,12 @@
     <div class="trails-grid" id="trails-grid"></div>
   </section>
 
-  <!-- Featured (before search) -->
+  <!-- Featured -->
   <section id="featured-section">
     <div class="section-label">✦ Trending this week</div>
     <div class="section-title">Popular adventures</div>
     <div class="trails-grid" id="featured-grid"></div>
-
-    <!-- State explorer -->
-    <div class="state-explorer" style="margin-top:2.5rem">
+    <div style="margin-top:2.5rem">
       <div class="section-label">🗺 Browse by state</div>
       <div class="section-title">Plan your next adventure</div>
       <div class="state-grid" id="state-grid"></div>
@@ -407,273 +362,267 @@
   </div>
 </div>
 
-<footer><p>© 2026 PathFind · <a href="#">Privacy</a> · <a href="#">Terms</a> · <a href="#">About</a></p></footer>
+<footer><p>© 2026 PathFind · <a href="#">Privacy</a> · <a href="#">Terms</a> · <a href="#">About</a> · Photos via <a href="https://unsplash.com" target="_blank">Unsplash</a></p></footer>
 
 <script>
 /* ═══════════════════════════════════════════════════════
-   DATA
+   PHOTO POOL  (Unsplash IDs, grouped by landscape type)
+═══════════════════════════════════════════════════════ */
+const PHOTOS = {
+  mountain_peak:       '1464822759023-fed622ff2c3b',
+  mountain_snow:       '1542856391-010ad2da8d3c',
+  mountain_ridge:      '1551632811-561732d1e306',
+  mountain_green:      '1533240332313-0db49b459ad6',
+  forest_sunlight:     '1441974231531-c6227db76b6e',
+  forest_green:        '1448375240586-882707db888b',
+  forest_path:         '1513836279014-a89f7a76ae86',
+  waterfall_canyon:    '1476611338197-c5c2e43e3b7e',
+  waterfall_forest:    '1432405972618-c60b0225b8f9',
+  alpine_lake:         '1494500764479-0c8f2919a3d8',
+  alpine_reflection:   '1454496522488-7a8e488e8606',
+  alpine_meadow:       '1506905925346-21bda4d32df4',
+  desert_canyon:       '1469854523086-cc02fe5d8800',
+  desert_red:          '1501854140801-50d01698950b',
+  canyon_slot:         '1510227272981-87123e259b17',
+  coastal_cliffs:      '1559827260-dc66d52bef19',
+  coastal_tropical:    '1507525428034-b723cf961d3e',
+  tropical_green:      '1544735716-392a3de11b3b',
+  volcano:             '1619468129361-605ebea04b44',
+  rainforest:          '1448375240586-882707db888b',
+};
+
+function photoURL(key) {
+  const id = PHOTOS[key] || PHOTOS.mountain_peak;
+  return `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&w=600&h=370&q=75`;
+}
+
+/* ═══════════════════════════════════════════════════════
+   TRAIL DATABASE  (50 trails)
 ═══════════════════════════════════════════════════════ */
 const trails = [
-  { id:1,  name:"Hanging Lake Trail",        location:"Glenwood Canyon, CO",  state:"CO", lat:39.60, lng:-107.20, distance:"3.0 mi", elevation:"1,050 ft", difficulty:"moderate", rating:4.9, reviews:2841, tags:["Waterfall","Lake","Views","Dogs OK"], match:98, color1:"#2d6e2a",color2:"#1a4d18", aiReason:"Iconic turquoise lake fed by waterfall — moderate with stunning payoff. Dogs allowed on leash.", featured:true },
-  { id:2,  name:"Bear Lake Loop",             location:"Rocky Mountain NP, CO", state:"CO", lat:40.31, lng:-105.65, distance:"0.8 mi", elevation:"100 ft",   difficulty:"easy",     rating:4.7, reviews:5210, tags:["Lake","Loop","Family","Dogs OK","Fall Colors"], match:94, color1:"#4a7c3f",color2:"#2d5a27", aiReason:"Flat accessible loop around a scenic alpine lake. Perfect for all ages & leashed dogs.", featured:true },
-  { id:3,  name:"Half Dome via JMT",          location:"Yosemite NP, CA",       state:"CA", lat:37.74, lng:-119.53, distance:"14.2 mi",elevation:"4,800 ft", difficulty:"hard",     rating:4.9, reviews:11320,tags:["Iconic","Cables","Views","Permit"], match:87, color1:"#5a7a30",color2:"#3a5520", aiReason:"One of America's most iconic hikes — cable section leads to breathtaking 360° summit views.", featured:true },
-  { id:4,  name:"Maroon Bells Loop",          location:"Aspen, CO",             state:"CO", lat:39.07, lng:-106.99, distance:"9.7 mi", elevation:"2,500 ft", difficulty:"moderate", rating:4.8, reviews:3677, tags:["Alpine","Lake","Fall Colors","Wildflowers"], match:92, color1:"#3d6b35",color2:"#27512a", aiReason:"The most photographed mountains in N. America. Autumn turns aspen groves electric gold.", featured:true },
-  { id:5,  name:"Angels Landing",             location:"Zion NP, UT",           state:"UT", lat:37.27, lng:-112.95, distance:"5.4 mi", elevation:"1,488 ft", difficulty:"hard",     rating:4.8, reviews:9140, tags:["Chains","Views","Iconic","Desert"], match:85, color1:"#8a5a30",color2:"#6b3e1a", aiReason:"Bucket-list scramble with chains along a narrow ridge — dramatic desert canyon views.", featured:false },
-  { id:6,  name:"Enchantments Thru-Hike",    location:"Leavenworth, WA",       state:"WA", lat:47.51, lng:-120.85, distance:"18.0 mi",elevation:"4,800 ft", difficulty:"hard",     rating:5.0, reviews:1853, tags:["Alpine Lakes","Permit","Backpacking","Goats"], match:90, color1:"#3a6e5a",color2:"#1a4d3a", aiReason:"Washington's most coveted permit. Dozens of crystal-clear alpine lakes with wild mountain goats.", featured:false },
-  { id:7,  name:"Appalachian Trail Section",  location:"Shenandoah NP, VA",     state:"VA", lat:38.53, lng:-78.35, distance:"8.2 mi", elevation:"1,200 ft", difficulty:"moderate", rating:4.6, reviews:2240, tags:["Thru-hike","Views","Wildlife","Fall Colors"], match:83, color1:"#4a6e30",color2:"#2d5220", aiReason:"Classic AT section through Blue Ridge — great wildlife sightings and ridge-top vistas.", featured:false },
-  { id:8,  name:"Rim to Rim — Grand Canyon", location:"Grand Canyon NP, AZ",   state:"AZ", lat:36.10, lng:-112.11, distance:"21.0 mi",elevation:"4,380 ft", difficulty:"hard",     rating:4.9, reviews:6720, tags:["Iconic","Multi-day","Desert","Permit"], match:80, color1:"#a05a30",color2:"#7a3e1a", aiReason:"One of the world's great hikes — descend into geologic history on both rims.", featured:false },
-  { id:9,  name:"Mirror Lake Loop",           location:"Uinta Mountains, UT",   state:"UT", lat:40.70, lng:-110.88, distance:"4.5 mi", elevation:"300 ft",   difficulty:"easy",     rating:4.5, reviews:1870, tags:["Lake","Family","Dogs OK","Wildflowers"], match:88, color1:"#3a7a6e",color2:"#1e5a50", aiReason:"Easy, flat loop around a pristine alpine lake — perfect for families and beginners.", featured:false },
-  { id:10, name:"Kalalau Trail",              location:"Nā Pali Coast, HI",     state:"HI", lat:22.21, lng:-159.65, distance:"11.0 mi",elevation:"2,500 ft", difficulty:"hard",     rating:4.9, reviews:3180, tags:["Coastal","Jungle","Remote","Permit"], match:78, color1:"#1a6b2d",color2:"#0a4d1a", aiReason:"Dramatic sea cliffs and lush valleys — one of the most beautiful and challenging trails in America.", featured:false },
-  { id:11, name:"Acadia Carriage Roads",      location:"Acadia NP, ME",         state:"ME", lat:44.35, lng:-68.21, distance:"6.0 mi", elevation:"400 ft",   difficulty:"easy",     rating:4.6, reviews:2930, tags:["Loop","Family","Bike-friendly","Ocean Views"], match:85, color1:"#5a7a4a",color2:"#3a5a2a", aiReason:"Historic carriage roads with ocean glimpses — ideal for a relaxed half-day outing.", featured:false },
-  { id:12, name:"Skyline Trail",              location:"Mt. Rainier NP, WA",    state:"WA", lat:46.85, lng:-121.73, distance:"5.5 mi", elevation:"1,600 ft", difficulty:"moderate", rating:4.9, reviews:4120, tags:["Wildflowers","Glacier Views","Subalpine"], match:91, color1:"#2d6e5a",color2:"#1a4d3a", aiReason:"Jaw-dropping wildflower meadows with Rainier looming overhead — one of WA's finest day hikes.", featured:false },
-  { id:13, name:"Chimney Tops Trail",         location:"Great Smoky Mtns, TN",  state:"TN", lat:35.64, lng:-83.48, distance:"4.0 mi", elevation:"1,400 ft", difficulty:"moderate", rating:4.7, reviews:3560, tags:["Views","Waterfalls","Wildlife","Dogs OK"], match:86, color1:"#4a6e35",color2:"#2d5220", aiReason:"Rocky summit with panoramic Smokies views — popular but worth every step.", featured:false },
-  { id:14, name:"Highline Trail",             location:"Glacier NP, MT",        state:"MT", lat:48.70, lng:-113.72, distance:"11.8 mi",elevation:"200 ft",   difficulty:"moderate", rating:5.0, reviews:2870, tags:["Alpine","Wildflowers","Goats","Views"], match:93, color1:"#3a5a7a",color2:"#1a3a5a", aiReason:"Traverses the Continental Divide with Glacier's most spectacular ridge-top views.", featured:false },
-  { id:15, name:"Lost Coast Trail",           location:"Humboldt County, CA",   state:"CA", lat:40.00, lng:-124.07, distance:"24.0 mi",elevation:"1,000 ft", difficulty:"hard",     rating:4.8, reviews:1640, tags:["Coastal","Backpacking","Remote","Tide-dependent"], match:82, color1:"#2a6e4a",color2:"#1a4d30", aiReason:"Wild and remote Pacific coastline — hike only when tides allow, reward is total solitude.", featured:false },
-  { id:16, name:"Naomi Peak Trail",           location:"Logan Canyon, UT",      state:"UT", lat:41.89, lng:-111.55, distance:"6.4 mi", elevation:"1,977 ft", difficulty:"moderate", rating:4.6, reviews:1120, tags:["Summit","Wildflowers","Dogs OK","Views"], match:87, color1:"#5a7a3a",color2:"#3a5a20", aiReason:"Cache Valley's highest peak with sweeping views of Utah, Wyoming, and Idaho.", featured:false },
-  { id:17, name:"Wonderland Trail",           location:"Mt. Rainier NP, WA",    state:"WA", lat:46.85, lng:-121.85, distance:"93.0 mi",elevation:"22,000 ft",difficulty:"hard",     rating:5.0, reviews:980,  tags:["Permit","Backpacking","Glaciers","Epic"], match:75, color1:"#1a5a3a",color2:"#0a3a20", aiReason:"Circle Mt. Rainier on this 93-mile epic — the PNW's crown jewel backpacking route.", featured:false },
-  { id:18, name:"Cadillac Mountain Summit",   location:"Acadia NP, ME",         state:"ME", lat:44.35, lng:-68.23, distance:"3.5 mi", elevation:"1,530 ft", difficulty:"moderate", rating:4.8, reviews:2150, tags:["Sunrise","Ocean Views","Iconic","Dogs OK"], match:89, color1:"#6a7a5a",color2:"#4a5a3a", aiReason:"First place in the US to see the sunrise — granite slabs with sweeping Atlantic views.", featured:false },
-  { id:19, name:"Havasupai Falls",            location:"Supai, AZ",             state:"AZ", lat:36.26, lng:-112.69, distance:"10.0 mi",elevation:"2,500 ft", difficulty:"moderate", rating:5.0, reviews:7430, tags:["Waterfall","Blue Water","Permit","Camping"], match:96, color1:"#1a7a6e",color2:"#0a5a50", aiReason:"Stunning turquoise waterfalls deep in the Grand Canyon — requires permit, worth every hurdle.", featured:false },
-  { id:20, name:"Tuckerman Ravine Trail",     location:"Mt. Washington, NH",    state:"NH", lat:44.27, lng:-71.30, distance:"8.0 mi", elevation:"4,255 ft", difficulty:"hard",     rating:4.7, reviews:3240, tags:["Alpine","Summit","Challenging","Seasonal"], match:84, color1:"#5a6a7a",color2:"#3a4a5a", aiReason:"Northeast's most demanding day hike — summit of the highest peak east of the Mississippi.", featured:false },
+  // ── Colorado ──
+  { id:1,  name:"Hanging Lake Trail",          location:"Glenwood Canyon, CO",      state:"CO", lat:39.60,lng:-107.20, distance:"3.0 mi",  elevation:"1,050 ft", difficulty:"moderate", rating:4.9, reviews:2841,  tags:["Waterfall","Lake","Views","Dogs OK"],                     match:98, photo:"waterfall_canyon", aiReason:"Iconic turquoise lake fed by a waterfall. Moderate terrain with a stunning payoff.", featured:true  },
+  { id:2,  name:"Bear Lake Loop",              location:"Rocky Mountain NP, CO",    state:"CO", lat:40.31,lng:-105.65, distance:"0.8 mi",  elevation:"100 ft",   difficulty:"easy",     rating:4.7, reviews:5210,  tags:["Lake","Loop","Family","Dogs OK","Fall Colors"],           match:94, photo:"alpine_reflection", aiReason:"Flat accessible loop around a scenic alpine lake. Perfect for all ages.", featured:true  },
+  { id:3,  name:"Maroon Bells Loop",           location:"Aspen, CO",               state:"CO", lat:39.07,lng:-106.99, distance:"9.7 mi",  elevation:"2,500 ft", difficulty:"moderate", rating:4.8, reviews:3677,  tags:["Alpine","Lake","Fall Colors","Wildflowers"],             match:92, photo:"alpine_meadow",    aiReason:"The most photographed mountains in N. America — golden aspens in fall.", featured:true  },
+  { id:4,  name:"Mt. Bierstadt Summit",        location:"Georgetown, CO",           state:"CO", lat:39.58,lng:-105.71, distance:"7.0 mi",  elevation:"2,850 ft", difficulty:"moderate", rating:4.6, reviews:2130,  tags:["Summit","14er","Views","Dogs OK"],                       match:88, photo:"mountain_snow",    aiReason:"One of Colorado's most accessible 14ers — open slopes with sweeping Front Range views.", featured:false },
+  { id:5,  name:"Black Canyon Rim Trail",      location:"Black Canyon NP, CO",     state:"CO", lat:38.57,lng:-107.72, distance:"5.0 mi",  elevation:"300 ft",   difficulty:"easy",     rating:4.5, reviews:980,   tags:["Canyon","Views","Geology","Dogs OK"],                    match:82, photo:"canyon_slot",      aiReason:"Dramatic views into one of America's steepest canyons from a gentle rim walk.", featured:false },
+
+  // ── Utah ──
+  { id:6,  name:"Angels Landing",             location:"Zion NP, UT",             state:"UT", lat:37.27,lng:-112.95, distance:"5.4 mi",  elevation:"1,488 ft", difficulty:"hard",     rating:4.8, reviews:9140,  tags:["Chains","Views","Iconic","Desert"],                      match:85, photo:"canyon_slot",      aiReason:"Bucket-list scramble with chains — dramatic Zion canyon views await at the top.", featured:true  },
+  { id:7,  name:"The Narrows",                location:"Zion NP, UT",             state:"UT", lat:37.30,lng:-112.95, distance:"9.4 mi",  elevation:"334 ft",   difficulty:"moderate", rating:4.9, reviews:7640,  tags:["River Hike","Iconic","Slot Canyon","Permit"],            match:91, photo:"waterfall_canyon", aiReason:"Wade through the Virgin River inside a towering slot canyon — unlike anything else.", featured:false },
+  { id:8,  name:"Delicate Arch Trail",        location:"Arches NP, UT",           state:"UT", lat:38.74,lng:-109.50, distance:"3.0 mi",  elevation:"480 ft",   difficulty:"moderate", rating:4.9, reviews:8920,  tags:["Iconic","Desert","Views","Sunrise/Sunset"],              match:93, photo:"desert_red",       aiReason:"Utah's most iconic arch glowing orange at sunset — an unmissable bucket-list hike.", featured:false },
+  { id:9,  name:"Queens Garden / Navajo Loop", location:"Bryce Canyon NP, UT",    state:"UT", lat:37.62,lng:-112.17, distance:"2.9 mi",  elevation:"521 ft",   difficulty:"moderate", rating:4.8, reviews:6310,  tags:["Hoodoos","Iconic","Loop","Views"],                       match:90, photo:"desert_red",       aiReason:"Wind through Bryce's famous hoodoo forest — best bang-for-buck trail in the park.", featured:false },
+  { id:10, name:"Mirror Lake Loop",           location:"Uinta Mountains, UT",     state:"UT", lat:40.70,lng:-110.88, distance:"4.5 mi",  elevation:"300 ft",   difficulty:"easy",     rating:4.5, reviews:1870,  tags:["Lake","Family","Dogs OK","Wildflowers"],                 match:88, photo:"alpine_lake",      aiReason:"Easy, flat loop around a pristine alpine lake — perfect for families and beginners.", featured:false },
+  { id:11, name:"Chesler Park Loop",          location:"Canyonlands NP, UT",      state:"UT", lat:38.12,lng:-109.80, distance:"11.0 mi", elevation:"1,300 ft", difficulty:"hard",     rating:4.7, reviews:1140,  tags:["Desert","Backcountry","Views","Solitude"],               match:80, photo:"desert_canyon",    aiReason:"Remote canyon country with towering spires and 360° desert panoramas.", featured:false },
+  { id:12, name:"Havasupai Falls Trail",      location:"Supai, AZ",               state:"AZ", lat:36.26,lng:-112.69, distance:"10.0 mi", elevation:"2,500 ft", difficulty:"moderate", rating:5.0, reviews:7430,  tags:["Waterfall","Blue Water","Permit","Camping"],             match:96, photo:"waterfall_forest", aiReason:"Stunning turquoise waterfalls deep in the Grand Canyon — worth every permit hurdle.", featured:false },
+
+  // ── Arizona ──
+  { id:13, name:"Grand Canyon Rim to Rim",    location:"Grand Canyon NP, AZ",     state:"AZ", lat:36.10,lng:-112.11, distance:"21.0 mi", elevation:"4,380 ft", difficulty:"hard",     rating:4.9, reviews:6720,  tags:["Iconic","Multi-day","Desert","Permit"],                  match:80, photo:"desert_canyon",    aiReason:"One of the world's great hikes — descend through 2 billion years of geologic history.", featured:false },
+  { id:14, name:"Bright Angel Trail",        location:"Grand Canyon NP, AZ",     state:"AZ", lat:36.06,lng:-112.14, distance:"9.5 mi",  elevation:"3,060 ft", difficulty:"hard",     rating:4.7, reviews:5540,  tags:["Iconic","Desert","Views","Mule Trains"],                 match:83, photo:"desert_canyon",    aiReason:"The Grand Canyon's main corridor — rest houses, water stations, and jaw-dropping views.", featured:false },
+  { id:15, name:"West Fork Oak Creek Trail",  location:"Sedona, AZ",              state:"AZ", lat:34.98,lng:-111.74, distance:"6.4 mi",  elevation:"400 ft",   difficulty:"easy",     rating:4.8, reviews:3280,  tags:["Creek","Fall Colors","Dogs OK","Red Rocks"],             match:87, photo:"forest_sunlight",  aiReason:"Stunning red rock canyon with a clear creek and gorgeous fall color — easy and beautiful.", featured:false },
+
+  // ── California ──
+  { id:16, name:"Half Dome via JMT",          location:"Yosemite NP, CA",         state:"CA", lat:37.74,lng:-119.53, distance:"14.2 mi", elevation:"4,800 ft", difficulty:"hard",     rating:4.9, reviews:11320, tags:["Iconic","Cables","Views","Permit"],                      match:87, photo:"mountain_peak",    aiReason:"One of America's most iconic hikes — cables lead to a breathtaking 360° summit.", featured:true  },
+  { id:17, name:"Mist Trail to Vernal Falls", location:"Yosemite NP, CA",         state:"CA", lat:37.72,lng:-119.55, distance:"3.6 mi",  elevation:"1,000 ft", difficulty:"moderate", rating:4.8, reviews:9870,  tags:["Waterfall","Iconic","Views","Spray"],                    match:92, photo:"waterfall_forest", aiReason:"Feel the spray of Vernal and Nevada Falls on Yosemite's most thrilling short hike.", featured:false },
+  { id:18, name:"John Muir Trail Segment",    location:"Sierra Nevada, CA",       state:"CA", lat:37.60,lng:-119.08, distance:"12.0 mi", elevation:"3,100 ft", difficulty:"hard",     rating:5.0, reviews:2310,  tags:["Alpine","Backpacking","Lakes","Permit"],                 match:88, photo:"alpine_lake",      aiReason:"A section of America's most celebrated trail — crystal lakes and granite domes everywhere.", featured:false },
+  { id:19, name:"Lost Coast Trail",           location:"Humboldt County, CA",     state:"CA", lat:40.00,lng:-124.07, distance:"24.0 mi", elevation:"1,000 ft", difficulty:"hard",     rating:4.8, reviews:1640,  tags:["Coastal","Backpacking","Remote","Tide-dependent"],       match:82, photo:"coastal_cliffs",   aiReason:"Wild, remote Pacific coastline — total solitude and dramatic sea stacks await.", featured:false },
+  { id:20, name:"Tahoe Rim Trail Section",    location:"Lake Tahoe, CA/NV",       state:"CA", lat:38.93,lng:-119.98, distance:"8.0 mi",  elevation:"1,500 ft", difficulty:"moderate", rating:4.7, reviews:2080,  tags:["Lake Views","Wildflowers","Dogs OK","Pines"],            match:86, photo:"mountain_ridge",   aiReason:"Sweeping views of cobalt-blue Lake Tahoe from the ridgeline — stunning at any season.", featured:false },
+  { id:21, name:"General Sherman Tree Trail", location:"Sequoia NP, CA",          state:"CA", lat:36.58,lng:-118.75, distance:"2.0 mi",  elevation:"100 ft",   difficulty:"easy",     rating:4.6, reviews:4210,  tags:["Ancient Trees","Family","Dogs OK","Accessible"],         match:84, photo:"forest_sunlight",  aiReason:"Walk among the world's largest trees — awe-inspiring giants that have stood for millennia.", featured:false },
+  { id:22, name:"Redwood Creek Trail",        location:"Redwood NP, CA",          state:"CA", lat:41.38,lng:-124.07, distance:"8.2 mi",  elevation:"400 ft",   difficulty:"easy",     rating:4.7, reviews:1850,  tags:["Old Growth","Coastal","Dogs OK","Quiet"],               match:85, photo:"forest_green",     aiReason:"Walk beneath ancient coast redwoods — the tallest trees on Earth forming a cathedral canopy.", featured:false },
+  { id:23, name:"Mt Whitney Trail",           location:"Lone Pine, CA",           state:"CA", lat:36.58,lng:-118.29, distance:"22.0 mi", elevation:"6,100 ft", difficulty:"hard",     rating:4.9, reviews:4780,  tags:["Summit","48 states high point","Permit","Alpine"],      match:85, photo:"mountain_snow",    aiReason:"The highest peak in the contiguous US — grueling but deeply rewarding at 14,505 ft.", featured:false },
+  { id:24, name:"Point Reyes Coast Trail",    location:"Point Reyes NS, CA",      state:"CA", lat:38.00,lng:-122.98, distance:"8.5 mi",  elevation:"1,000 ft", difficulty:"moderate", rating:4.6, reviews:1560,  tags:["Coastal","Lighthouse","Wildlife","Dogs OK"],            match:83, photo:"coastal_cliffs",   aiReason:"Rugged Pacific cliffs, lighthouse views, and migrating gray whales in season.", featured:false },
+
+  // ── Washington ──
+  { id:25, name:"Enchantments Thru-Hike",     location:"Leavenworth, WA",         state:"WA", lat:47.51,lng:-120.85, distance:"18.0 mi", elevation:"4,800 ft", difficulty:"hard",     rating:5.0, reviews:1853,  tags:["Alpine Lakes","Permit","Backpacking","Goats"],           match:90, photo:"alpine_lake",      aiReason:"Washington's most coveted permit — crystal alpine lakes and wild mountain goats.", featured:true  },
+  { id:26, name:"Skyline Trail",               location:"Mt. Rainier NP, WA",     state:"WA", lat:46.85,lng:-121.73, distance:"5.5 mi",  elevation:"1,600 ft", difficulty:"moderate", rating:4.9, reviews:4120,  tags:["Wildflowers","Glacier Views","Subalpine"],              match:91, photo:"alpine_meadow",    aiReason:"Jaw-dropping wildflower meadows with Mt. Rainier looming overhead.", featured:false },
+  { id:27, name:"Wonderland Trail",            location:"Mt. Rainier NP, WA",     state:"WA", lat:46.85,lng:-121.85, distance:"93.0 mi", elevation:"22,000 ft",difficulty:"hard",     rating:5.0, reviews:980,   tags:["Permit","Backpacking","Glaciers","Epic"],               match:75, photo:"mountain_snow",    aiReason:"Circle Mt. Rainier on this 93-mile epic — the PNW's crown jewel backpacking route.", featured:false },
+  { id:28, name:"Mt. St. Helens Summit",       location:"Gifford Pinchot NF, WA", state:"WA", lat:46.19,lng:-122.19, distance:"10.0 mi", elevation:"4,500 ft", difficulty:"hard",     rating:4.8, reviews:2250,  tags:["Volcano","Summit","Views","Permit"],                    match:84, photo:"volcano",          aiReason:"Climb an active volcano and peer into the famous crater — geology on a massive scale.", featured:false },
+  { id:29, name:"Hoh Rain Forest Hall of Mosses",location:"Olympic NP, WA",       state:"WA", lat:47.86,lng:-123.93, distance:"0.8 mi",  elevation:"50 ft",    difficulty:"easy",     rating:4.8, reviews:3870,  tags:["Rainforest","Family","Accessible","Surreal"],           match:87, photo:"rainforest",       aiReason:"Otherworldly moss-draped maple trees in North America's only temperate rainforest.", featured:false },
+  { id:30, name:"Hurricane Ridge Loop",        location:"Olympic NP, WA",         state:"WA", lat:47.97,lng:-123.49, distance:"3.2 mi",  elevation:"700 ft",   difficulty:"easy",     rating:4.7, reviews:2640,  tags:["Views","Wildflowers","Wildlife","Dogs OK"],             match:85, photo:"mountain_green",   aiReason:"Subalpine meadows with Olympic Peninsula views and resident deer that barely notice you.", featured:false },
+  { id:31, name:"Cascade Pass Trail",          location:"North Cascades NP, WA",  state:"WA", lat:48.47,lng:-121.07, distance:"7.4 mi",  elevation:"1,800 ft", difficulty:"moderate", rating:4.9, reviews:1760,  tags:["Alpine","Glaciers","Views","Wildflowers"],              match:89, photo:"mountain_peak",    aiReason:"Classic North Cascades pass with dramatic peaks, hanging glaciers, and wildflower basins.", featured:false },
+
+  // ── Oregon ──
+  { id:32, name:"Multnomah Falls Loop",        location:"Columbia Gorge, OR",      state:"OR", lat:45.58,lng:-122.12, distance:"2.4 mi",  elevation:"700 ft",   difficulty:"moderate", rating:4.7, reviews:8930,  tags:["Waterfall","Views","Dogs OK","Iconic"],                 match:89, photo:"waterfall_forest", aiReason:"Oregon's most visited natural landmark — 620-ft falls with a historic bridge viewpoint.", featured:false },
+  { id:33, name:"Smith Rock Summit Trail",     location:"Terrebonne, OR",          state:"OR", lat:44.37,lng:-121.14, distance:"4.0 mi",  elevation:"800 ft",   difficulty:"moderate", rating:4.8, reviews:3410,  tags:["Rock Climbing","Views","Desert","Dogs OK"],             match:86, photo:"desert_red",       aiReason:"Oregon's dramatic volcanic spires rising from the high desert — world-class climbing mecca.", featured:false },
+  { id:34, name:"Crater Lake Rim Trail",       location:"Crater Lake NP, OR",      state:"OR", lat:42.94,lng:-122.10, distance:"6.0 mi",  elevation:"800 ft",   difficulty:"moderate", rating:4.9, reviews:3980,  tags:["Volcanic Lake","Views","Wildflowers","Scenic"],         match:90, photo:"alpine_lake",      aiReason:"Sapphire-blue caldera lake — the deepest in the US — from a stunning volcanic rim.", featured:false },
+  { id:35, name:"Timberline Trail",            location:"Mt. Hood, OR",            state:"OR", lat:45.37,lng:-121.70, distance:"40.0 mi", elevation:"9,000 ft", difficulty:"hard",     rating:4.8, reviews:1320,  tags:["Backpacking","Glaciers","Circumnavigation","Permit"],  match:82, photo:"mountain_snow",    aiReason:"Circle Oregon's iconic snow-capped volcano on a spectacular 40-mile backpacking loop.", featured:false },
+
+  // ── Montana ──
+  { id:36, name:"Highline Trail",              location:"Glacier NP, MT",          state:"MT", lat:48.70,lng:-113.72, distance:"11.8 mi", elevation:"200 ft",   difficulty:"moderate", rating:5.0, reviews:2870,  tags:["Alpine","Wildflowers","Goats","Views"],                 match:93, photo:"mountain_ridge",   aiReason:"Traverses the Continental Divide with Glacier NP's most spectacular ridge-top views.", featured:false },
+  { id:37, name:"Iceberg Lake Trail",          location:"Glacier NP, MT",          state:"MT", lat:48.74,lng:-113.64, distance:"9.7 mi",  elevation:"1,275 ft", difficulty:"moderate", rating:4.9, reviews:2430,  tags:["Alpine Lake","Icebergs","Wildflowers","Bears"],         match:91, photo:"alpine_lake",      aiReason:"A bright turquoise lake with floating icebergs even in midsummer — surreal and magical.", featured:false },
+
+  // ── Wyoming ──
+  { id:38, name:"Jenny Lake Loop",             location:"Grand Teton NP, WY",      state:"WY", lat:43.75,lng:-110.73, distance:"7.0 mi",  elevation:"200 ft",   difficulty:"easy",     rating:4.8, reviews:3760,  tags:["Lake","Teton Views","Family","Dogs OK"],               match:87, photo:"alpine_reflection", aiReason:"Mirror-calm lake reflecting the Tetons — one of Wyoming's most beautiful easy hikes.", featured:false },
+  { id:39, name:"Cascade Canyon Trail",        location:"Grand Teton NP, WY",      state:"WY", lat:43.75,lng:-110.78, distance:"9.7 mi",  elevation:"1,070 ft", difficulty:"moderate", rating:4.9, reviews:2980,  tags:["Waterfall","Teton Views","Wildlife","Bears"],          match:90, photo:"mountain_peak",    aiReason:"Dramatic canyon between soaring Teton peaks — excellent moose and bear sightings.", featured:false },
+  { id:40, name:"Lamar Valley Patrol Cabin",   location:"Yellowstone NP, WY",      state:"WY", lat:44.88,lng:-110.20, distance:"5.0 mi",  elevation:"200 ft",   difficulty:"easy",     rating:4.6, reviews:1240,  tags:["Wildlife","Wolves","Bison","Dogs Prohibited"],          match:83, photo:"alpine_meadow",    aiReason:"The Serengeti of North America — unmatched wolf, bison, and elk watching in open valleys.", featured:false },
+
+  // ── New Hampshire ──
+  { id:41, name:"Franconia Ridge Loop",        location:"Franconia Notch SP, NH",  state:"NH", lat:44.14,lng:-71.68,  distance:"8.9 mi",  elevation:"3,900 ft", difficulty:"hard",     rating:4.9, reviews:4870,  tags:["Ridge Walk","Views","Alpine","Dogs OK"],               match:88, photo:"mountain_ridge",   aiReason:"New England's finest ridge walk — exposed above tree-line with 360° White Mountain views.", featured:false },
+  { id:42, name:"Tuckerman Ravine Trail",      location:"Mt. Washington, NH",      state:"NH", lat:44.27,lng:-71.30,  distance:"8.0 mi",  elevation:"4,255 ft", difficulty:"hard",     rating:4.7, reviews:3240,  tags:["Alpine","Summit","Challenging","Seasonal"],            match:84, photo:"mountain_snow",    aiReason:"Northeast's most demanding day hike — summit of the highest peak east of the Mississippi.", featured:false },
+
+  // ── Maine ──
+  { id:43, name:"Acadia Carriage Roads",       location:"Acadia NP, ME",           state:"ME", lat:44.35,lng:-68.21,  distance:"6.0 mi",  elevation:"400 ft",   difficulty:"easy",     rating:4.6, reviews:2930,  tags:["Loop","Family","Bike-friendly","Ocean Views"],          match:85, photo:"forest_green",     aiReason:"Historic carriage roads with ocean glimpses — ideal for a relaxed half-day outing.", featured:false },
+  { id:44, name:"Cadillac Mountain Summit",    location:"Acadia NP, ME",           state:"ME", lat:44.35,lng:-68.23,  distance:"3.5 mi",  elevation:"1,530 ft", difficulty:"moderate", rating:4.8, reviews:2150,  tags:["Sunrise","Ocean Views","Iconic","Dogs OK"],            match:89, photo:"mountain_green",   aiReason:"First place in the US to see the sunrise — granite slabs with sweeping Atlantic views.", featured:false },
+  { id:45, name:"Mt. Katahdin Knife's Edge",   location:"Baxter SP, ME",           state:"ME", lat:45.90,lng:-68.92,  distance:"10.4 mi", elevation:"4,200 ft", difficulty:"hard",     rating:4.9, reviews:2870,  tags:["Knife Edge","Summit","Epic","Permit"],                 match:86, photo:"mountain_peak",    aiReason:"Maine's crowning peak — the Knife's Edge ridge traverse is one of the East's great adventures.", featured:false },
+
+  // ── Tennessee / North Carolina ──
+  { id:46, name:"Chimney Tops Trail",          location:"Great Smoky Mtns, TN",    state:"TN", lat:35.64,lng:-83.48,  distance:"4.0 mi",  elevation:"1,400 ft", difficulty:"moderate", rating:4.7, reviews:3560,  tags:["Views","Summit","Wildlife","Dogs OK"],                 match:86, photo:"forest_path",      aiReason:"Rocky twin summits with sweeping Smokies panoramas — popular but worth every step.", featured:false },
+  { id:47, name:"Alum Cave to Mt. LeConte",    location:"Great Smoky Mtns, TN",    state:"TN", lat:35.65,lng:-83.45,  distance:"11.0 mi", elevation:"2,760 ft", difficulty:"hard",     rating:4.8, reviews:2780,  tags:["Views","Bluffs","Summit","Backcountry Lodge"],         match:84, photo:"mountain_green",   aiReason:"Hike past surreal overhanging bluffs to one of the Smokies' highest summits.", featured:false },
+  { id:48, name:"Black Balsam Knob",           location:"Blue Ridge Parkway, NC",  state:"NC", lat:35.33,lng:-82.88,  distance:"3.4 mi",  elevation:"600 ft",   difficulty:"easy",     rating:4.7, reviews:1960,  tags:["Bald Summit","Views","Dogs OK","Wind-swept"],          match:85, photo:"alpine_meadow",    aiReason:"Open grassy bald summit with 360° Blue Ridge views and no tree cover blocking the sky.", featured:false },
+
+  // ── Virginia ──
+  { id:49, name:"Old Rag Mountain Loop",       location:"Shenandoah NP, VA",       state:"VA", lat:38.55,lng:-78.31,  distance:"9.0 mi",  elevation:"2,415 ft", difficulty:"hard",     rating:4.9, reviews:5420,  tags:["Rock Scramble","Views","Summit","Permit"],             match:87, photo:"mountain_ridge",   aiReason:"Virginia's best hike — exhilarating granite boulder scramble to an open summit.", featured:false },
+  { id:50, name:"Hawksbill Summit Trail",      location:"Shenandoah NP, VA",       state:"VA", lat:38.56,lng:-78.39,  distance:"2.9 mi",  elevation:"696 ft",   difficulty:"moderate", rating:4.6, reviews:2130,  tags:["Summit","Views","Birds","Dogs OK"],                    match:83, photo:"forest_path",      aiReason:"Shenandoah's highest peak with a stone observation shelter — hawks and eagles soar past.", featured:false },
+
+  // ── Hawaii ──
+  { id:51, name:"Kalalau Trail",               location:"Nā Pali Coast, HI",       state:"HI", lat:22.21,lng:-159.65, distance:"11.0 mi", elevation:"2,500 ft", difficulty:"hard",     rating:4.9, reviews:3180,  tags:["Coastal","Jungle","Remote","Permit"],                  match:78, photo:"tropical_green",   aiReason:"Dramatic sea cliffs and lush valleys — one of the most beautiful and challenging trails in the US.", featured:false },
+  { id:52, name:"Diamond Head Summit Trail",   location:"Honolulu, HI",            state:"HI", lat:21.26,lng:-157.80, distance:"1.6 mi",  elevation:"560 ft",   difficulty:"easy",     rating:4.5, reviews:8740,  tags:["Volcanic","Views","Iconic","Family"],                  match:80, photo:"coastal_tropical", aiReason:"Climb inside a volcanic crater to panoramic Honolulu and Pacific Ocean views.", featured:false },
 ];
 
 /* ═══════════════════════════════════════════════════════
    LOCATION STATE
 ═══════════════════════════════════════════════════════ */
-let locationState = {
-  type: null,   // 'gps' | 'manual' | 'state'
-  label: '',
-  lat: null,
-  lng: null,
-  stateCode: null,
-  radiusMi: 50,
-};
-
+let locationState = { type:null, label:'', lat:null, lng:null, stateCode:null, radiusMi:50 };
 let activeTypeFilter = 'all';
 let currentResults = [];
 
-/* distance between two lat/lng in miles (Haversine) */
-function haversine(lat1, lng1, lat2, lng2) {
-  const R = 3958.8;
-  const dLat = (lat2-lat1)*Math.PI/180;
-  const dLng = (lng2-lng1)*Math.PI/180;
-  const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLng/2)**2;
-  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+function haversine(lat1,lng1,lat2,lng2){
+  const R=3958.8, dLat=(lat2-lat1)*Math.PI/180, dLng=(lng2-lng1)*Math.PI/180;
+  const a=Math.sin(dLat/2)**2+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLng/2)**2;
+  return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
 }
 
-/* city→coords lookup (demo subset) */
 const cityCoords = {
-  "denver":       {lat:39.74, lng:-104.98, label:"Denver, CO"},
-  "denver, co":   {lat:39.74, lng:-104.98, label:"Denver, CO"},
-  "boulder":      {lat:40.01, lng:-105.27, label:"Boulder, CO"},
-  "boulder, co":  {lat:40.01, lng:-105.27, label:"Boulder, CO"},
-  "seattle":      {lat:47.60, lng:-122.33, label:"Seattle, WA"},
-  "seattle, wa":  {lat:47.60, lng:-122.33, label:"Seattle, WA"},
-  "portland":     {lat:45.52, lng:-122.68, label:"Portland, OR"},
-  "portland, or": {lat:45.52, lng:-122.68, label:"Portland, OR"},
-  "salt lake city":{lat:40.76, lng:-111.89, label:"Salt Lake City, UT"},
-  "slc":          {lat:40.76, lng:-111.89, label:"Salt Lake City, UT"},
-  "los angeles":  {lat:34.05, lng:-118.24, label:"Los Angeles, CA"},
-  "la":           {lat:34.05, lng:-118.24, label:"Los Angeles, CA"},
-  "san francisco":{lat:37.77, lng:-122.42, label:"San Francisco, CA"},
-  "sf":           {lat:37.77, lng:-122.42, label:"San Francisco, CA"},
-  "new york":     {lat:40.71, lng:-74.00,  label:"New York, NY"},
-  "nyc":          {lat:40.71, lng:-74.00,  label:"New York, NY"},
-  "boston":       {lat:42.36, lng:-71.06,  label:"Boston, MA"},
-  "boston, ma":   {lat:42.36, lng:-71.06,  label:"Boston, MA"},
-  "phoenix":      {lat:33.45, lng:-112.07, label:"Phoenix, AZ"},
-  "phoenix, az":  {lat:33.45, lng:-112.07, label:"Phoenix, AZ"},
-  "chicago":      {lat:41.88, lng:-87.63,  label:"Chicago, IL"},
-  "asheville":    {lat:35.57, lng:-82.55,  label:"Asheville, NC"},
-  "asheville, nc":{lat:35.57, lng:-82.55,  label:"Asheville, NC"},
-  "bozeman":      {lat:45.68, lng:-111.04, label:"Bozeman, MT"},
-  "bozeman, mt":  {lat:45.68, lng:-111.04, label:"Bozeman, MT"},
+  "denver":{lat:39.74,lng:-104.98,label:"Denver, CO"},"denver, co":{lat:39.74,lng:-104.98,label:"Denver, CO"},
+  "boulder":{lat:40.01,lng:-105.27,label:"Boulder, CO"},"boulder, co":{lat:40.01,lng:-105.27,label:"Boulder, CO"},
+  "seattle":{lat:47.60,lng:-122.33,label:"Seattle, WA"},"seattle, wa":{lat:47.60,lng:-122.33,label:"Seattle, WA"},
+  "portland":{lat:45.52,lng:-122.68,label:"Portland, OR"},"portland, or":{lat:45.52,lng:-122.68,label:"Portland, OR"},
+  "salt lake city":{lat:40.76,lng:-111.89,label:"Salt Lake City, UT"},"slc":{lat:40.76,lng:-111.89,label:"Salt Lake City, UT"},
+  "los angeles":{lat:34.05,lng:-118.24,label:"Los Angeles, CA"},"la":{lat:34.05,lng:-118.24,label:"Los Angeles, CA"},
+  "san francisco":{lat:37.77,lng:-122.42,label:"San Francisco, CA"},"sf":{lat:37.77,lng:-122.42,label:"San Francisco, CA"},
+  "new york":{lat:40.71,lng:-74.00,label:"New York, NY"},"nyc":{lat:40.71,lng:-74.00,label:"New York, NY"},
+  "boston":{lat:42.36,lng:-71.06,label:"Boston, MA"},"boston, ma":{lat:42.36,lng:-71.06,label:"Boston, MA"},
+  "phoenix":{lat:33.45,lng:-112.07,label:"Phoenix, AZ"},"phoenix, az":{lat:33.45,lng:-112.07,label:"Phoenix, AZ"},
+  "chicago":{lat:41.88,lng:-87.63,label:"Chicago, IL"},
+  "asheville":{lat:35.57,lng:-82.55,label:"Asheville, NC"},"asheville, nc":{lat:35.57,lng:-82.55,label:"Asheville, NC"},
+  "bozeman":{lat:45.68,lng:-111.04,label:"Bozeman, MT"},"bozeman, mt":{lat:45.68,lng:-111.04,label:"Bozeman, MT"},
+  "reno":{lat:39.53,lng:-119.81,label:"Reno, NV"},"reno, nv":{lat:39.53,lng:-119.81,label:"Reno, NV"},
+  "las vegas":{lat:36.17,lng:-115.14,label:"Las Vegas, NV"},
+  "honolulu":{lat:21.31,lng:-157.86,label:"Honolulu, HI"},
+  "jackson":{lat:43.48,lng:-110.76,label:"Jackson, WY"},"jackson, wy":{lat:43.48,lng:-110.76,label:"Jackson, WY"},
 };
 
 /* ═══════════════════════════════════════════════════════
    LOCATION FUNCTIONS
 ═══════════════════════════════════════════════════════ */
-function useMyLocation() {
-  const btn = document.getElementById('gps-btn');
-  if (!navigator.geolocation) { alert("Geolocation isn't supported by your browser."); return; }
-  btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation:spin .8s linear infinite"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg> Locating…`;
+function useMyLocation(){
+  const btn=document.getElementById('gps-btn');
+  if(!navigator.geolocation){alert("Geolocation isn't supported by your browser.");return;}
+  btn.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation:spin .8s linear infinite"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg> Locating…`;
   navigator.geolocation.getCurrentPosition(
-    pos => {
-      locationState = { type:'gps', label:'your location', lat:pos.coords.latitude, lng:pos.coords.longitude, stateCode:null, radiusMi: parseInt(document.getElementById('radius-select').value)||50 };
-      btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg> Near Me ✓`;
+    pos=>{
+      locationState={type:'gps',label:'your location',lat:pos.coords.latitude,lng:pos.coords.longitude,stateCode:null,radiusMi:parseInt(document.getElementById('radius-select').value)||50};
+      btn.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg> Near Me ✓`;
       btn.classList.add('active');
-      document.getElementById('location-input').value = '';
-      document.getElementById('state-select').value = '';
+      document.getElementById('location-input').value='';
+      document.getElementById('state-select').value='';
       updateBanner();
     },
-    () => {
-      btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg> Near Me`;
-      alert("Couldn't get your location. Try entering a city manually.");
-    }
+    ()=>{ btn.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/><circle cx="12" cy="12" r="9" stroke-dasharray="3 2"/></svg> Near Me`; alert("Couldn't get your location. Try entering a city manually."); }
   );
 }
-
-function onLocInput() {
-  const val = document.getElementById('location-input').value;
-  document.getElementById('loc-clear-btn').style.display = val ? 'block' : 'none';
+function onLocInput(){document.getElementById('loc-clear-btn').style.display=document.getElementById('location-input').value?'block':'none';}
+function applyManualLocation(){
+  const raw=document.getElementById('location-input').value.trim().toLowerCase();
+  if(!raw)return;
+  const m=cityCoords[raw];
+  if(m){locationState={type:'manual',label:m.label,lat:m.lat,lng:m.lng,stateCode:null,radiusMi:parseInt(document.getElementById('radius-select').value)||50};document.getElementById('gps-btn').classList.remove('active');document.getElementById('state-select').value='';updateBanner();}
+  else{locationState={type:'manual',label:document.getElementById('location-input').value.trim(),lat:null,lng:null,stateCode:null,radiusMi:0};updateBanner();}
 }
-
-function applyManualLocation() {
-  const raw = document.getElementById('location-input').value.trim().toLowerCase();
-  if (!raw) return;
-  const match = cityCoords[raw];
-  if (match) {
-    locationState = { type:'manual', label:match.label, lat:match.lat, lng:match.lng, stateCode:null, radiusMi: parseInt(document.getElementById('radius-select').value)||50 };
-    document.getElementById('gps-btn').classList.remove('active');
-    document.getElementById('state-select').value = '';
-    updateBanner();
-  } else {
-    // treat as state or fuzzy — just show filter label
-    locationState = { type:'manual', label:document.getElementById('location-input').value.trim(), lat:null, lng:null, stateCode:null, radiusMi:0 };
-    updateBanner();
-  }
-}
-
-function clearLocationInput() {
-  document.getElementById('location-input').value = '';
-  document.getElementById('loc-clear-btn').style.display = 'none';
-  clearLocation();
-}
-
-function onRadiusChange() {
-  locationState.radiusMi = parseInt(document.getElementById('radius-select').value) || 0;
-  updateBanner();
-}
-
-function onStateChange() {
-  const val = document.getElementById('state-select').value;
-  if (!val) { if (locationState.type==='state') clearLocation(); return; }
-  locationState = { type:'state', label:`${stateNames[val] || val}`, lat:null, lng:null, stateCode:val, radiusMi:0 };
+function clearLocationInput(){document.getElementById('location-input').value='';document.getElementById('loc-clear-btn').style.display='none';clearLocation();}
+function onRadiusChange(){locationState.radiusMi=parseInt(document.getElementById('radius-select').value)||0;updateBanner();}
+function onStateChange(){
+  const v=document.getElementById('state-select').value;
+  if(!v){if(locationState.type==='state')clearLocation();return;}
+  locationState={type:'state',label:stateNames[v]||v,lat:null,lng:null,stateCode:v,radiusMi:0};
   document.getElementById('gps-btn').classList.remove('active');
   document.getElementById('location-input').value='';
   document.getElementById('loc-clear-btn').style.display='none';
   updateBanner();
 }
-
-function clearLocation() {
-  locationState = { type:null, label:'', lat:null, lng:null, stateCode:null, radiusMi:50 };
+function clearLocation(){
+  locationState={type:null,label:'',lat:null,lng:null,stateCode:null,radiusMi:50};
   document.getElementById('gps-btn').classList.remove('active');
-  document.getElementById('gps-btn').innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/><circle cx="12" cy="12" r="9" stroke-dasharray="3 2"/></svg> Near Me`;
+  document.getElementById('gps-btn').innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/><circle cx="12" cy="12" r="9" stroke-dasharray="3 2"/></svg> Near Me`;
   document.getElementById('location-input').value='';
   document.getElementById('loc-clear-btn').style.display='none';
   document.getElementById('state-select').value='';
   document.getElementById('radius-select').value='50';
   updateBanner();
 }
-
-function updateBanner() {
-  const banner = document.getElementById('location-banner');
-  const txt = document.getElementById('banner-text');
-  if (!locationState.type) { banner.classList.remove('visible'); return; }
-  banner.classList.add('visible');
-  if (locationState.type === 'state') {
-    txt.innerHTML = `Browsing trails in <strong>${locationState.label}</strong>`;
-  } else if (locationState.radiusMi > 0) {
-    txt.innerHTML = `Showing trails within <strong>${locationState.radiusMi} miles</strong> of <strong>${locationState.label}</strong>`;
-  } else {
-    txt.innerHTML = `Searching near <strong>${locationState.label}</strong>`;
-  }
+function updateBanner(){
+  const b=document.getElementById('location-banner'),t=document.getElementById('banner-text');
+  if(!locationState.type){b.classList.remove('visible');return;}
+  b.classList.add('visible');
+  if(locationState.type==='state') t.innerHTML=`Browsing trails in <strong>${locationState.label}</strong>`;
+  else if(locationState.radiusMi>0) t.innerHTML=`Showing trails within <strong>${locationState.radiusMi} miles</strong> of <strong>${locationState.label}</strong>`;
+  else t.innerHTML=`Searching near <strong>${locationState.label}</strong>`;
 }
 
 /* ═══════════════════════════════════════════════════════
    FILTER & SORT
 ═══════════════════════════════════════════════════════ */
-function filterTrails(all) {
-  let list = [...all];
-
-  // state filter
-  if (locationState.type === 'state' && locationState.stateCode) {
-    list = list.filter(t => t.state === locationState.stateCode);
-  }
-
-  // distance filter (only when we have coords AND a radius)
-  if (locationState.lat !== null && locationState.radiusMi > 0) {
-    list = list.map(t => ({ ...t, _dist: Math.round(haversine(locationState.lat, locationState.lng, t.lat, t.lng)) }))
-               .filter(t => t._dist <= locationState.radiusMi);
-  } else if (locationState.lat !== null) {
-    list = list.map(t => ({ ...t, _dist: Math.round(haversine(locationState.lat, locationState.lng, t.lat, t.lng)) }));
-  }
-
-  // type filter
-  if (activeTypeFilter === 'easy')     list = list.filter(t => t.difficulty==='easy');
-  else if (activeTypeFilter === 'moderate') list = list.filter(t => t.difficulty==='moderate');
-  else if (activeTypeFilter === 'hard')     list = list.filter(t => t.difficulty==='hard');
-  else if (activeTypeFilter === 'dog')  list = list.filter(t => t.tags.some(g=>g.toLowerCase().includes('dog')));
-  else if (activeTypeFilter === 'camp') list = list.filter(t => t.tags.some(g=>g.toLowerCase().includes('camp')));
-
+function filterTrails(all){
+  let list=[...all];
+  if(locationState.type==='state'&&locationState.stateCode) list=list.filter(t=>t.state===locationState.stateCode);
+  if(locationState.lat!==null&&locationState.radiusMi>0) list=list.map(t=>({...t,_dist:Math.round(haversine(locationState.lat,locationState.lng,t.lat,t.lng))})).filter(t=>t._dist<=locationState.radiusMi);
+  else if(locationState.lat!==null) list=list.map(t=>({...t,_dist:Math.round(haversine(locationState.lat,locationState.lng,t.lat,t.lng))}));
+  if(activeTypeFilter==='easy') list=list.filter(t=>t.difficulty==='easy');
+  else if(activeTypeFilter==='moderate') list=list.filter(t=>t.difficulty==='moderate');
+  else if(activeTypeFilter==='hard') list=list.filter(t=>t.difficulty==='hard');
+  else if(activeTypeFilter==='dog') list=list.filter(t=>t.tags.some(g=>g.toLowerCase().includes('dog')));
+  else if(activeTypeFilter==='camp') list=list.filter(t=>t.tags.some(g=>g.toLowerCase().includes('camp')));
   return list;
 }
-
-function sortTrails(list) {
-  const s = document.getElementById('sort-select').value;
-  const diffOrder = {easy:1,moderate:2,hard:3};
-  if (s === 'distance' && list[0]?._dist !== undefined) return [...list].sort((a,b)=>(a._dist||9999)-(b._dist||9999));
-  if (s === 'rating') return [...list].sort((a,b)=>b.rating-a.rating);
-  if (s === 'difficulty-asc') return [...list].sort((a,b)=>diffOrder[a.difficulty]-diffOrder[b.difficulty]);
-  if (s === 'difficulty-desc') return [...list].sort((a,b)=>diffOrder[b.difficulty]-diffOrder[a.difficulty]);
-  return [...list].sort((a,b)=>b.match-a.match); // default: match score
+function sortTrails(list){
+  const s=document.getElementById('sort-select').value;
+  const d={easy:1,moderate:2,hard:3};
+  if(s==='distance'&&list[0]?._dist!==undefined) return [...list].sort((a,b)=>(a._dist||9999)-(b._dist||9999));
+  if(s==='rating') return [...list].sort((a,b)=>b.rating-a.rating);
+  if(s==='difficulty-asc') return [...list].sort((a,b)=>d[a.difficulty]-d[b.difficulty]);
+  if(s==='difficulty-desc') return [...list].sort((a,b)=>d[b.difficulty]-d[a.difficulty]);
+  return [...list].sort((a,b)=>b.match-a.match);
 }
-
-function resortResults() {
-  if (!document.getElementById('results-section').classList.contains('visible')) return;
-  renderResults(sortTrails(currentResults));
-}
-
-function setTypeFilter(type, btn) {
-  activeTypeFilter = type;
+function resortResults(){if(!document.getElementById('results-section').classList.contains('visible'))return;renderResults(sortTrails(currentResults));}
+function setTypeFilter(type,btn){
+  activeTypeFilter=type;
   document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
-  if (document.getElementById('results-section').classList.contains('visible')) {
-    currentResults = filterTrails(trails);
-    resortResults();
-    updateResultCount();
-  }
+  if(document.getElementById('results-section').classList.contains('visible')){currentResults=filterTrails(trails);resortResults();updateResultCount();}
 }
-
-function updateResultCount() {
-  const n = currentResults.length;
-  const q = document.getElementById('search-input').value.trim();
-  const sub = q ? `— ${n} result${n!==1?'s':''} for "${q.length>35?q.slice(0,35)+'…':q}"` : `— ${n} trail${n!==1?'s':''}`;
-  document.getElementById('result-subtitle').textContent = sub;
+function updateResultCount(){
+  const n=currentResults.length,q=document.getElementById('search-input').value.trim();
+  document.getElementById('result-subtitle').textContent=q?`— ${n} result${n!==1?'s':''} for "${q.length>35?q.slice(0,35)+'…':q}"`:`— ${n} trail${n!==1?'s':''}`;
 }
 
 /* ═══════════════════════════════════════════════════════
    RENDER
 ═══════════════════════════════════════════════════════ */
-function getLandscapeSVG(c1, c2, id) {
-  const s = id * 137;
-  const mH = 55 + (s%30), mH2 = 40 + ((s*3)%25);
-  const trees = [...Array(8)].map((_,i)=>{ const x=20+i*38+(s%15),y=140+(s%10); return `<polygon points="${x},${y} ${x-8},${y+20} ${x+8},${y+20}" fill="${c2}" opacity=".9"/><rect x="${x-2}" y="${y+18}" width="4" height="6" fill="#5c4033" opacity=".7"/>`; }).join('');
-  return `<svg viewBox="0 0 320 180" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-    <defs><linearGradient id="sky${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#c8dfe8"/><stop offset="100%" stop-color="#a8c8d8"/></linearGradient></defs>
-    <rect width="320" height="180" fill="url(#sky${id})"/>
-    <circle cx="${180+(s%60)}" cy="${30+(s%20)}" r="18" fill="#f5d87a" opacity=".7"/>
-    <polygon points="0,180 ${80+(s%40)},${180-mH2} ${200+(s%40)},180" fill="${c1}" opacity=".6"/>
-    <polygon points="${100+(s%50)},180 ${220+(s%30)},${180-mH} 320,180" fill="${c1}" opacity=".75"/>
-    <polygon points="0,180 ${60+(s%60)},${180-mH+10} ${160+(s%50)},180" fill="${c2}"/>
-    <polygon points="${60+(s%60)},${180-mH+10} ${50+(s%60)},${180-mH+30} ${70+(s%60)},${180-mH+30}" fill="#eef5f8" opacity=".8"/>
-    ${trees}
-  </svg>`;
+function distBadgeHTML(t){
+  if(t._dist===undefined)return'';
+  return`<span class="dist-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a7 7 0 0 1 7 7c0 5-7 13-7 13S5 14 5 9a7 7 0 0 1 7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>${t._dist} mi away</span>`;
 }
 
-function distBadgeHTML(t) {
-  if (t._dist === undefined) return '';
-  return `<span class="dist-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a7 7 0 0 1 7 7c0 5-7 13-7 13S5 14 5 9a7 7 0 0 1 7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>${t._dist} mi away</span>`;
-}
-
-function renderCard(t, showAI=false) {
-  const dc = {easy:'diff-easy',moderate:'diff-moderate',hard:'diff-hard'}[t.difficulty];
-  const stars = '★'.repeat(Math.round(t.rating))+'☆'.repeat(5-Math.round(t.rating));
-  return `<div class="trail-card">
+function renderCard(t, showAI=false){
+  const dc={easy:'diff-easy',moderate:'diff-moderate',hard:'diff-hard'}[t.difficulty];
+  const stars='★'.repeat(Math.round(t.rating))+'☆'.repeat(5-Math.round(t.rating));
+  const imgSrc=photoURL(t.photo);
+  return`<div class="trail-card">
     <div class="trail-img">
-      ${getLandscapeSVG(t.color1,t.color2,t.id)}
+      <img src="${imgSrc}" alt="${t.name}" loading="lazy" onerror="this.parentElement.style.background='linear-gradient(135deg,#4a7c3f,#2d5a27)';this.style.display='none'"/>
       <div class="trail-img-overlay">
         <span class="difficulty-badge ${dc}">${t.difficulty}</span>
-        ${showAI ? `<span class="match-badge">⚡ ${t.match}%</span>` : ''}
+        ${showAI?`<span class="match-badge">⚡ ${t.match}%</span>`:''}
         ${distBadgeHTML(t)}
       </div>
     </div>
@@ -690,151 +639,106 @@ function renderCard(t, showAI=false) {
         <button class="btn-view">View Trail →</button>
       </div>
     </div>
-    ${showAI ? `<div class="ai-reason"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6Z"/></svg>${t.aiReason}</div>` : ''}
+    ${showAI?`<div class="ai-reason"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6Z"/></svg>${t.aiReason}</div>`:''}
   </div>`;
 }
 
-function renderResults(list) {
-  const grid = document.getElementById('trails-grid');
-  if (list.length === 0) {
-    grid.innerHTML = `<div class="no-results" style="grid-column:1/-1">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/><path d="M8 11h6M11 8v6"/></svg>
-      <h3>No trails found</h3>
-      <p>Try adjusting your filters, expanding the distance radius, or clearing the location.</p>
-    </div>`;
-  } else {
-    grid.innerHTML = list.map(t => renderCard(t, true)).join('');
-  }
+function renderResults(list){
+  const grid=document.getElementById('trails-grid');
+  grid.innerHTML=list.length===0
+    ?`<div class="no-results" style="grid-column:1/-1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg><h3>No trails found</h3><p>Try adjusting your filters, expanding the distance radius, or clearing the location.</p></div>`
+    :list.map(t=>renderCard(t,true)).join('');
 }
 
 /* ═══════════════════════════════════════════════════════
    AI SEARCH
 ═══════════════════════════════════════════════════════ */
-const summaries = {
-  default:  `I found <strong>{n} trails</strong> matching your description{loc}. Results are ranked by AI relevance — I've matched scenic features, difficulty, and seasonal conditions.`,
-  waterfall:`Your search suggests a <strong>waterfall experience</strong> with accessible terrain{loc}. I prioritized trails with confirmed falls, dog-friendly policies, and manageable elevation.`,
-  camping:  `For <strong>backcountry camping</strong>{loc}, I've surfaced trails with established sites, water sources, and permit availability. Distances are round-trip.`,
+const summaries={
+  default: `I found <strong>{n} trails</strong> matching your description{loc}. Ranked by AI relevance — scenic features, difficulty, and seasonal conditions all factored in.`,
+  waterfall:`Your search suggests a <strong>waterfall experience</strong>{loc}. I prioritized trails with confirmed falls, dog-friendly policies, and manageable elevation.`,
+  camping:  `For <strong>backcountry camping</strong>{loc}, I've surfaced trails with established sites, water sources, and permit info. Distances are round-trip.`,
   sunrise:  `These <strong>summit trails</strong>{loc} offer east-facing views ideal for sunrise. Sorted by proximity and recent trail condition reports.`,
   fall:     `Peak <strong>fall foliage</strong>{loc} typically runs late September–October at elevation. Check live reports before heading out.`,
   snow:     `<strong>Snowshoe-friendly routes</strong>{loc} with gentle grades and lower avalanche risk. Bring microspikes and check USFS snow depth reports.`,
+  coastal:  `<strong>Coastal trails</strong>{loc} with ocean views, sea cliffs, and beach access. Check tide tables for any beach sections.`,
+  lake:     `<strong>Alpine lake trails</strong>{loc} — I prioritized clear water, scenic shorelines, and trails with good swimming access.`,
 };
-
-function getSummary(query, n) {
-  const ql = query.toLowerCase();
-  let key = 'default';
-  if (ql.includes('waterfall')||ql.includes('dog')) key='waterfall';
-  else if (ql.includes('camp')) key='camping';
-  else if (ql.includes('sunrise')||ql.includes('summit')) key='sunrise';
-  else if (ql.includes('fall')||ql.includes('foliage')||ql.includes('autumn')) key='fall';
-  else if (ql.includes('snow')||ql.includes('winter')||ql.includes('snowshoe')) key='snow';
-
-  let locStr = '';
-  if (locationState.type === 'state') locStr = ` in <strong>${locationState.label}</strong>`;
-  else if (locationState.type && locationState.radiusMi > 0) locStr = ` within <strong>${locationState.radiusMi} miles</strong> of <strong>${locationState.label}</strong>`;
-  else if (locationState.type) locStr = ` near <strong>${locationState.label}</strong>`;
-
-  return summaries[key].replace('{n}', n).replace(/{loc}/g, locStr);
+function getSummary(query,n){
+  const ql=query.toLowerCase();
+  let key='default';
+  if(ql.includes('waterfall'))key='waterfall';
+  else if(ql.includes('camp'))key='camping';
+  else if(ql.includes('sunrise')||ql.includes('summit'))key='sunrise';
+  else if(ql.includes('fall')||ql.includes('foliage')||ql.includes('autumn'))key='fall';
+  else if(ql.includes('snow')||ql.includes('winter')||ql.includes('snowshoe'))key='snow';
+  else if(ql.includes('coast')||ql.includes('ocean')||ql.includes('beach'))key='coastal';
+  else if(ql.includes('lake')||ql.includes('swim'))key='lake';
+  else if(ql.includes('dog'))key='waterfall';
+  let locStr='';
+  if(locationState.type==='state')locStr=` in <strong>${locationState.label}</strong>`;
+  else if(locationState.type&&locationState.radiusMi>0)locStr=` within <strong>${locationState.radiusMi} miles</strong> of <strong>${locationState.label}</strong>`;
+  else if(locationState.type)locStr=` near <strong>${locationState.label}</strong>`;
+  return summaries[key].replace('{n}',n).replace(/{loc}/g,locStr);
 }
 
-function doSearch() {
-  const query = document.getElementById('search-input').value.trim();
-  if (!query) return;
-
-  // apply manual location if typed but not submitted
-  const locVal = document.getElementById('location-input').value.trim();
-  if (locVal && !locationState.type) applyManualLocation();
-
-  document.getElementById('featured-section').style.display = 'none';
+function doSearch(){
+  const query=document.getElementById('search-input').value.trim();
+  if(!query)return;
+  const locVal=document.getElementById('location-input').value.trim();
+  if(locVal&&!locationState.type)applyManualLocation();
+  document.getElementById('featured-section').style.display='none';
   document.getElementById('results-section').classList.remove('visible');
   document.getElementById('loading-cards').classList.add('visible');
-  setTimeout(() => { document.getElementById('loading-cards').scrollIntoView({behavior:'smooth',block:'start'}); }, 80);
-
-  setTimeout(() => {
+  setTimeout(()=>{document.getElementById('loading-cards').scrollIntoView({behavior:'smooth',block:'start'});},80);
+  setTimeout(()=>{
     document.getElementById('loading-cards').classList.remove('visible');
-    currentResults = filterTrails(trails);
-    const sorted = sortTrails(currentResults);
-    document.getElementById('ai-summary-text').innerHTML = getSummary(query, sorted.length);
+    currentResults=filterTrails(trails);
+    const sorted=sortTrails(currentResults);
+    document.getElementById('ai-summary-text').innerHTML=getSummary(query,sorted.length);
     updateResultCount();
     renderResults(sorted);
     document.getElementById('results-section').classList.add('visible');
     document.getElementById('results-section').scrollIntoView({behavior:'smooth',block:'start'});
-  }, 1500);
+  },1500);
 }
 
 /* ═══════════════════════════════════════════════════════
    STATE EXPLORER
 ═══════════════════════════════════════════════════════ */
-const stateNames = {
-  AK:"Alaska",AZ:"Arizona",CA:"California",CO:"Colorado",FL:"Florida",
-  GA:"Georgia",HI:"Hawaii",ID:"Idaho",IL:"Illinois",ME:"Maine",MT:"Montana",
-  NC:"N. Carolina",NH:"New Hampshire",NM:"New Mexico",NV:"Nevada",
-  NY:"New York",OR:"Oregon",TN:"Tennessee",TX:"Texas",UT:"Utah",
-  VA:"Virginia",VT:"Vermont",WA:"Washington",WY:"Wyoming"
-};
+const stateNames={AK:"Alaska",AZ:"Arizona",CA:"California",CO:"Colorado",FL:"Florida",GA:"Georgia",HI:"Hawaii",ID:"Idaho",IL:"Illinois",ME:"Maine",MT:"Montana",NC:"N. Carolina",NH:"New Hampshire",NM:"New Mexico",NV:"Nevada",NY:"New York",OR:"Oregon",TN:"Tennessee",TX:"Texas",UT:"Utah",VA:"Virginia",VT:"Vermont",WA:"Washington",WY:"Wyoming"};
 
-function buildStateGrid() {
-  const counts = {};
-  trails.forEach(t => { counts[t.state] = (counts[t.state]||0)+1; });
-  const select = document.getElementById('state-select');
-  const grid = document.getElementById('state-grid');
-  const states = Object.keys(counts).sort();
-  states.forEach(s => {
-    // option
-    const opt = document.createElement('option');
-    opt.value = s; opt.textContent = `${stateNames[s]||s} (${counts[s]})`;
-    select.appendChild(opt);
-    // chip
-    const chip = document.createElement('div');
-    chip.className = 'state-chip';
-    chip.innerHTML = `${stateNames[s]||s} <span class="count">${counts[s]}</span>`;
-    chip.addEventListener('click', () => {
-      document.querySelectorAll('.state-chip').forEach(c=>c.classList.remove('active'));
-      chip.classList.add('active');
-      document.getElementById('state-select').value = s;
-      onStateChange();
-      // trigger a search if search input has content, otherwise show filtered featured
-      if (document.getElementById('search-input').value.trim()) doSearch();
-      else showStateResults(s);
-    });
+function buildStateGrid(){
+  const counts={};
+  trails.forEach(t=>{counts[t.state]=(counts[t.state]||0)+1;});
+  const select=document.getElementById('state-select'),grid=document.getElementById('state-grid');
+  Object.keys(counts).sort().forEach(s=>{
+    const opt=document.createElement('option');opt.value=s;opt.textContent=`${stateNames[s]||s} (${counts[s]})`;select.appendChild(opt);
+    const chip=document.createElement('div');chip.className='state-chip';
+    chip.innerHTML=`${stateNames[s]||s} <span class="count">${counts[s]}</span>`;
+    chip.addEventListener('click',()=>{document.querySelectorAll('.state-chip').forEach(c=>c.classList.remove('active'));chip.classList.add('active');document.getElementById('state-select').value=s;onStateChange();if(document.getElementById('search-input').value.trim())doSearch();else showStateResults(s);});
     grid.appendChild(chip);
   });
 }
-
-function showStateResults(stateCode) {
-  document.getElementById('featured-section').style.display = 'none';
-  currentResults = filterTrails(trails);
-  const sorted = sortTrails(currentResults);
-  document.getElementById('ai-summary-text').innerHTML = `Showing <strong>${sorted.length} trail${sorted.length!==1?'s':''}</strong> in <strong>${stateNames[stateCode]||stateCode}</strong> — sorted by popularity. Use the search bar to narrow by trail type.`;
-  updateResultCount();
-  renderResults(sorted);
+function showStateResults(stateCode){
+  document.getElementById('featured-section').style.display='none';
+  currentResults=filterTrails(trails);
+  const sorted=sortTrails(currentResults);
+  document.getElementById('ai-summary-text').innerHTML=`Showing <strong>${sorted.length} trail${sorted.length!==1?'s':''}</strong> in <strong>${stateNames[stateCode]||stateCode}</strong> — sorted by popularity.`;
+  updateResultCount();renderResults(sorted);
   document.getElementById('results-section').classList.add('visible');
   document.getElementById('results-section').scrollIntoView({behavior:'smooth',block:'start'});
 }
 
 /* ═══════════════════════════════════════════════════════
-   MISC HELPERS
+   HELPERS & INIT
 ═══════════════════════════════════════════════════════ */
-function fillHint(el) {
-  document.getElementById('search-input').value = el.textContent.replace(/^[^\s]+\s/,'');
-  autoResize(document.getElementById('search-input'));
-  doSearch();
-}
-function handleKey(e) { if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();doSearch();} }
-function autoResize(el) { el.style.height='auto'; el.style.height=el.scrollHeight+'px'; }
+function fillHint(el){document.getElementById('search-input').value=el.textContent.replace(/^[^\s]+\s/,'');autoResize(document.getElementById('search-input'));doSearch();}
+function handleKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();doSearch();}}
+function autoResize(el){el.style.height='auto';el.style.height=el.scrollHeight+'px';}
+document.head.appendChild(Object.assign(document.createElement('style'),{textContent:'@keyframes spin{to{transform:rotate(360deg)}}'}));
 
-/* spin animation for GPS icon */
-const style = document.createElement('style');
-style.textContent = '@keyframes spin{to{transform:rotate(360deg)}}';
-document.head.appendChild(style);
-
-/* ═══════════════════════════════════════════════════════
-   INIT
-═══════════════════════════════════════════════════════ */
-function renderFeatured() {
-  document.getElementById('featured-grid').innerHTML = trails.filter(t=>t.featured).map(t=>renderCard(t,false)).join('');
-}
 buildStateGrid();
-renderFeatured();
+document.getElementById('featured-grid').innerHTML=trails.filter(t=>t.featured).map(t=>renderCard(t,false)).join('');
 </script>
 </body>
 </html>
