@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PathFind — AI-Powered Trail Discovery</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --forest:  #2d5a27; --moss: #4a7c3f; --sage: #7aad6e; --leaf: #a8d5a2;
+      --cream:   #f5f0e8; --tan:  #d4b896; --bark: #8b6f47; --earth: #5c4033;
+      --text:    #2c2416; --muted:#7a6752; --border:#e2d9cd;
+      --shadow:  0 2px 12px rgba(44,36,22,.10);
+      --shadow-lg:0 8px 32px rgba(44,36,22,.14);
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: Georgia, serif; background: var(--cream); color: var(--text); min-height: 100vh; }
+
+    /* ── Nav ── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(245,240,232,.96); backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem; display: flex; align-items: center;
+      justify-content: space-between; height: 64px;
+    }
+    .nav-logo { display:flex; align-items:center; gap:.5rem; font-size:1.4rem; font-weight:bold; color:var(--forest); text-decoration:none; letter-spacing:-.5px; }
+    .nav-logo svg { width:28px; height:28px; }
+    .nav-links { display:flex; gap:1.5rem; align-items:center; }
+    .nav-links a { text-decoration:none; color:var(--muted); font-size:.9rem; font-family:Arial,sans-serif; transition:color .2s; }
+    .nav-links a:hover { color:var(--forest); }
+    .nav-cta { background:var(--forest); color:#fff !important; padding:.45rem 1.1rem; border-radius:20px; font-weight:bold !important; }
+    .nav-cta:hover { background:var(--moss) !important; }
+
+    /* ── Hero ── */
+    .hero {
+      position: relative;
+      background: linear-gradient(160deg,#1a3d15 0%,#2d5a27 45%,#4a7c3f 100%);
+      padding: 6rem 2rem 6rem; text-align: center; overflow: hidden;
+    }
+    .hero::before {
+      content:''; position:absolute; bottom:-1px; left:0; right:0; height:80px;
+      background:var(--cream); clip-path:ellipse(55% 100% at 50% 100%);
+    }
+    .hero-badge {
+      display:inline-flex; align-items:center; gap:.4rem;
+      background:rgba(255,255,255,.15); color:var(--leaf);
+      padding:.35rem .9rem; border-radius:20px; font-size:.78rem;
+      font-family:Arial,sans-serif; letter-spacing:.5px; text-transform:uppercase;
+      margin-bottom:1.4rem; border:1px solid rgba(168,213,162,.3);
+    }
+    .hero h1 { font-size:clamp(2rem,5vw,3.4rem); color:#fff; line-height:1.15; margin-bottom:.8rem; text-shadow:0 2px 12px rgba(0,0,0,.3); }
+    .hero h1 span { color:var(--leaf); }
+    .hero > p { color:rgba(255,255,255,.78); font-size:1rem; max-width:500px; margin:0 auto 2rem; font-family:Arial,sans-serif; line-height:1.6; }
+
+    /* ── Search box ── */
+    .search-container { max-width:720px; margin:0 auto; position:relative; z-index:2; }
+    .search-box {
+      background:#fff; border-radius:16px;
+      box-shadow:0 8px 40px rgba(0,0,0,.25);
+      border:2px solid transparent; transition:border-color .25s,box-shadow .25s;
+    }
+    .search-box:focus-within { border-color:var(--sage); box-shadow:0 8px 40px rgba(0,0,0,.3),0 0 0 4px rgba(122,173,110,.2); }
+    .search-top { display:flex; align-items:center; padding:.9rem 1rem .9rem 1rem; gap:.75rem; }
+    .ai-icon { width:36px; height:36px; flex-shrink:0; background:linear-gradient(135deg,var(--forest),var(--moss)); border-radius:10px; display:flex; align-items:center; justify-content:center; }
+    .ai-icon svg { width:18px; height:18px; color:#fff; }
+    #search-input { flex:1; border:none; outline:none; font-size:1.05rem; color:var(--text); background:transparent; font-family:Arial,sans-serif; resize:none; min-height:28px; max-height:80px; overflow:auto; line-height:1.4; }
+    #search-input::placeholder { color:#b0a898; }
+    .search-submit { background:var(--forest); color:#fff; border:none; cursor:pointer; width:42px; height:42px; border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:background .2s,transform .15s; }
+    .search-submit:hover { background:var(--moss); transform:scale(1.05); }
+    .search-submit svg { width:18px; height:18px; }
+
+    /* ── Location row ── */
+    .location-row {
+      border-top: 1px solid var(--border);
+      padding: .65rem 1rem;
+      display: flex; align-items: center; gap: .6rem; flex-wrap: wrap;
+    }
+    .loc-label { font-size:.75rem; font-family:Arial,sans-serif; color:var(--muted); white-space:nowrap; flex-shrink:0; }
+
+    .loc-input-wrap {
+      display:flex; align-items:center; gap:.35rem;
+      background:#f9f6f1; border:1px solid var(--border); border-radius:10px;
+      padding:.35rem .7rem; flex:1; min-width:160px; max-width:260px;
+      transition:border-color .2s;
+    }
+    .loc-input-wrap:focus-within { border-color:var(--sage); }
+    .loc-input-wrap svg { width:14px; height:14px; color:var(--muted); flex-shrink:0; }
+    #location-input {
+      border:none; outline:none; background:transparent;
+      font-family:Arial,sans-serif; font-size:.82rem; color:var(--text);
+      width:100%;
+    }
+    #location-input::placeholder { color:#b0a898; }
+    .loc-clear { background:none; border:none; cursor:pointer; color:var(--muted); font-size:.85rem; line-height:1; padding:0; display:none; }
+    .loc-clear:hover { color:var(--earth); }
+
+    .loc-gps-btn {
+      display:flex; align-items:center; gap:.35rem;
+      background:#f0f7ee; border:1px solid #c3ddbf; border-radius:10px;
+      padding:.35rem .75rem; cursor:pointer;
+      font-family:Arial,sans-serif; font-size:.78rem; color:var(--forest);
+      white-space:nowrap; transition:background .2s;
+    }
+    .loc-gps-btn:hover { background:#e2f0df; }
+    .loc-gps-btn.active { background:var(--forest); color:#fff; border-color:var(--forest); }
+    .loc-gps-btn svg { width:13px; height:13px; }
+
+    .loc-divider { font-size:.75rem; color:var(--muted); font-family:Arial,sans-serif; }
+
+    /* radius + state selects */
+    .loc-select {
+      font-family:Arial,sans-serif; font-size:.78rem; color:var(--text);
+      background:#f9f6f1; border:1px solid var(--border); border-radius:10px;
+      padding:.35rem .65rem; cursor:pointer; outline:none; transition:border-color .2s;
+    }
+    .loc-select:focus { border-color:var(--sage); }
+
+    /* hints */
+    .search-hints { border-top:1px solid var(--border); padding:.6rem 1rem; display:flex; flex-wrap:wrap; gap:.4rem; }
+    .hint-chip { font-size:.75rem; font-family:Arial,sans-serif; color:var(--muted); background:var(--cream); border:1px solid var(--border); border-radius:12px; padding:.25rem .7rem; cursor:pointer; transition:background .2s,color .2s; white-space:nowrap; }
+    .hint-chip:hover { background:var(--leaf); color:var(--forest); border-color:var(--sage); }
+
+    /* ── Active location banner ── */
+    #location-banner {
+      display:none; background:linear-gradient(90deg,#f0f7ee,#e8f4e5);
+      border-bottom:1px solid #c3ddbf; padding:.55rem 2rem;
+      font-family:Arial,sans-serif; font-size:.82rem; color:var(--forest);
+      align-items:center; gap:.5rem;
+    }
+    #location-banner.visible { display:flex; }
+    #location-banner svg { width:14px; height:14px; flex-shrink:0; }
+    #location-banner button { margin-left:auto; background:none; border:none; cursor:pointer; color:var(--muted); font-size:.78rem; font-family:Arial,sans-serif; text-decoration:underline; }
+    #location-banner button:hover { color:var(--earth); }
+
+    /* ── Stats ── */
+    .stats-bar { display:flex; justify-content:center; gap:2.5rem; flex-wrap:wrap; padding:2.5rem 2rem 1rem; }
+    .stat { text-align:center; }
+    .stat-num { font-size:1.6rem; font-weight:bold; color:var(--forest); display:block; }
+    .stat-label { font-size:.8rem; color:var(--muted); font-family:Arial,sans-serif; text-transform:uppercase; letter-spacing:.5px; }
+
+    /* ── State explorer ── */
+    .state-explorer { padding:.5rem 0 2rem; }
+    .section-label { font-size:.8rem; font-family:Arial,sans-serif; text-transform:uppercase; letter-spacing:.8px; color:var(--bark); margin-bottom:.5rem; }
+    .section-title { font-size:1.4rem; color:var(--forest); margin-bottom:1rem; }
+    .state-grid { display:flex; flex-wrap:wrap; gap:.45rem; }
+    .state-chip {
+      font-family:Arial,sans-serif; font-size:.78rem; color:var(--muted);
+      background:#fff; border:1px solid var(--border); border-radius:10px;
+      padding:.35rem .75rem; cursor:pointer; transition:all .18s;
+      display:flex; align-items:center; gap:.3rem;
+    }
+    .state-chip:hover { background:var(--forest); color:#fff; border-color:var(--forest); }
+    .state-chip.active { background:var(--forest); color:#fff; border-color:var(--forest); }
+    .state-chip .count { font-size:.68rem; opacity:.7; }
+
+    /* ── Main ── */
+    .main { max-width:1160px; margin:0 auto; padding:2rem 1.5rem 4rem; }
+
+    /* ── Results ── */
+    #results-section { display:none; }
+    #results-section.visible { display:block; }
+    .results-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem; flex-wrap:wrap; gap:.5rem; }
+    .results-header h2 { font-size:1.2rem; color:var(--forest); }
+    .results-header h2 span { color:var(--muted); font-weight:normal; font-size:.95rem; }
+    .sort-select { font-family:Arial,sans-serif; font-size:.78rem; color:var(--text); background:#fff; border:1px solid var(--border); border-radius:8px; padding:.35rem .65rem; outline:none; cursor:pointer; }
+
+    .filter-row { display:flex; gap:.45rem; flex-wrap:wrap; margin-bottom:1.2rem; }
+    .filter-btn { font-family:Arial,sans-serif; font-size:.78rem; border:1px solid var(--border); background:#fff; color:var(--muted); padding:.35rem .85rem; border-radius:20px; cursor:pointer; transition:all .2s; }
+    .filter-btn:hover, .filter-btn.active { background:var(--forest); color:#fff; border-color:var(--forest); }
+
+    .ai-summary { background:linear-gradient(135deg,#f0f7ee,#e8f4e5); border:1px solid #c3ddbf; border-radius:12px; padding:.9rem 1.1rem; margin-bottom:1.4rem; display:flex; gap:.75rem; align-items:flex-start; }
+    .ai-summary svg { width:18px; height:18px; color:var(--forest); flex-shrink:0; margin-top:2px; }
+    .ai-summary p { font-family:Arial,sans-serif; font-size:.88rem; color:var(--forest); line-height:1.55; }
+    .ai-summary strong { color:var(--earth); }
+
+    /* ── Cards ── */
+    .trails-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(310px,1fr)); gap:1.2rem; }
+    .trail-card { background:#fff; border-radius:14px; border:1px solid var(--border); overflow:hidden; box-shadow:var(--shadow); transition:transform .2s,box-shadow .2s; cursor:pointer; }
+    .trail-card:hover { transform:translateY(-3px); box-shadow:var(--shadow-lg); }
+    .trail-img { width:100%; height:175px; position:relative; display:flex; align-items:flex-end; overflow:hidden; }
+    .trail-img svg { position:absolute; bottom:0; left:0; width:100%; height:100%; }
+    .trail-img-overlay { position:absolute; bottom:0; left:0; right:0; background:linear-gradient(transparent,rgba(0,0,0,.45)); padding:.55rem .8rem .45rem; display:flex; align-items:center; gap:.4rem; }
+    .difficulty-badge { font-size:.68rem; font-family:Arial,sans-serif; font-weight:bold; text-transform:uppercase; letter-spacing:.4px; padding:.18rem .5rem; border-radius:6px; color:#fff; }
+    .diff-easy { background:#3a8a3a; } .diff-moderate { background:#c67c00; } .diff-hard { background:#b83232; }
+    .match-badge { margin-left:auto; font-size:.68rem; font-family:Arial,sans-serif; font-weight:bold; color:#fff; background:rgba(255,255,255,.22); backdrop-filter:blur(4px); padding:.18rem .5rem; border-radius:6px; border:1px solid rgba(255,255,255,.35); }
+    .dist-badge { font-size:.68rem; font-family:Arial,sans-serif; color:#fff; background:rgba(0,0,0,.38); backdrop-filter:blur(4px); padding:.18rem .5rem; border-radius:6px; display:flex; align-items:center; gap:.25rem; }
+    .dist-badge svg { width:10px; height:10px; }
+
+    .trail-body { padding:1rem 1rem .85rem; }
+    .trail-name { font-size:1rem; font-weight:bold; color:var(--text); margin-bottom:.2rem; }
+    .trail-location { font-size:.8rem; color:var(--muted); font-family:Arial,sans-serif; display:flex; align-items:center; gap:.25rem; margin-bottom:.65rem; }
+    .trail-location svg { width:12px; height:12px; }
+    .trail-stats { display:flex; gap:1rem; margin-bottom:.65rem; }
+    .trail-stat { font-family:Arial,sans-serif; font-size:.78rem; color:var(--muted); display:flex; align-items:center; gap:.3rem; }
+    .trail-stat svg { width:13px; height:13px; color:var(--moss); }
+    .trail-stat strong { color:var(--text); }
+    .trail-tags { display:flex; flex-wrap:wrap; gap:.3rem; margin-bottom:.75rem; }
+    .tag { font-size:.7rem; font-family:Arial,sans-serif; background:var(--cream); color:var(--bark); border:1px solid var(--tan); border-radius:7px; padding:.18rem .48rem; }
+    .trail-footer { display:flex; align-items:center; justify-content:space-between; border-top:1px solid var(--border); padding-top:.7rem; }
+    .rating { display:flex; align-items:center; gap:.3rem; font-size:.8rem; font-family:Arial,sans-serif; }
+    .stars { color:#e6a817; font-size:.82rem; }
+    .rating-count { color:var(--muted); }
+    .btn-view { font-family:Arial,sans-serif; font-size:.78rem; font-weight:bold; background:var(--forest); color:#fff; border:none; border-radius:20px; padding:.38rem .95rem; cursor:pointer; transition:background .2s; }
+    .btn-view:hover { background:var(--moss); }
+    .ai-reason { font-family:Arial,sans-serif; font-size:.76rem; color:#4a7c3f; background:#f0f7ee; padding:.48rem .9rem; border-top:1px solid #c3ddbf; display:flex; align-items:flex-start; gap:.32rem; line-height:1.45; }
+    .ai-reason svg { width:12px; height:12px; flex-shrink:0; margin-top:1px; }
+
+    /* ── Featured ── */
+    #featured-section { margin-top:.5rem; }
+
+    /* ── How it Works ── */
+    .how-it-works { background:linear-gradient(135deg,#1a3d15,#2d5a27); border-radius:20px; padding:3rem 2.5rem; margin:3rem 0; color:#fff; text-align:center; }
+    .how-it-works h2 { font-size:1.7rem; margin-bottom:.4rem; }
+    .how-it-works > p { color:rgba(255,255,255,.72); font-family:Arial,sans-serif; margin-bottom:2.2rem; font-size:.92rem; }
+    .steps { display:grid; grid-template-columns:repeat(auto-fit,minmax(175px,1fr)); gap:1.5rem; }
+    .step-icon { width:54px; height:54px; border-radius:16px; background:rgba(255,255,255,.14); border:1px solid rgba(255,255,255,.2); display:flex; align-items:center; justify-content:center; margin:0 auto .9rem; }
+    .step-icon svg { width:24px; height:24px; color:var(--leaf); }
+    .step h3 { font-size:.95rem; margin-bottom:.3rem; }
+    .step p { font-family:Arial,sans-serif; font-size:.8rem; color:rgba(255,255,255,.68); line-height:1.5; }
+
+    /* ── Loading ── */
+    @keyframes shimmer { 0%{background-position:-400px 0} 100%{background-position:400px 0} }
+    .skeleton { background:linear-gradient(90deg,#e8e0d6 25%,#f0ebe3 50%,#e8e0d6 75%); background-size:800px 100%; animation:shimmer 1.5s infinite; border-radius:8px; }
+    .loading-cards { display:none; grid-template-columns:repeat(auto-fill,minmax(310px,1fr)); gap:1.2rem; }
+    .loading-cards.visible { display:grid; }
+    .skel-card { background:#fff; border-radius:14px; border:1px solid var(--border); overflow:hidden; }
+    .skel-img { height:175px; }
+    .skel-body { padding:1rem; }
+    .skel-line { height:13px; margin-bottom:9px; }
+
+    /* ── No results ── */
+    .no-results { text-align:center; padding:3rem 1rem; }
+    .no-results svg { width:48px; height:48px; color:var(--tan); margin-bottom:1rem; }
+    .no-results h3 { font-size:1.1rem; color:var(--muted); margin-bottom:.4rem; }
+    .no-results p { font-family:Arial,sans-serif; font-size:.88rem; color:var(--muted); }
+
+    /* ── Footer ── */
+    footer { background:var(--earth); color:rgba(255,255,255,.75); text-align:center; padding:2rem; font-family:Arial,sans-serif; font-size:.85rem; }
+    footer a { color:var(--leaf); text-decoration:none; }
+
+    @media(max-width:620px){
+      nav{padding:0 1rem;} .nav-links a:not(.nav-cta){display:none;}
+      .hero{padding:5rem 1.2rem 4rem;} .stats-bar{gap:1.5rem;}
+      .main{padding:1.5rem 1rem 3rem;} .how-it-works{padding:2rem 1.2rem;}
+      .location-row{gap:.4rem;}
+    }
+  </style>
+</head>
+<body>
+
+<!-- Nav -->
+<nav>
+  <a class="nav-logo" href="#">
+    <svg viewBox="0 0 28 28" fill="none"><path d="M14 3L7 13h4L8 25l12-14h-5Z" fill="#2d5a27"/><circle cx="14" cy="6" r="2.5" fill="#7aad6e"/></svg>
+    PathFind
+  </a>
+  <div class="nav-links">
+    <a href="#">Explore</a>
+    <a href="#">Maps</a>
+    <a href="#">Community</a>
+    <a href="#" class="nav-cta">Sign Up Free</a>
+  </div>
+</nav>
+
+<!-- Location banner (shown when location is active) -->
+<div id="location-banner">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a7 7 0 0 1 7 7c0 5-7 13-7 13S5 14 5 9a7 7 0 0 1 7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+  <span id="banner-text">Showing trails near <strong>your location</strong></span>
+  <button onclick="clearLocation()">Clear location</button>
+</div>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-badge">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a4 4 0 0 1 4 4c0 3-4 8-4 8S8 9 8 6a4 4 0 0 1 4-4z"/><circle cx="12" cy="6" r="1.5" fill="currentColor" stroke="none"/></svg>
+    AI-Powered Trail Discovery
+  </div>
+  <h1>Find your perfect<br/><span>trail in plain English</span></h1>
+  <p>Describe the adventure you want — difficulty, scenery, distance, season — then tell us where you're headed. PathFind does the rest.</p>
+
+  <div class="search-container">
+    <div class="search-box">
+      <!-- AI query -->
+      <div class="search-top">
+        <div class="ai-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6Z"/></svg>
+        </div>
+        <textarea id="search-input" placeholder='e.g. "Easy waterfall hike, dog-friendly, under 5 miles"' rows="1" oninput="autoResize(this)" onkeydown="handleKey(event)"></textarea>
+        <button class="search-submit" onclick="doSearch()" title="Search">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
+      </div>
+
+      <!-- Location row -->
+      <div class="location-row">
+        <span class="loc-label">📍 Where?</span>
+
+        <div class="loc-input-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
+          <input id="location-input" type="text" placeholder="City, state, or zip..." autocomplete="off" oninput="onLocInput()" onkeydown="if(event.key==='Enter')applyManualLocation()" />
+          <button class="loc-clear" id="loc-clear-btn" onclick="clearLocationInput()" title="Clear">✕</button>
+        </div>
+
+        <button class="loc-gps-btn" id="gps-btn" onclick="useMyLocation()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/><circle cx="12" cy="12" r="9" stroke-dasharray="3 2"/></svg>
+          Near Me
+        </button>
+
+        <span class="loc-divider">·</span>
+
+        <select class="loc-select" id="radius-select" onchange="onRadiusChange()">
+          <option value="0">Any distance</option>
+          <option value="25">Within 25 mi</option>
+          <option value="50" selected>Within 50 mi</option>
+          <option value="100">Within 100 mi</option>
+          <option value="250">Within 250 mi</option>
+        </select>
+
+        <select class="loc-select" id="state-select" onchange="onStateChange()">
+          <option value="">All states</option>
+        </select>
+      </div>
+
+      <!-- Quick hints -->
+      <div class="search-hints">
+        <span class="hint-chip" onclick="fillHint(this)">🌊 Waterfall hike, dog-friendly</span>
+        <span class="hint-chip" onclick="fillHint(this)">⛺ Backcountry camping under 8 miles</span>
+        <span class="hint-chip" onclick="fillHint(this)">🌅 Sunrise summit, moderate difficulty</span>
+        <span class="hint-chip" onclick="fillHint(this)">🍂 Fall foliage, easy loop trail</span>
+        <span class="hint-chip" onclick="fillHint(this)">❄️ Snowshoe trail, beginner friendly</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Stats -->
+<div class="stats-bar">
+  <div class="stat"><span class="stat-num">320K+</span><span class="stat-label">Trails indexed</span></div>
+  <div class="stat"><span class="stat-num">48</span><span class="stat-label">States covered</span></div>
+  <div class="stat"><span class="stat-num">AI</span><span class="stat-label">Natural language search</span></div>
+  <div class="stat"><span class="stat-num">4.9★</span><span class="stat-label">Avg. user rating</span></div>
+</div>
+
+<!-- Main -->
+<div class="main">
+
+  <!-- Loading -->
+  <div class="loading-cards" id="loading-cards">
+    <div class="skel-card"><div class="skel-img skeleton"></div><div class="skel-body"><div class="skel-line skeleton" style="width:70%"></div><div class="skel-line skeleton" style="width:45%"></div><div class="skel-line skeleton" style="width:90%"></div></div></div>
+    <div class="skel-card"><div class="skel-img skeleton"></div><div class="skel-body"><div class="skel-line skeleton" style="width:70%"></div><div class="skel-line skeleton" style="width:45%"></div><div class="skel-line skeleton" style="width:90%"></div></div></div>
+    <div class="skel-card"><div class="skel-img skeleton"></div><div class="skel-body"><div class="skel-line skeleton" style="width:70%"></div><div class="skel-line skeleton" style="width:45%"></div><div class="skel-line skeleton" style="width:90%"></div></div></div>
+  </div>
+
+  <!-- Results -->
+  <section id="results-section">
+    <div class="results-header">
+      <h2>Results <span id="result-subtitle"></span></h2>
+      <select class="sort-select" id="sort-select" onchange="resortResults()">
+        <option value="match">Sort: Best match</option>
+        <option value="distance">Sort: Nearest first</option>
+        <option value="rating">Sort: Highest rated</option>
+        <option value="difficulty-asc">Sort: Easiest first</option>
+        <option value="difficulty-desc">Sort: Hardest first</option>
+      </select>
+    </div>
+    <div class="ai-summary" id="ai-summary">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6Z"/></svg>
+      <p id="ai-summary-text"></p>
+    </div>
+    <div class="filter-row">
+      <button class="filter-btn active" onclick="setTypeFilter('all',this)">All</button>
+      <button class="filter-btn" onclick="setTypeFilter('easy',this)">Easy</button>
+      <button class="filter-btn" onclick="setTypeFilter('moderate',this)">Moderate</button>
+      <button class="filter-btn" onclick="setTypeFilter('hard',this)">Hard</button>
+      <button class="filter-btn" onclick="setTypeFilter('dog',this)">Dog-Friendly</button>
+      <button class="filter-btn" onclick="setTypeFilter('camp',this)">Camping</button>
+    </div>
+    <div class="trails-grid" id="trails-grid"></div>
+  </section>
+
+  <!-- Featured (before search) -->
+  <section id="featured-section">
+    <div class="section-label">✦ Trending this week</div>
+    <div class="section-title">Popular adventures</div>
+    <div class="trails-grid" id="featured-grid"></div>
+
+    <!-- State explorer -->
+    <div class="state-explorer" style="margin-top:2.5rem">
+      <div class="section-label">🗺 Browse by state</div>
+      <div class="section-title">Plan your next adventure</div>
+      <div class="state-grid" id="state-grid"></div>
+    </div>
+  </section>
+
+  <!-- How it works -->
+  <div class="how-it-works">
+    <h2>How PathFind works</h2>
+    <p>Powered by AI that understands what you actually mean — not just keywords.</p>
+    <div class="steps">
+      <div class="step"><div class="step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 12h8M8 8h8M8 16h5"/></svg></div><h3>Describe it</h3><p>Tell us exactly what you want — scenery, difficulty, features, even the mood.</p></div>
+      <div class="step"><div class="step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a7 7 0 0 1 7 7c0 5-7 13-7 13S5 14 5 9a7 7 0 0 1 7-7z"/><circle cx="12" cy="9" r="2.5"/></svg></div><h3>Set location</h3><p>Use your current location or search any city, state, or park — plan trips anywhere.</p></div>
+      <div class="step"><div class="step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6Z"/></svg></div><h3>AI matches</h3><p>Our model understands context — "not too crowded" means something real.</p></div>
+      <div class="step"><div class="step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></div><h3>Go & share</h3><p>Get offline maps, conditions, and share your experience with the community.</p></div>
+    </div>
+  </div>
+</div>
+
+<footer><p>© 2026 PathFind · <a href="#">Privacy</a> · <a href="#">Terms</a> · <a href="#">About</a></p></footer>
+
+<script>
+/* ═══════════════════════════════════════════════════════
+   DATA
+═══════════════════════════════════════════════════════ */
+const trails = [
+  { id:1,  name:"Hanging Lake Trail",        location:"Glenwood Canyon, CO",  state:"CO", lat:39.60, lng:-107.20, distance:"3.0 mi", elevation:"1,050 ft", difficulty:"moderate", rating:4.9, reviews:2841, tags:["Waterfall","Lake","Views","Dogs OK"], match:98, color1:"#2d6e2a",color2:"#1a4d18", aiReason:"Iconic turquoise lake fed by waterfall — moderate with stunning payoff. Dogs allowed on leash.", featured:true },
+  { id:2,  name:"Bear Lake Loop",             location:"Rocky Mountain NP, CO", state:"CO", lat:40.31, lng:-105.65, distance:"0.8 mi", elevation:"100 ft",   difficulty:"easy",     rating:4.7, reviews:5210, tags:["Lake","Loop","Family","Dogs OK","Fall Colors"], match:94, color1:"#4a7c3f",color2:"#2d5a27", aiReason:"Flat accessible loop around a scenic alpine lake. Perfect for all ages & leashed dogs.", featured:true },
+  { id:3,  name:"Half Dome via JMT",          location:"Yosemite NP, CA",       state:"CA", lat:37.74, lng:-119.53, distance:"14.2 mi",elevation:"4,800 ft", difficulty:"hard",     rating:4.9, reviews:11320,tags:["Iconic","Cables","Views","Permit"], match:87, color1:"#5a7a30",color2:"#3a5520", aiReason:"One of America's most iconic hikes — cable section leads to breathtaking 360° summit views.", featured:true },
+  { id:4,  name:"Maroon Bells Loop",          location:"Aspen, CO",             state:"CO", lat:39.07, lng:-106.99, distance:"9.7 mi", elevation:"2,500 ft", difficulty:"moderate", rating:4.8, reviews:3677, tags:["Alpine","Lake","Fall Colors","Wildflowers"], match:92, color1:"#3d6b35",color2:"#27512a", aiReason:"The most photographed mountains in N. America. Autumn turns aspen groves electric gold.", featured:true },
+  { id:5,  name:"Angels Landing",             location:"Zion NP, UT",           state:"UT", lat:37.27, lng:-112.95, distance:"5.4 mi", elevation:"1,488 ft", difficulty:"hard",     rating:4.8, reviews:9140, tags:["Chains","Views","Iconic","Desert"], match:85, color1:"#8a5a30",color2:"#6b3e1a", aiReason:"Bucket-list scramble with chains along a narrow ridge — dramatic desert canyon views.", featured:false },
+  { id:6,  name:"Enchantments Thru-Hike",    location:"Leavenworth, WA",       state:"WA", lat:47.51, lng:-120.85, distance:"18.0 mi",elevation:"4,800 ft", difficulty:"hard",     rating:5.0, reviews:1853, tags:["Alpine Lakes","Permit","Backpacking","Goats"], match:90, color1:"#3a6e5a",color2:"#1a4d3a", aiReason:"Washington's most coveted permit. Dozens of crystal-clear alpine lakes with wild mountain goats.", featured:false },
+  { id:7,  name:"Appalachian Trail Section",  location:"Shenandoah NP, VA",     state:"VA", lat:38.53, lng:-78.35, distance:"8.2 mi", elevation:"1,200 ft", difficulty:"moderate", rating:4.6, reviews:2240, tags:["Thru-hike","Views","Wildlife","Fall Colors"], match:83, color1:"#4a6e30",color2:"#2d5220", aiReason:"Classic AT section through Blue Ridge — great wildlife sightings and ridge-top vistas.", featured:false },
+  { id:8,  name:"Rim to Rim — Grand Canyon", location:"Grand Canyon NP, AZ",   state:"AZ", lat:36.10, lng:-112.11, distance:"21.0 mi",elevation:"4,380 ft", difficulty:"hard",     rating:4.9, reviews:6720, tags:["Iconic","Multi-day","Desert","Permit"], match:80, color1:"#a05a30",color2:"#7a3e1a", aiReason:"One of the world's great hikes — descend into geologic history on both rims.", featured:false },
+  { id:9,  name:"Mirror Lake Loop",           location:"Uinta Mountains, UT",   state:"UT", lat:40.70, lng:-110.88, distance:"4.5 mi", elevation:"300 ft",   difficulty:"easy",     rating:4.5, reviews:1870, tags:["Lake","Family","Dogs OK","Wildflowers"], match:88, color1:"#3a7a6e",color2:"#1e5a50", aiReason:"Easy, flat loop around a pristine alpine lake — perfect for families and beginners.", featured:false },
+  { id:10, name:"Kalalau Trail",              location:"Nā Pali Coast, HI",     state:"HI", lat:22.21, lng:-159.65, distance:"11.0 mi",elevation:"2,500 ft", difficulty:"hard",     rating:4.9, reviews:3180, tags:["Coastal","Jungle","Remote","Permit"], match:78, color1:"#1a6b2d",color2:"#0a4d1a", aiReason:"Dramatic sea cliffs and lush valleys — one of the most beautiful and challenging trails in America.", featured:false },
+  { id:11, name:"Acadia Carriage Roads",      location:"Acadia NP, ME",         state:"ME", lat:44.35, lng:-68.21, distance:"6.0 mi", elevation:"400 ft",   difficulty:"easy",     rating:4.6, reviews:2930, tags:["Loop","Family","Bike-friendly","Ocean Views"], match:85, color1:"#5a7a4a",color2:"#3a5a2a", aiReason:"Historic carriage roads with ocean glimpses — ideal for a relaxed half-day outing.", featured:false },
+  { id:12, name:"Skyline Trail",              location:"Mt. Rainier NP, WA",    state:"WA", lat:46.85, lng:-121.73, distance:"5.5 mi", elevation:"1,600 ft", difficulty:"moderate", rating:4.9, reviews:4120, tags:["Wildflowers","Glacier Views","Subalpine"], match:91, color1:"#2d6e5a",color2:"#1a4d3a", aiReason:"Jaw-dropping wildflower meadows with Rainier looming overhead — one of WA's finest day hikes.", featured:false },
+  { id:13, name:"Chimney Tops Trail",         location:"Great Smoky Mtns, TN",  state:"TN", lat:35.64, lng:-83.48, distance:"4.0 mi", elevation:"1,400 ft", difficulty:"moderate", rating:4.7, reviews:3560, tags:["Views","Waterfalls","Wildlife","Dogs OK"], match:86, color1:"#4a6e35",color2:"#2d5220", aiReason:"Rocky summit with panoramic Smokies views — popular but worth every step.", featured:false },
+  { id:14, name:"Highline Trail",             location:"Glacier NP, MT",        state:"MT", lat:48.70, lng:-113.72, distance:"11.8 mi",elevation:"200 ft",   difficulty:"moderate", rating:5.0, reviews:2870, tags:["Alpine","Wildflowers","Goats","Views"], match:93, color1:"#3a5a7a",color2:"#1a3a5a", aiReason:"Traverses the Continental Divide with Glacier's most spectacular ridge-top views.", featured:false },
+  { id:15, name:"Lost Coast Trail",           location:"Humboldt County, CA",   state:"CA", lat:40.00, lng:-124.07, distance:"24.0 mi",elevation:"1,000 ft", difficulty:"hard",     rating:4.8, reviews:1640, tags:["Coastal","Backpacking","Remote","Tide-dependent"], match:82, color1:"#2a6e4a",color2:"#1a4d30", aiReason:"Wild and remote Pacific coastline — hike only when tides allow, reward is total solitude.", featured:false },
+  { id:16, name:"Naomi Peak Trail",           location:"Logan Canyon, UT",      state:"UT", lat:41.89, lng:-111.55, distance:"6.4 mi", elevation:"1,977 ft", difficulty:"moderate", rating:4.6, reviews:1120, tags:["Summit","Wildflowers","Dogs OK","Views"], match:87, color1:"#5a7a3a",color2:"#3a5a20", aiReason:"Cache Valley's highest peak with sweeping views of Utah, Wyoming, and Idaho.", featured:false },
+  { id:17, name:"Wonderland Trail",           location:"Mt. Rainier NP, WA",    state:"WA", lat:46.85, lng:-121.85, distance:"93.0 mi",elevation:"22,000 ft",difficulty:"hard",     rating:5.0, reviews:980,  tags:["Permit","Backpacking","Glaciers","Epic"], match:75, color1:"#1a5a3a",color2:"#0a3a20", aiReason:"Circle Mt. Rainier on this 93-mile epic — the PNW's crown jewel backpacking route.", featured:false },
+  { id:18, name:"Cadillac Mountain Summit",   location:"Acadia NP, ME",         state:"ME", lat:44.35, lng:-68.23, distance:"3.5 mi", elevation:"1,530 ft", difficulty:"moderate", rating:4.8, reviews:2150, tags:["Sunrise","Ocean Views","Iconic","Dogs OK"], match:89, color1:"#6a7a5a",color2:"#4a5a3a", aiReason:"First place in the US to see the sunrise — granite slabs with sweeping Atlantic views.", featured:false },
+  { id:19, name:"Havasupai Falls",            location:"Supai, AZ",             state:"AZ", lat:36.26, lng:-112.69, distance:"10.0 mi",elevation:"2,500 ft", difficulty:"moderate", rating:5.0, reviews:7430, tags:["Waterfall","Blue Water","Permit","Camping"], match:96, color1:"#1a7a6e",color2:"#0a5a50", aiReason:"Stunning turquoise waterfalls deep in the Grand Canyon — requires permit, worth every hurdle.", featured:false },
+  { id:20, name:"Tuckerman Ravine Trail",     location:"Mt. Washington, NH",    state:"NH", lat:44.27, lng:-71.30, distance:"8.0 mi", elevation:"4,255 ft", difficulty:"hard",     rating:4.7, reviews:3240, tags:["Alpine","Summit","Challenging","Seasonal"], match:84, color1:"#5a6a7a",color2:"#3a4a5a", aiReason:"Northeast's most demanding day hike — summit of the highest peak east of the Mississippi.", featured:false },
+];
+
+/* ═══════════════════════════════════════════════════════
+   LOCATION STATE
+═══════════════════════════════════════════════════════ */
+let locationState = {
+  type: null,   // 'gps' | 'manual' | 'state'
+  label: '',
+  lat: null,
+  lng: null,
+  stateCode: null,
+  radiusMi: 50,
+};
+
+let activeTypeFilter = 'all';
+let currentResults = [];
+
+/* distance between two lat/lng in miles (Haversine) */
+function haversine(lat1, lng1, lat2, lng2) {
+  const R = 3958.8;
+  const dLat = (lat2-lat1)*Math.PI/180;
+  const dLng = (lng2-lng1)*Math.PI/180;
+  const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLng/2)**2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+}
+
+/* city→coords lookup (demo subset) */
+const cityCoords = {
+  "denver":       {lat:39.74, lng:-104.98, label:"Denver, CO"},
+  "denver, co":   {lat:39.74, lng:-104.98, label:"Denver, CO"},
+  "boulder":      {lat:40.01, lng:-105.27, label:"Boulder, CO"},
+  "boulder, co":  {lat:40.01, lng:-105.27, label:"Boulder, CO"},
+  "seattle":      {lat:47.60, lng:-122.33, label:"Seattle, WA"},
+  "seattle, wa":  {lat:47.60, lng:-122.33, label:"Seattle, WA"},
+  "portland":     {lat:45.52, lng:-122.68, label:"Portland, OR"},
+  "portland, or": {lat:45.52, lng:-122.68, label:"Portland, OR"},
+  "salt lake city":{lat:40.76, lng:-111.89, label:"Salt Lake City, UT"},
+  "slc":          {lat:40.76, lng:-111.89, label:"Salt Lake City, UT"},
+  "los angeles":  {lat:34.05, lng:-118.24, label:"Los Angeles, CA"},
+  "la":           {lat:34.05, lng:-118.24, label:"Los Angeles, CA"},
+  "san francisco":{lat:37.77, lng:-122.42, label:"San Francisco, CA"},
+  "sf":           {lat:37.77, lng:-122.42, label:"San Francisco, CA"},
+  "new york":     {lat:40.71, lng:-74.00,  label:"New York, NY"},
+  "nyc":          {lat:40.71, lng:-74.00,  label:"New York, NY"},
+  "boston":       {lat:42.36, lng:-71.06,  label:"Boston, MA"},
+  "boston, ma":   {lat:42.36, lng:-71.06,  label:"Boston, MA"},
+  "phoenix":      {lat:33.45, lng:-112.07, label:"Phoenix, AZ"},
+  "phoenix, az":  {lat:33.45, lng:-112.07, label:"Phoenix, AZ"},
+  "chicago":      {lat:41.88, lng:-87.63,  label:"Chicago, IL"},
+  "asheville":    {lat:35.57, lng:-82.55,  label:"Asheville, NC"},
+  "asheville, nc":{lat:35.57, lng:-82.55,  label:"Asheville, NC"},
+  "bozeman":      {lat:45.68, lng:-111.04, label:"Bozeman, MT"},
+  "bozeman, mt":  {lat:45.68, lng:-111.04, label:"Bozeman, MT"},
+};
+
+/* ═══════════════════════════════════════════════════════
+   LOCATION FUNCTIONS
+═══════════════════════════════════════════════════════ */
+function useMyLocation() {
+  const btn = document.getElementById('gps-btn');
+  if (!navigator.geolocation) { alert("Geolocation isn't supported by your browser."); return; }
+  btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation:spin .8s linear infinite"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg> Locating…`;
+  navigator.geolocation.getCurrentPosition(
+    pos => {
+      locationState = { type:'gps', label:'your location', lat:pos.coords.latitude, lng:pos.coords.longitude, stateCode:null, radiusMi: parseInt(document.getElementById('radius-select').value)||50 };
+      btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg> Near Me ✓`;
+      btn.classList.add('active');
+      document.getElementById('location-input').value = '';
+      document.getElementById('state-select').value = '';
+      updateBanner();
+    },
+    () => {
+      btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg> Near Me`;
+      alert("Couldn't get your location. Try entering a city manually.");
+    }
+  );
+}
+
+function onLocInput() {
+  const val = document.getElementById('location-input').value;
+  document.getElementById('loc-clear-btn').style.display = val ? 'block' : 'none';
+}
+
+function applyManualLocation() {
+  const raw = document.getElementById('location-input').value.trim().toLowerCase();
+  if (!raw) return;
+  const match = cityCoords[raw];
+  if (match) {
+    locationState = { type:'manual', label:match.label, lat:match.lat, lng:match.lng, stateCode:null, radiusMi: parseInt(document.getElementById('radius-select').value)||50 };
+    document.getElementById('gps-btn').classList.remove('active');
+    document.getElementById('state-select').value = '';
+    updateBanner();
+  } else {
+    // treat as state or fuzzy — just show filter label
+    locationState = { type:'manual', label:document.getElementById('location-input').value.trim(), lat:null, lng:null, stateCode:null, radiusMi:0 };
+    updateBanner();
+  }
+}
+
+function clearLocationInput() {
+  document.getElementById('location-input').value = '';
+  document.getElementById('loc-clear-btn').style.display = 'none';
+  clearLocation();
+}
+
+function onRadiusChange() {
+  locationState.radiusMi = parseInt(document.getElementById('radius-select').value) || 0;
+  updateBanner();
+}
+
+function onStateChange() {
+  const val = document.getElementById('state-select').value;
+  if (!val) { if (locationState.type==='state') clearLocation(); return; }
+  locationState = { type:'state', label:`${stateNames[val] || val}`, lat:null, lng:null, stateCode:val, radiusMi:0 };
+  document.getElementById('gps-btn').classList.remove('active');
+  document.getElementById('location-input').value='';
+  document.getElementById('loc-clear-btn').style.display='none';
+  updateBanner();
+}
+
+function clearLocation() {
+  locationState = { type:null, label:'', lat:null, lng:null, stateCode:null, radiusMi:50 };
+  document.getElementById('gps-btn').classList.remove('active');
+  document.getElementById('gps-btn').innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/><circle cx="12" cy="12" r="9" stroke-dasharray="3 2"/></svg> Near Me`;
+  document.getElementById('location-input').value='';
+  document.getElementById('loc-clear-btn').style.display='none';
+  document.getElementById('state-select').value='';
+  document.getElementById('radius-select').value='50';
+  updateBanner();
+}
+
+function updateBanner() {
+  const banner = document.getElementById('location-banner');
+  const txt = document.getElementById('banner-text');
+  if (!locationState.type) { banner.classList.remove('visible'); return; }
+  banner.classList.add('visible');
+  if (locationState.type === 'state') {
+    txt.innerHTML = `Browsing trails in <strong>${locationState.label}</strong>`;
+  } else if (locationState.radiusMi > 0) {
+    txt.innerHTML = `Showing trails within <strong>${locationState.radiusMi} miles</strong> of <strong>${locationState.label}</strong>`;
+  } else {
+    txt.innerHTML = `Searching near <strong>${locationState.label}</strong>`;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════
+   FILTER & SORT
+═══════════════════════════════════════════════════════ */
+function filterTrails(all) {
+  let list = [...all];
+
+  // state filter
+  if (locationState.type === 'state' && locationState.stateCode) {
+    list = list.filter(t => t.state === locationState.stateCode);
+  }
+
+  // distance filter (only when we have coords AND a radius)
+  if (locationState.lat !== null && locationState.radiusMi > 0) {
+    list = list.map(t => ({ ...t, _dist: Math.round(haversine(locationState.lat, locationState.lng, t.lat, t.lng)) }))
+               .filter(t => t._dist <= locationState.radiusMi);
+  } else if (locationState.lat !== null) {
+    list = list.map(t => ({ ...t, _dist: Math.round(haversine(locationState.lat, locationState.lng, t.lat, t.lng)) }));
+  }
+
+  // type filter
+  if (activeTypeFilter === 'easy')     list = list.filter(t => t.difficulty==='easy');
+  else if (activeTypeFilter === 'moderate') list = list.filter(t => t.difficulty==='moderate');
+  else if (activeTypeFilter === 'hard')     list = list.filter(t => t.difficulty==='hard');
+  else if (activeTypeFilter === 'dog')  list = list.filter(t => t.tags.some(g=>g.toLowerCase().includes('dog')));
+  else if (activeTypeFilter === 'camp') list = list.filter(t => t.tags.some(g=>g.toLowerCase().includes('camp')));
+
+  return list;
+}
+
+function sortTrails(list) {
+  const s = document.getElementById('sort-select').value;
+  const diffOrder = {easy:1,moderate:2,hard:3};
+  if (s === 'distance' && list[0]?._dist !== undefined) return [...list].sort((a,b)=>(a._dist||9999)-(b._dist||9999));
+  if (s === 'rating') return [...list].sort((a,b)=>b.rating-a.rating);
+  if (s === 'difficulty-asc') return [...list].sort((a,b)=>diffOrder[a.difficulty]-diffOrder[b.difficulty]);
+  if (s === 'difficulty-desc') return [...list].sort((a,b)=>diffOrder[b.difficulty]-diffOrder[a.difficulty]);
+  return [...list].sort((a,b)=>b.match-a.match); // default: match score
+}
+
+function resortResults() {
+  if (!document.getElementById('results-section').classList.contains('visible')) return;
+  renderResults(sortTrails(currentResults));
+}
+
+function setTypeFilter(type, btn) {
+  activeTypeFilter = type;
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  if (document.getElementById('results-section').classList.contains('visible')) {
+    currentResults = filterTrails(trails);
+    resortResults();
+    updateResultCount();
+  }
+}
+
+function updateResultCount() {
+  const n = currentResults.length;
+  const q = document.getElementById('search-input').value.trim();
+  const sub = q ? `— ${n} result${n!==1?'s':''} for "${q.length>35?q.slice(0,35)+'…':q}"` : `— ${n} trail${n!==1?'s':''}`;
+  document.getElementById('result-subtitle').textContent = sub;
+}
+
+/* ═══════════════════════════════════════════════════════
+   RENDER
+═══════════════════════════════════════════════════════ */
+function getLandscapeSVG(c1, c2, id) {
+  const s = id * 137;
+  const mH = 55 + (s%30), mH2 = 40 + ((s*3)%25);
+  const trees = [...Array(8)].map((_,i)=>{ const x=20+i*38+(s%15),y=140+(s%10); return `<polygon points="${x},${y} ${x-8},${y+20} ${x+8},${y+20}" fill="${c2}" opacity=".9"/><rect x="${x-2}" y="${y+18}" width="4" height="6" fill="#5c4033" opacity=".7"/>`; }).join('');
+  return `<svg viewBox="0 0 320 180" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+    <defs><linearGradient id="sky${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#c8dfe8"/><stop offset="100%" stop-color="#a8c8d8"/></linearGradient></defs>
+    <rect width="320" height="180" fill="url(#sky${id})"/>
+    <circle cx="${180+(s%60)}" cy="${30+(s%20)}" r="18" fill="#f5d87a" opacity=".7"/>
+    <polygon points="0,180 ${80+(s%40)},${180-mH2} ${200+(s%40)},180" fill="${c1}" opacity=".6"/>
+    <polygon points="${100+(s%50)},180 ${220+(s%30)},${180-mH} 320,180" fill="${c1}" opacity=".75"/>
+    <polygon points="0,180 ${60+(s%60)},${180-mH+10} ${160+(s%50)},180" fill="${c2}"/>
+    <polygon points="${60+(s%60)},${180-mH+10} ${50+(s%60)},${180-mH+30} ${70+(s%60)},${180-mH+30}" fill="#eef5f8" opacity=".8"/>
+    ${trees}
+  </svg>`;
+}
+
+function distBadgeHTML(t) {
+  if (t._dist === undefined) return '';
+  return `<span class="dist-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a7 7 0 0 1 7 7c0 5-7 13-7 13S5 14 5 9a7 7 0 0 1 7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>${t._dist} mi away</span>`;
+}
+
+function renderCard(t, showAI=false) {
+  const dc = {easy:'diff-easy',moderate:'diff-moderate',hard:'diff-hard'}[t.difficulty];
+  const stars = '★'.repeat(Math.round(t.rating))+'☆'.repeat(5-Math.round(t.rating));
+  return `<div class="trail-card">
+    <div class="trail-img">
+      ${getLandscapeSVG(t.color1,t.color2,t.id)}
+      <div class="trail-img-overlay">
+        <span class="difficulty-badge ${dc}">${t.difficulty}</span>
+        ${showAI ? `<span class="match-badge">⚡ ${t.match}%</span>` : ''}
+        ${distBadgeHTML(t)}
+      </div>
+    </div>
+    <div class="trail-body">
+      <div class="trail-name">${t.name}</div>
+      <div class="trail-location"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2a7 7 0 0 1 7 7c0 5-7 13-7 13S5 14 5 9a7 7 0 0 1 7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>${t.location}</div>
+      <div class="trail-stats">
+        <div class="trail-stat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M12 3l9 9-9 9"/></svg><strong>${t.distance}</strong></div>
+        <div class="trail-stat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 20L9 8l6 6 6-10"/></svg><strong>${t.elevation}</strong></div>
+      </div>
+      <div class="trail-tags">${t.tags.map(g=>`<span class="tag">${g}</span>`).join('')}</div>
+      <div class="trail-footer">
+        <div class="rating"><span class="stars">${stars}</span>${t.rating}<span class="rating-count">(${t.reviews.toLocaleString()})</span></div>
+        <button class="btn-view">View Trail →</button>
+      </div>
+    </div>
+    ${showAI ? `<div class="ai-reason"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6Z"/></svg>${t.aiReason}</div>` : ''}
+  </div>`;
+}
+
+function renderResults(list) {
+  const grid = document.getElementById('trails-grid');
+  if (list.length === 0) {
+    grid.innerHTML = `<div class="no-results" style="grid-column:1/-1">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/><path d="M8 11h6M11 8v6"/></svg>
+      <h3>No trails found</h3>
+      <p>Try adjusting your filters, expanding the distance radius, or clearing the location.</p>
+    </div>`;
+  } else {
+    grid.innerHTML = list.map(t => renderCard(t, true)).join('');
+  }
+}
+
+/* ═══════════════════════════════════════════════════════
+   AI SEARCH
+═══════════════════════════════════════════════════════ */
+const summaries = {
+  default:  `I found <strong>{n} trails</strong> matching your description{loc}. Results are ranked by AI relevance — I've matched scenic features, difficulty, and seasonal conditions.`,
+  waterfall:`Your search suggests a <strong>waterfall experience</strong> with accessible terrain{loc}. I prioritized trails with confirmed falls, dog-friendly policies, and manageable elevation.`,
+  camping:  `For <strong>backcountry camping</strong>{loc}, I've surfaced trails with established sites, water sources, and permit availability. Distances are round-trip.`,
+  sunrise:  `These <strong>summit trails</strong>{loc} offer east-facing views ideal for sunrise. Sorted by proximity and recent trail condition reports.`,
+  fall:     `Peak <strong>fall foliage</strong>{loc} typically runs late September–October at elevation. Check live reports before heading out.`,
+  snow:     `<strong>Snowshoe-friendly routes</strong>{loc} with gentle grades and lower avalanche risk. Bring microspikes and check USFS snow depth reports.`,
+};
+
+function getSummary(query, n) {
+  const ql = query.toLowerCase();
+  let key = 'default';
+  if (ql.includes('waterfall')||ql.includes('dog')) key='waterfall';
+  else if (ql.includes('camp')) key='camping';
+  else if (ql.includes('sunrise')||ql.includes('summit')) key='sunrise';
+  else if (ql.includes('fall')||ql.includes('foliage')||ql.includes('autumn')) key='fall';
+  else if (ql.includes('snow')||ql.includes('winter')||ql.includes('snowshoe')) key='snow';
+
+  let locStr = '';
+  if (locationState.type === 'state') locStr = ` in <strong>${locationState.label}</strong>`;
+  else if (locationState.type && locationState.radiusMi > 0) locStr = ` within <strong>${locationState.radiusMi} miles</strong> of <strong>${locationState.label}</strong>`;
+  else if (locationState.type) locStr = ` near <strong>${locationState.label}</strong>`;
+
+  return summaries[key].replace('{n}', n).replace(/{loc}/g, locStr);
+}
+
+function doSearch() {
+  const query = document.getElementById('search-input').value.trim();
+  if (!query) return;
+
+  // apply manual location if typed but not submitted
+  const locVal = document.getElementById('location-input').value.trim();
+  if (locVal && !locationState.type) applyManualLocation();
+
+  document.getElementById('featured-section').style.display = 'none';
+  document.getElementById('results-section').classList.remove('visible');
+  document.getElementById('loading-cards').classList.add('visible');
+  setTimeout(() => { document.getElementById('loading-cards').scrollIntoView({behavior:'smooth',block:'start'}); }, 80);
+
+  setTimeout(() => {
+    document.getElementById('loading-cards').classList.remove('visible');
+    currentResults = filterTrails(trails);
+    const sorted = sortTrails(currentResults);
+    document.getElementById('ai-summary-text').innerHTML = getSummary(query, sorted.length);
+    updateResultCount();
+    renderResults(sorted);
+    document.getElementById('results-section').classList.add('visible');
+    document.getElementById('results-section').scrollIntoView({behavior:'smooth',block:'start'});
+  }, 1500);
+}
+
+/* ═══════════════════════════════════════════════════════
+   STATE EXPLORER
+═══════════════════════════════════════════════════════ */
+const stateNames = {
+  AK:"Alaska",AZ:"Arizona",CA:"California",CO:"Colorado",FL:"Florida",
+  GA:"Georgia",HI:"Hawaii",ID:"Idaho",IL:"Illinois",ME:"Maine",MT:"Montana",
+  NC:"N. Carolina",NH:"New Hampshire",NM:"New Mexico",NV:"Nevada",
+  NY:"New York",OR:"Oregon",TN:"Tennessee",TX:"Texas",UT:"Utah",
+  VA:"Virginia",VT:"Vermont",WA:"Washington",WY:"Wyoming"
+};
+
+function buildStateGrid() {
+  const counts = {};
+  trails.forEach(t => { counts[t.state] = (counts[t.state]||0)+1; });
+  const select = document.getElementById('state-select');
+  const grid = document.getElementById('state-grid');
+  const states = Object.keys(counts).sort();
+  states.forEach(s => {
+    // option
+    const opt = document.createElement('option');
+    opt.value = s; opt.textContent = `${stateNames[s]||s} (${counts[s]})`;
+    select.appendChild(opt);
+    // chip
+    const chip = document.createElement('div');
+    chip.className = 'state-chip';
+    chip.innerHTML = `${stateNames[s]||s} <span class="count">${counts[s]}</span>`;
+    chip.addEventListener('click', () => {
+      document.querySelectorAll('.state-chip').forEach(c=>c.classList.remove('active'));
+      chip.classList.add('active');
+      document.getElementById('state-select').value = s;
+      onStateChange();
+      // trigger a search if search input has content, otherwise show filtered featured
+      if (document.getElementById('search-input').value.trim()) doSearch();
+      else showStateResults(s);
+    });
+    grid.appendChild(chip);
+  });
+}
+
+function showStateResults(stateCode) {
+  document.getElementById('featured-section').style.display = 'none';
+  currentResults = filterTrails(trails);
+  const sorted = sortTrails(currentResults);
+  document.getElementById('ai-summary-text').innerHTML = `Showing <strong>${sorted.length} trail${sorted.length!==1?'s':''}</strong> in <strong>${stateNames[stateCode]||stateCode}</strong> — sorted by popularity. Use the search bar to narrow by trail type.`;
+  updateResultCount();
+  renderResults(sorted);
+  document.getElementById('results-section').classList.add('visible');
+  document.getElementById('results-section').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+/* ═══════════════════════════════════════════════════════
+   MISC HELPERS
+═══════════════════════════════════════════════════════ */
+function fillHint(el) {
+  document.getElementById('search-input').value = el.textContent.replace(/^[^\s]+\s/,'');
+  autoResize(document.getElementById('search-input'));
+  doSearch();
+}
+function handleKey(e) { if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();doSearch();} }
+function autoResize(el) { el.style.height='auto'; el.style.height=el.scrollHeight+'px'; }
+
+/* spin animation for GPS icon */
+const style = document.createElement('style');
+style.textContent = '@keyframes spin{to{transform:rotate(360deg)}}';
+document.head.appendChild(style);
+
+/* ═══════════════════════════════════════════════════════
+   INIT
+═══════════════════════════════════════════════════════ */
+function renderFeatured() {
+  document.getElementById('featured-grid').innerHTML = trails.filter(t=>t.featured).map(t=>renderCard(t,false)).join('');
+}
+buildStateGrid();
+renderFeatured();
+</script>
+</body>
+</html>
