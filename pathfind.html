@@ -24,6 +24,49 @@
     .nav-cta{background:var(--forest);color:#fff !important;padding:.45rem 1.1rem;border-radius:20px;font-weight:bold !important;}
     .nav-cta:hover{background:var(--moss) !important;}
 
+    /* ── Trail Detail Modal ── */
+    #trail-modal{position:fixed;inset:0;z-index:1000;display:flex;align-items:flex-end;justify-content:center;background:rgba(30,20,10,.55);backdrop-filter:blur(4px);opacity:0;pointer-events:none;transition:opacity .25s;}
+    #trail-modal.open{opacity:1;pointer-events:all;}
+    .modal-panel{background:var(--cream);width:100%;max-width:780px;max-height:92vh;border-radius:20px 20px 0 0;overflow-y:auto;transform:translateY(40px);transition:transform .3s cubic-bezier(.22,1,.36,1);}
+    #trail-modal.open .modal-panel{transform:translateY(0);}
+    .modal-hero{position:relative;height:240px;overflow:hidden;border-radius:20px 20px 0 0;}
+    .modal-hero img{width:100%;height:100%;object-fit:cover;}
+    .modal-hero-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(20,14,6,.75) 0%,transparent 55%);}
+    .modal-close{position:absolute;top:14px;right:14px;width:36px;height:36px;border-radius:50%;background:rgba(0,0,0,.4);border:none;color:#fff;font-size:1.3rem;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;}
+    .modal-hero-text{position:absolute;bottom:16px;left:20px;right:60px;color:#fff;}
+    .modal-hero-text h2{font-size:1.5rem;font-weight:bold;text-shadow:0 1px 4px rgba(0,0,0,.5);}
+    .modal-hero-text .modal-location{font-size:.85rem;opacity:.88;display:flex;align-items:center;gap:4px;margin-top:3px;font-family:Arial,sans-serif;}
+    .modal-body{padding:1.4rem 1.6rem 2.5rem;}
+    .modal-stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:.7rem;margin-bottom:1.3rem;}
+    .modal-stat{background:#fff;border:1px solid var(--border);border-radius:10px;padding:.75rem .6rem;text-align:center;}
+    .modal-stat .ms-val{font-size:1.1rem;font-weight:bold;color:var(--forest);}
+    .modal-stat .ms-lbl{font-size:.7rem;color:var(--muted);font-family:Arial,sans-serif;margin-top:2px;text-transform:uppercase;letter-spacing:.03em;}
+    .modal-diff-badge{display:inline-block;padding:.2rem .7rem;border-radius:20px;font-size:.78rem;font-weight:bold;font-family:Arial,sans-serif;text-transform:capitalize;}
+    .modal-diff-badge.diff-easy{background:#d4edda;color:#1a7a3c;}
+    .modal-diff-badge.diff-moderate{background:#fff3cd;color:#856404;}
+    .modal-diff-badge.diff-hard{background:#f8d7da;color:#842029;}
+    .modal-section-title{font-size:.75rem;font-family:Arial,sans-serif;font-weight:bold;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:.2rem 0 .5rem;}
+    .modal-desc{font-size:.95rem;line-height:1.65;color:var(--text);margin-bottom:1.2rem;}
+    .modal-tags{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:1.3rem;}
+    .modal-tags .tag{background:var(--leaf);color:var(--forest);border-radius:20px;padding:.2rem .75rem;font-size:.76rem;font-family:Arial,sans-serif;font-weight:600;}
+    .modal-rating-row{display:flex;align-items:center;gap:.5rem;margin-bottom:1.4rem;font-family:Arial,sans-serif;}
+    .modal-rating-row .stars{color:#d4a017;font-size:1.1rem;}
+    .modal-rating-row .rv{font-size:.85rem;color:var(--muted);}
+    .modal-map{width:100%;height:220px;border-radius:12px;border:1px solid var(--border);overflow:hidden;margin-bottom:1.3rem;}
+    .modal-map iframe{width:100%;height:100%;border:none;}
+    .modal-weather{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;margin-bottom:1.4rem;}
+    .weather-day{background:#fff;border:1px solid var(--border);border-radius:10px;padding:.7rem .5rem;text-align:center;font-family:Arial,sans-serif;}
+    .weather-day .wd-label{font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;}
+    .weather-day .wd-icon{font-size:1.6rem;margin:.3rem 0;}
+    .weather-day .wd-temp{font-size:.88rem;font-weight:bold;color:var(--text);}
+    .weather-day .wd-rain{font-size:.7rem;color:#4a7cb5;margin-top:2px;}
+    .modal-actions{display:flex;gap:.75rem;flex-wrap:wrap;}
+    .btn-directions{flex:1;background:var(--forest);color:#fff;border:none;border-radius:10px;padding:.85rem 1rem;font-family:Arial,sans-serif;font-size:.95rem;font-weight:bold;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:.5rem;text-decoration:none;}
+    .btn-directions:hover{background:var(--moss);}
+    .btn-osm{flex:1;background:#fff;color:var(--forest);border:2px solid var(--forest);border-radius:10px;padding:.85rem 1rem;font-family:Arial,sans-serif;font-size:.95rem;font-weight:bold;cursor:pointer;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:.5rem;}
+    .btn-osm:hover{background:var(--leaf);}
+    .weather-loading{text-align:center;font-family:Arial,sans-serif;font-size:.85rem;color:var(--muted);padding:.5rem;}
+
     /* NPS key banner */
     #nps-banner{display:none;background:#fffbeb;border-bottom:1px solid #f0d060;padding:.5rem 2rem;font-family:Arial,sans-serif;font-size:.8rem;color:#7a5f00;align-items:center;gap:.5rem;flex-wrap:wrap;}
     #nps-banner.visible{display:flex;}
@@ -320,6 +363,55 @@
   </div>
 </div>
 
+<!-- Trail Detail Modal -->
+<div id="trail-modal" onclick="handleModalBgClick(event)">
+  <div class="modal-panel" id="modal-panel">
+    <div class="modal-hero">
+      <img id="modal-img" src="" alt="" />
+      <div class="modal-hero-overlay"></div>
+      <button class="modal-close" onclick="closeTrailModal()">✕</button>
+      <div class="modal-hero-text">
+        <h2 id="modal-name"></h2>
+        <div class="modal-location" id="modal-location">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2a7 7 0 0 1 7 7c0 5-7 13-7 13S5 14 5 9a7 7 0 0 1 7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+          <span></span>
+        </div>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="modal-stats-row">
+        <div class="modal-stat"><div class="ms-val" id="modal-dist">—</div><div class="ms-lbl">Distance</div></div>
+        <div class="modal-stat"><div class="ms-val" id="modal-elev">—</div><div class="ms-lbl">Elevation</div></div>
+        <div class="modal-stat"><div class="ms-val" id="modal-time">—</div><div class="ms-lbl">Est. Time</div></div>
+        <div class="modal-stat"><div class="ms-val" id="modal-diff-wrap">—</div><div class="ms-lbl">Difficulty</div></div>
+      </div>
+      <div class="modal-section-title">About this trail</div>
+      <div class="modal-desc" id="modal-desc"></div>
+      <div class="modal-section-title">Tags</div>
+      <div class="modal-tags" id="modal-tags"></div>
+      <div class="modal-rating-row">
+        <span class="stars" id="modal-stars"></span>
+        <strong id="modal-rating-val"></strong>
+        <span class="rv" id="modal-reviews"></span>
+      </div>
+      <div class="modal-section-title">3-Day Forecast</div>
+      <div id="modal-weather"><div class="weather-loading">Loading forecast…</div></div>
+      <div class="modal-section-title" style="margin-top:1.2rem">Map</div>
+      <div class="modal-map"><iframe id="modal-map-frame" src="" loading="lazy"></iframe></div>
+      <div class="modal-actions">
+        <a id="modal-directions" class="btn-directions" href="#" target="_blank">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
+          Get Directions
+        </a>
+        <a id="modal-osm-link" class="btn-osm" href="#" target="_blank">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20"/></svg>
+          View on OSM
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
 <footer><p>© 2026 PathFind · Trail data © <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap contributors</a> · Photos via <a href="https://unsplash.com" target="_blank">Unsplash</a> · <a href="#">Privacy</a> · <a href="#">Terms</a></p></footer>
 
 <script>
@@ -390,6 +482,63 @@ const localTrails = [
   {id:13,name:"Mist Trail to Vernal Falls",location:"Yosemite NP, CA",state:"CA",lat:37.72,lng:-119.55,distance:"3.6 mi",elevation:"1,000 ft",difficulty:"moderate",rating:4.8,reviews:9870,tags:["Waterfall","Iconic","Views","Spray"],match:92,photo:"waterfall_forest",aiReason:"Feel the spray of Vernal and Nevada Falls on Yosemite's most thrilling short hike.",featured:false},
   {id:14,name:"Franconia Ridge Loop",location:"Franconia Notch SP, NH",state:"NH",lat:44.14,lng:-71.68,distance:"8.9 mi",elevation:"3,900 ft",difficulty:"hard",rating:4.9,reviews:4870,tags:["Ridge Walk","Views","Alpine","Dogs OK"],match:88,photo:"mountain_ridge",aiReason:"New England's finest ridge walk — 360° White Mountain views above tree-line.",featured:false},
   {id:15,name:"Old Rag Mountain Loop",location:"Shenandoah NP, VA",state:"VA",lat:38.55,lng:-78.31,distance:"9.0 mi",elevation:"2,415 ft",difficulty:"hard",rating:4.9,reviews:5420,tags:["Rock Scramble","Views","Summit","Permit"],match:87,photo:"mountain_ridge",aiReason:"Virginia's best hike — exhilarating granite boulder scramble to an open summit.",featured:false},
+  // --- Pacific Coast ---
+  {id:16,name:"Muir Woods Redwood Loop",location:"Mill Valley, CA",state:"CA",lat:37.89,lng:-122.57,distance:"2.2 mi",elevation:"200 ft",difficulty:"easy",rating:4.8,reviews:6780,tags:["Redwoods","Loop","Family","Dogs prohibited"],match:90,photo:"forest_sunlight",aiReason:"Walk among cathedral-like old-growth redwoods just north of San Francisco.",featured:true},
+  {id:17,name:"Lands End Trail",location:"San Francisco, CA",state:"CA",lat:37.78,lng:-122.51,distance:"3.4 mi",elevation:"400 ft",difficulty:"easy",rating:4.7,reviews:4320,tags:["Coastal","City Views","Golden Gate","Dogs OK"],match:89,photo:"coastal_cliffs",aiReason:"Rugged coastal path with stunning Golden Gate views.",featured:false},
+  {id:18,name:"Santa Cruz Island Loop",location:"Channel Islands NP, CA",state:"CA",lat:34.01,lng:-119.78,distance:"5.8 mi",elevation:"1,100 ft",difficulty:"moderate",rating:4.8,reviews:1240,tags:["Island","Coastal","Wildlife","Views"],match:85,photo:"coastal_cliffs",aiReason:"Pristine island wilderness with foxes, sea caves, and turquoise coves.",featured:false},
+  {id:19,name:"Temescal Canyon Loop",location:"Pacific Palisades, CA",state:"CA",lat:34.04,lng:-118.54,distance:"3.8 mi",elevation:"900 ft",difficulty:"moderate",rating:4.6,reviews:5870,tags:["Waterfall","Ocean Views","Dogs OK","Loop"],match:87,photo:"waterfall_canyon",aiReason:"Hidden waterfall and sweeping Pacific Ocean views from the Santa Monica Mountains.",featured:false},
+  {id:20,name:"Rattlesnake Ledge",location:"North Bend, WA",state:"WA",lat:47.44,lng:-121.77,distance:"4.0 mi",elevation:"1,160 ft",difficulty:"moderate",rating:4.7,reviews:7640,tags:["Views","Dogs OK","Year-round","Seattle"],match:91,photo:"mountain_green",aiReason:"Seattle's favorite quickie summit — dramatic ledge views over Rattlesnake Lake.",featured:true},
+  {id:21,name:"Mount Si Trail",location:"North Bend, WA",state:"WA",lat:47.49,lng:-121.72,distance:"8.0 mi",elevation:"3,150 ft",difficulty:"hard",rating:4.7,reviews:6230,tags:["Summit","Views","Dogs OK","Training"],match:86,photo:"mountain_peak",aiReason:"The quintessential Seattle training hike with big payoff views at the rocky 'Haystack' summit.",featured:false},
+  {id:22,name:"Ramona Falls",location:"Mt. Hood NF, OR",state:"OR",lat:45.38,lng:-121.80,distance:"7.1 mi",elevation:"730 ft",difficulty:"moderate",rating:4.8,reviews:2980,tags:["Waterfall","Forest","Dogs OK","Loop"],match:93,photo:"waterfall_forest",aiReason:"A gorgeous mossy waterfall cascading down a 120-foot basalt wall in the Mount Hood forest.",featured:false},
+  {id:23,name:"Multnomah Falls Trail",location:"Columbia River Gorge, OR",state:"OR",lat:45.58,lng:-122.12,distance:"2.4 mi",elevation:"750 ft",difficulty:"moderate",rating:4.8,reviews:12400,tags:["Waterfall","Iconic","Views","Year-round"],match:94,photo:"waterfall_forest",aiReason:"Oregon's most visited site — a 620-foot double-tiered waterfall with a historic bridge viewpoint.",featured:true},
+  // --- Desert Southwest ---
+  {id:24,name:"South Kaibab Trail",location:"Grand Canyon NP, AZ",state:"AZ",lat:36.05,lng:-112.08,distance:"6.0 mi",elevation:"4,780 ft",difficulty:"hard",rating:4.9,reviews:8930,tags:["Grand Canyon","Iconic","Views","No Shade"],match:88,photo:"desert_red",aiReason:"Unobstructed rim-to-river views on the Grand Canyon's most dramatic trail.",featured:true},
+  {id:25,name:"Bright Angel Trail",location:"Grand Canyon NP, AZ",state:"AZ",lat:36.06,lng:-112.14,distance:"9.5 mi",elevation:"4,380 ft",difficulty:"hard",rating:4.8,reviews:10230,tags:["Grand Canyon","Water Stations","Classic","Permit"],match:87,photo:"desert_red",aiReason:"The Grand Canyon's most traveled inner-canyon trail with rest houses and water.",featured:false},
+  {id:26,name:"Mesa Arch Trail",location:"Canyonlands NP, UT",state:"UT",lat:38.37,lng:-109.86,distance:"0.5 mi",elevation:"60 ft",difficulty:"easy",rating:4.9,reviews:6120,tags:["Arch","Sunrise","Easy","Iconic"],match:96,photo:"desert_red",aiReason:"Sunrise through Mesa Arch is one of the most photographed moments in the Southwest.",featured:false},
+  {id:27,name:"Peek-a-Boo Loop",location:"Bryce Canyon NP, UT",state:"UT",lat:37.64,lng:-112.17,distance:"5.5 mi",elevation:"1,635 ft",difficulty:"moderate",rating:4.9,reviews:3760,tags:["Hoodoos","Loop","Views","Horses OK"],match:91,photo:"desert_red",aiReason:"Weave through Bryce Canyon's iconic orange hoodoo spires on this unforgettable loop.",featured:true},
+  {id:28,name:"Lower Antelope Canyon",location:"Page, AZ",state:"AZ",lat:36.86,lng:-111.37,distance:"1.0 mi",elevation:"50 ft",difficulty:"easy",rating:4.9,reviews:9850,tags:["Slot Canyon","Photography","Guided Tour","Iconic"],match:97,photo:"canyon_slot",aiReason:"Flowing sandstone walls lit by narrow shafts of light in a famous Navajo slot canyon.",featured:false},
+  {id:29,name:"The Wave",location:"Vermilion Cliffs, AZ",state:"AZ",lat:36.99,lng:-112.01,distance:"5.8 mi",elevation:"590 ft",difficulty:"moderate",rating:5.0,reviews:2140,tags:["Lottery Permit","Photography","Iconic","No Trail"],match:95,photo:"desert_red",aiReason:"The most sought-after permit in America — swirling petrified sand dunes unlike anything else.",featured:false},
+  {id:30,name:"Zion Narrows Top-Down",location:"Zion NP, UT",state:"UT",lat:37.40,lng:-112.87,distance:"16.0 mi",elevation:"1,480 ft",difficulty:"hard",rating:5.0,reviews:1680,tags:["Permit","River","Backpacking","Slot Canyon"],match:89,photo:"canyon_slot",aiReason:"Start from Chamberlain's Ranch and wade the full slot canyon — a world-class multi-day adventure.",featured:false},
+  {id:31,name:"Observation Point",location:"Zion NP, UT",state:"UT",lat:37.27,lng:-112.93,distance:"8.0 mi",elevation:"2,148 ft",difficulty:"hard",rating:4.9,reviews:4100,tags:["Views","Summit","Less Crowded","Desert"],match:90,photo:"desert_red",aiReason:"The best view in Zion — look down on Angels Landing from even higher ground.",featured:false},
+  // --- Rocky Mountains ---
+  {id:32,name:"Longs Peak Keyhole Route",location:"Rocky Mountain NP, CO",state:"CO",lat:40.25,lng:-105.61,distance:"14.5 mi",elevation:"4,855 ft",difficulty:"hard",rating:4.8,reviews:3420,tags:["14er","Summit","Alpine","Early Start"],match:83,photo:"mountain_peak",aiReason:"Colorado's most-climbed 14er — a thrilling scramble through the Keyhole to the broad summit.",featured:false},
+  {id:33,name:"Emerald Lake Trail",location:"Rocky Mountain NP, CO",state:"CO",lat:40.31,lng:-105.66,distance:"3.6 mi",elevation:"605 ft",difficulty:"easy",rating:4.8,reviews:7230,tags:["Lake","Family","Views","Snow"],match:93,photo:"alpine_lake",aiReason:"Three gorgeous alpine lakes in succession — Dream, Nymph, and Emerald — with Hallett Peak backdrop.",featured:false},
+  {id:34,name:"Sky Pond Trail",location:"Rocky Mountain NP, CO",state:"CO",lat:40.28,lng:-105.70,distance:"9.0 mi",elevation:"1,780 ft",difficulty:"moderate",rating:4.9,reviews:2870,tags:["Lake","Waterfall","Alpine","Views"],match:92,photo:"alpine_lake",aiReason:"Climb past a stunning waterfall to a high alpine lake beneath The Sharkstooth.",featured:false},
+  {id:35,name:"Timpanogos Cave Trail",location:"American Fork Canyon, UT",state:"UT",lat:40.43,lng:-111.71,distance:"3.0 mi",elevation:"1,065 ft",difficulty:"moderate",rating:4.6,reviews:4120,tags:["Cave","Views","Family","Historic"],match:85,photo:"mountain_green",aiReason:"Hike to a series of caverns filled with rare helictite formations and stalactites.",featured:false},
+  {id:36,name:"Jenny Lake Loop",location:"Grand Teton NP, WY",state:"WY",lat:43.75,lng:-110.73,distance:"7.1 mi",elevation:"500 ft",difficulty:"easy",rating:4.9,reviews:5640,tags:["Lake","Loop","Views","Ferry Option"],match:94,photo:"alpine_lake",aiReason:"A stunning loop around Jenny Lake with views of the dramatic Teton Range.",featured:true},
+  {id:37,name:"Cascade Canyon Trail",location:"Grand Teton NP, WY",state:"WY",lat:43.76,lng:-110.80,distance:"13.5 mi",elevation:"1,100 ft",difficulty:"moderate",rating:4.9,reviews:4320,tags:["Canyon","Views","Wildlife","Backcountry"],match:91,photo:"mountain_ridge",aiReason:"Deep into the heart of the Tetons past waterfalls, elk meadows, and towering granite walls.",featured:false},
+  {id:38,name:"Beehive Basin",location:"Big Sky, MT",state:"MT",lat:45.27,lng:-111.42,distance:"7.1 mi",elevation:"1,500 ft",difficulty:"moderate",rating:4.8,reviews:1870,tags:["Alpine","Lake","Views","Wildflowers"],match:90,photo:"alpine_lake",aiReason:"Montana's hidden gem — a high alpine basin with a glassy lake and rocky peaks.",featured:false},
+  // --- Pacific Northwest & Alaska ---
+  {id:39,name:"Hoh Rainforest Hall of Mosses",location:"Olympic NP, WA",state:"WA",lat:47.86,lng:-123.93,distance:"0.8 mi",elevation:"50 ft",difficulty:"easy",rating:4.8,reviews:5120,tags:["Rainforest","Moss","Family","Year-round"],match:92,photo:"rainforest",aiReason:"Wander through ethereal moss-draped big-leaf maples in one of North America's only temperate rainforests.",featured:true},
+  {id:40,name:"Hurricane Ridge",location:"Olympic NP, WA",state:"WA",lat:47.97,lng:-123.50,distance:"3.2 mi",elevation:"700 ft",difficulty:"easy",rating:4.8,reviews:4560,tags:["Views","Wildflowers","Deer","Family"],match:91,photo:"mountain_green",aiReason:"Sweeping Olympic Peninsula views with wildflower meadows and friendly deer at your feet.",featured:false},
+  {id:41,name:"Garibaldi Lake Trail",location:"Whistler, BC",state:"WA",lat:49.93,lng:-122.99,distance:"11.0 mi",elevation:"2,900 ft",difficulty:"hard",rating:4.9,reviews:3460,tags:["Lake","Alpine","Canada","Views"],match:88,photo:"alpine_lake",aiReason:"Iconic turquoise glacial lake framed by volcanic peaks — one of BC's crown jewels.",featured:false},
+  {id:42,name:"Flattop Mountain Trail",location:"Anchorage, AK",state:"AK",lat:61.09,lng:-149.67,distance:"3.4 mi",elevation:"1,350 ft",difficulty:"moderate",rating:4.8,reviews:3120,tags:["Summit","City Views","Accessible","Alaska"],match:86,photo:"mountain_peak",aiReason:"Anchorage's most popular hike — sweeping views of Cook Inlet and the Alaska Range.",featured:false},
+  // --- New England & Mid-Atlantic ---
+  {id:43,name:"Acadia Precipice Trail",location:"Acadia NP, ME",state:"ME",lat:44.36,lng:-68.23,distance:"2.5 mi",elevation:"1,050 ft",difficulty:"hard",rating:4.8,reviews:2780,tags:["Iron Rungs","Views","Coastal","Technical"],match:87,photo:"coastal_cliffs",aiReason:"Maine's most thrilling hike — iron rungs and ladders up sheer cliffs with stunning coastal views.",featured:false},
+  {id:44,name:"Jordan Pond Path",location:"Acadia NP, ME",state:"ME",lat:44.33,lng:-68.25,distance:"3.4 mi",elevation:"150 ft",difficulty:"easy",rating:4.7,reviews:5430,tags:["Lake","Flat","Family","Popovers"],match:90,photo:"alpine_lake",aiReason:"A peaceful loop around a crystal-clear glacial pond in Acadia's heart.",featured:false},
+  {id:45,name:"Presidential Traverse",location:"White Mountains, NH",state:"NH",lat:44.27,lng:-71.30,distance:"23.0 mi",elevation:"9,000 ft",difficulty:"hard",rating:5.0,reviews:1240,tags:["Backpacking","Alpine","Remote","Epic"],match:79,photo:"mountain_ridge",aiReason:"One of America's great ridge traverses — cross multiple summits above treeline in the White Mountains.",featured:false},
+  {id:46,name:"Catskill High Peak: Slide Mountain",location:"Catskill Mountains, NY",state:"NY",lat:42.00,lng:-74.39,distance:"6.5 mi",elevation:"1,680 ft",difficulty:"moderate",rating:4.7,reviews:2870,tags:["Summit","Views","Catskills","Dogs OK"],match:86,photo:"forest_sunlight",aiReason:"The highest peak in the Catskills, with panoramic views stretching to the Poconos.",featured:false},
+  {id:47,name:"Bear Mountain Loop",location:"Bear Mountain SP, NY",state:"NY",lat:41.31,lng:-74.00,distance:"6.8 mi",elevation:"1,300 ft",difficulty:"moderate",rating:4.7,reviews:6540,tags:["Views","NYC Day Trip","Loop","Dogs OK"],match:88,photo:"mountain_green",aiReason:"Best view of NYC from the Hudson Highlands — a classic New York day hike.",featured:false},
+  // --- Southeast ---
+  {id:48,name:"Alum Cave Trail",location:"Great Smoky Mountains NP, TN",state:"TN",lat:35.63,lng:-83.45,distance:"4.6 mi",elevation:"1,200 ft",difficulty:"moderate",rating:4.8,reviews:5670,tags:["Caves","Views","Family","Year-round"],match:91,photo:"forest_sunlight",aiReason:"Past unique geological formations to dramatic overhanging bluffs in the Smokies.",featured:true},
+  {id:49,name:"Appalachian Trail: Max Patch",location:"Hot Springs, NC",state:"NC",lat:35.79,lng:-82.96,distance:"2.0 mi",elevation:"420 ft",difficulty:"easy",rating:4.9,reviews:4120,tags:["360° Views","Bald","Dogs OK","AT"],match:95,photo:"mountain_green",aiReason:"A grassy bald summit with 360° views of the Smokies — one of the AT's best spots.",featured:false},
+  {id:50,name:"Chimney Tops Trail",location:"Great Smoky Mountains NP, TN",state:"TN",lat:35.66,lng:-83.49,distance:"3.8 mi",elevation:"1,420 ft",difficulty:"hard",rating:4.7,reviews:4890,tags:["Scramble","Views","Iconic","Smokies"],match:87,photo:"mountain_ridge",aiReason:"A steep scramble to dramatic twin rock pinnacles above the Smokies.",featured:false},
+  {id:51,name:"Linville Gorge: Hawksbill Mountain",location:"Linville, NC",state:"NC",lat:35.87,lng:-81.89,distance:"2.6 mi",elevation:"500 ft",difficulty:"moderate",rating:4.7,reviews:2130,tags:["Views","Gorge","Rocks","Dogs OK"],match:88,photo:"mountain_ridge",aiReason:"A striking rock outcrop summit with aerial views into the deepest gorge in the East.",featured:false},
+  {id:52,name:"Stone Mountain Loop",location:"Blue Ridge Parkway, NC",state:"NC",lat:36.38,lng:-81.04,distance:"4.5 mi",elevation:"600 ft",difficulty:"moderate",rating:4.6,reviews:3240,tags:["Granite Dome","Waterfall","Loop","Dogs OK"],match:87,photo:"waterfall_forest",aiReason:"A massive granite dome with a waterfall and 360° Blue Ridge views.",featured:false},
+  // --- Midwest & Great Plains ---
+  {id:53,name:"Pictured Rocks: Chapel Loop",location:"Pictured Rocks NL, MI",state:"MI",lat:46.55,lng:-86.10,distance:"10.0 mi",elevation:"700 ft",difficulty:"moderate",rating:4.9,reviews:2870,tags:["Waterfall","Lake","Coastal","Backpacking"],match:91,photo:"waterfall_forest",aiReason:"Hike past a waterfall, through the forest, and along dramatic painted sandstone sea cliffs.",featured:true},
+  {id:54,name:"Porcupine Mountains: Lake of the Clouds",location:"Ontonagon, MI",state:"MI",lat:46.77,lng:-89.80,distance:"4.0 mi",elevation:"200 ft",difficulty:"easy",rating:4.8,reviews:2140,tags:["Lake","Views","Fall Colors","Family"],match:93,photo:"alpine_lake",aiReason:"Michigan's Upper Peninsula jewel — an elevated lake surrounded by ancient hardwood forest.",featured:false},
+  {id:55,name:"Badlands Notch Trail",location:"Badlands NP, SD",state:"SD",lat:43.74,lng:-102.49,distance:"1.5 mi",elevation:"200 ft",difficulty:"moderate",rating:4.7,reviews:3560,tags:["Scramble","Views","Unique","Family"],match:89,photo:"desert_red",aiReason:"Scramble through a dramatic notch in the Badlands Wall for sweeping prairie and pinnacle views.",featured:false},
+  {id:56,name:"Tallgrass Prairie: Southwind Nature Trail",location:"Strong City, KS",state:"KS",lat:38.44,lng:-96.57,distance:"1.75 mi",elevation:"60 ft",difficulty:"easy",rating:4.5,reviews:870,tags:["Prairie","Wildlife","Wildflowers","Bison"],match:84,photo:"mountain_green",aiReason:"Walk through the largest remaining tallgrass prairie in the world — home to bison herds.",featured:false},
+  // --- Southwest & Texas ---
+  {id:57,name:"The Fiery Furnace",location:"Arches NP, UT",state:"UT",lat:38.72,lng:-109.56,distance:"2.0 mi",elevation:"300 ft",difficulty:"moderate",rating:4.8,reviews:2430,tags:["Slot Canyon","Guided","No Trail","Arches"],match:90,photo:"canyon_slot",aiReason:"A labyrinth of narrow sandstone fins — an adventurous scramble requiring ranger or guide.",featured:false},
+  {id:58,name:"Lost Mine Trail",location:"Big Bend NP, TX",state:"TX",lat:29.26,lng:-103.30,distance:"4.4 mi",elevation:"1,100 ft",difficulty:"moderate",rating:4.9,reviews:2340,tags:["Views","Desert","Remote","Birds"],match:90,photo:"desert_red",aiReason:"One of Big Bend's best — sweeping Chisos Basin and canyon views on a moderate ridgeline trail.",featured:true},
+  {id:59,name:"Enchanted Rock Summit Trail",location:"Fredericksburg, TX",state:"TX",lat:30.51,lng:-98.82,distance:"1.9 mi",elevation:"425 ft",difficulty:"moderate",rating:4.7,reviews:6780,tags:["Dome","Views","Family","Swimming Nearby"],match:89,photo:"mountain_green",aiReason:"Scramble up a massive pink granite dome rising from the Texas Hill Country.",featured:false},
+  {id:60,name:"Guadalupe Peak Trail",location:"Guadalupe Mountains NP, TX",state:"TX",lat:31.89,lng:-104.86,distance:"8.4 mi",elevation:"3,000 ft",difficulty:"hard",rating:4.8,reviews:1980,tags:["Highest Point","Texas","Summit","Views"],match:85,photo:"mountain_peak",aiReason:"Reach the highest point in Texas — a strenuous climb rewarded with stunning Chihuahuan Desert views.",featured:false},
+  // --- Hawaii ---
+  {id:61,name:"Diamond Head Summit Trail",location:"Honolulu, HI",state:"HI",lat:21.26,lng:-157.81,distance:"1.6 mi",elevation:"560 ft",difficulty:"easy",rating:4.7,reviews:11230,tags:["Views","Iconic","Historic","Family"],match:94,photo:"coastal_cliffs",aiReason:"Hike inside a volcanic crater for sweeping Honolulu and Pacific Ocean views.",featured:true},
+  {id:62,name:"Pipiwai Trail",location:"Haleakalā NP, HI",state:"HI",lat:20.73,lng:-156.04,distance:"4.0 mi",elevation:"650 ft",difficulty:"moderate",rating:4.9,reviews:5670,tags:["Waterfall","Bamboo Forest","Maui","Iconic"],match:95,photo:"tropical_green",aiReason:"Walk through a towering bamboo forest to the 400-foot Waimoku Falls on Maui.",featured:false},
+  {id:63,name:"Waimea Canyon Trail",location:"Waimea, HI",state:"HI",lat:22.06,lng:-159.67,distance:"3.0 mi",elevation:"800 ft",difficulty:"moderate",rating:4.8,reviews:3120,tags:["Canyon","Views","Red Cliffs","Kauai"],match:91,photo:"desert_red",aiReason:"Explore the 'Grand Canyon of the Pacific' — vivid red and orange cliffs on Kauai.",featured:false},
 ];
 
 /* ═══════════════════════════════════════════════════════
@@ -698,13 +847,16 @@ function updateResultCount() {
 /* ═══════════════════════════════════════════════════════
    RENDER
 ═══════════════════════════════════════════════════════ */
+const _trailStore = []; // global lookup so onclick can access full trail objects
+
 function renderCard(t, showAI=false) {
   const dc = {easy:'diff-easy',moderate:'diff-moderate',hard:'diff-hard'}[t.difficulty];
   const stars = '★'.repeat(Math.round(t.rating))+'☆'.repeat(5-Math.round(t.rating));
   const imgSrc = t.npsImage || photoURL(t.photo);
   const distBadge = t._dist!==undefined ? `<span class="dist-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a7 7 0 0 1 7 7c0 5-7 13-7 13S5 14 5 9a7 7 0 0 1 7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>${t._dist} mi away</span>` : '';
   const liveTag = t._live ? `<span class="osm-tag">OSM LIVE</span>` : '';
-  return `<div class="trail-card">
+  const _key = _trailStore.push(t) - 1;
+  return `<div class="trail-card" style="cursor:pointer" onclick="openTrailModal(_trailStore[${_key}])">`+`
     <div class="trail-img">
       <img src="${imgSrc}" alt="${t.name}" loading="lazy" onerror="this.parentElement.style.background='linear-gradient(135deg,#4a7c3f,#2d5a27)';this.style.display='none'"/>
       ${liveTag}
@@ -876,6 +1028,103 @@ function autoResize(el) { el.style.height='auto'; el.style.height=el.scrollHeigh
 
 buildStateGrid();
 document.getElementById('featured-grid').innerHTML = localTrails.filter(t=>t.featured).map(t=>renderCard(t,false)).join('');
+
+/* ═══════════════════════════════════════════════════════
+   TRAIL DETAIL MODAL
+═══════════════════════════════════════════════════════ */
+let _currentModalTrail = null;
+
+function openTrailModal(t) {
+  _currentModalTrail = t;
+  const modal = document.getElementById('trail-modal');
+
+  // Hero image
+  document.getElementById('modal-img').src = t.npsImage || photoURL(t.photo);
+  document.getElementById('modal-name').textContent = t.name;
+  document.getElementById('modal-location').querySelector('span').textContent = t.location;
+
+  // Stats
+  document.getElementById('modal-dist').textContent = t.distance || '—';
+  document.getElementById('modal-elev').textContent = t.elevation || '—';
+
+  // Estimate time: ~2 mph + 500ft/hr elevation
+  const miles = parseFloat((t.distance||'0').replace(/[^\d.]/g,'')) || 0;
+  const elev = parseFloat((t.elevation||'0').replace(/[^\d,]/g,'').replace(',','')) || 0;
+  const hrs = miles/2 + elev/500;
+  const h = Math.floor(hrs), m = Math.round((hrs-h)*60);
+  document.getElementById('modal-time').textContent = hrs > 0 ? (h > 0 ? `${h}h ${m}m` : `${m}m`) : '—';
+
+  const dc = {easy:'diff-easy',moderate:'diff-moderate',hard:'diff-hard'}[t.difficulty] || '';
+  document.getElementById('modal-diff-wrap').innerHTML = `<span class="modal-diff-badge ${dc}">${t.difficulty||'—'}</span>`;
+
+  // Description
+  document.getElementById('modal-desc').textContent = t.npsDesc || t.aiReason || 'No description available.';
+
+  // Tags
+  document.getElementById('modal-tags').innerHTML = (t.tags||[]).map(g=>`<span class="tag">${g}</span>`).join('');
+
+  // Rating
+  const stars = '★'.repeat(Math.round(t.rating||0))+'☆'.repeat(5-Math.round(t.rating||0));
+  document.getElementById('modal-stars').textContent = stars;
+  document.getElementById('modal-rating-val').textContent = t.rating || '—';
+  document.getElementById('modal-reviews').textContent = t.reviews ? `(${Number(t.reviews).toLocaleString()} reviews)` : '';
+
+  // Map
+  const lat = t.lat || (t.center && t.center.lat) || 0;
+  const lng = t.lng || (t.center && t.center.lon) || 0;
+  if (lat && lng) {
+    const pad = 0.04;
+    document.getElementById('modal-map-frame').src =
+      `https://www.openstreetmap.org/export/embed.html?bbox=${lng-pad},${lat-pad},${lng+pad},${lat+pad}&layer=mapnik&marker=${lat},${lng}`;
+    document.getElementById('modal-directions').href =
+      `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
+    document.getElementById('modal-osm-link').href =
+      `https://www.openstreetmap.org/?mlat=${lat}&mlon=${lng}#map=13/${lat}/${lng}`;
+  }
+
+  // Weather (Open-Meteo, free, no key needed)
+  document.getElementById('modal-weather').innerHTML = '<div class="weather-loading">Loading forecast…</div>';
+  if (lat && lng) fetchWeather(lat, lng);
+
+  modal.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeTrailModal() {
+  document.getElementById('trail-modal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function handleModalBgClick(e) {
+  if (e.target === document.getElementById('trail-modal')) closeTrailModal();
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeTrailModal(); });
+
+async function fetchWeather(lat, lng) {
+  const WMO = {0:'☀️',1:'🌤',2:'⛅',3:'☁️',45:'🌫',48:'🌫',51:'🌦',53:'🌦',55:'🌧',61:'🌧',63:'🌧',65:'🌧',71:'🌨',73:'🌨',75:'❄️',80:'🌦',81:'🌧',82:'⛈',95:'⛈',96:'⛈',99:'⛈'};
+  try {
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_mean,weathercode&temperature_unit=fahrenheit&timezone=auto&forecast_days=3`;
+    const r = await fetch(url);
+    const d = await r.json();
+    const days = d.daily;
+    const labels = ['Today','Tomorrow',new Date(Date.now()+2*86400000).toLocaleDateString('en-US',{weekday:'short'})];
+    document.getElementById('modal-weather').innerHTML = days.time.map((_,i) => {
+      const icon = WMO[days.weathercode[i]] || '🌡️';
+      const hi = Math.round(days.temperature_2m_max[i]);
+      const lo = Math.round(days.temperature_2m_min[i]);
+      const rain = days.precipitation_probability_mean[i] || 0;
+      return `<div class="weather-day">
+        <div class="wd-label">${labels[i]}</div>
+        <div class="wd-icon">${icon}</div>
+        <div class="wd-temp">${hi}° / ${lo}°F</div>
+        <div class="wd-rain">💧 ${rain}% rain</div>
+      </div>`;
+    }).join('');
+  } catch {
+    document.getElementById('modal-weather').innerHTML = '<div class="weather-loading">Forecast unavailable</div>';
+  }
+}
 </script>
 </body>
 </html>
