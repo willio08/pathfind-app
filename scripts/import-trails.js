@@ -201,9 +201,9 @@ async function upsertBatch(trails) {
 
 async function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 
-async function getImportedStates() {
-  const { data } = await sb.from('trails').select('state').limit(5000);
-  return new Set((data || []).map(r => r.state));
+async function stateHasTrails(stateCode) {
+  const { data } = await sb.from('trails').select('id').eq('state', stateCode).limit(1);
+  return data && data.length > 0;
 }
 
 async function main() {
@@ -214,15 +214,12 @@ async function main() {
   console.log(`\n🏔  PathFind Trail Importer`);
   console.log(`📦  Fetching trails for ${states.length} US states from OpenStreetMap\n`);
 
-  // Check which states already have data so we can skip them
-  process.stdout.write('Checking which states already imported... ');
-  const alreadyDone = await getImportedStates();
-  console.log(`${alreadyDone.size} states already in DB, skipping those.\n`);
-
   for (let i = 0; i < states.length; i++) {
     const [code, { bbox, name }] = states[i];
 
-    if (alreadyDone.has(code)) {
+    // Check this specific state before importing
+    const already = await stateHasTrails(code);
+    if (already) {
       console.log(`[${i+1}/${states.length}] ${name} (${code})... ⏭  already imported`);
       continue;
     }
