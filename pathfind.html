@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>PathFind — AI-Powered Trail Discovery</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -23,6 +24,57 @@
     .nav-links a:hover{color:var(--forest);}
     .nav-cta{background:var(--forest);color:#fff !important;padding:.45rem 1.1rem;border-radius:20px;font-weight:bold !important;}
     .nav-cta:hover{background:var(--moss) !important;}
+
+    /* ── Auth Modal ── */
+    #auth-modal{position:fixed;inset:0;z-index:2000;display:flex;align-items:center;justify-content:center;background:rgba(30,20,10,.6);backdrop-filter:blur(4px);opacity:0;pointer-events:none;transition:opacity .2s;}
+    #auth-modal.open{opacity:1;pointer-events:all;}
+    .auth-box{background:var(--cream);border-radius:16px;padding:2rem;width:100%;max-width:380px;box-shadow:var(--shadow-lg);}
+    .auth-box h2{font-size:1.4rem;color:var(--forest);margin-bottom:.25rem;}
+    .auth-box p{font-size:.85rem;color:var(--muted);font-family:Arial,sans-serif;margin-bottom:1.2rem;}
+    .auth-field{display:flex;flex-direction:column;gap:.3rem;margin-bottom:.9rem;}
+    .auth-field label{font-size:.78rem;font-family:Arial,sans-serif;font-weight:bold;color:var(--bark);text-transform:uppercase;letter-spacing:.04em;}
+    .auth-field input{border:1px solid var(--border);border-radius:8px;padding:.6rem .8rem;font-size:.9rem;font-family:Arial,sans-serif;outline:none;background:#fff;}
+    .auth-field input:focus{border-color:var(--moss);}
+    .auth-submit{width:100%;background:var(--forest);color:#fff;border:none;border-radius:10px;padding:.8rem;font-family:Arial,sans-serif;font-size:.95rem;font-weight:bold;cursor:pointer;margin-top:.3rem;}
+    .auth-submit:hover{background:var(--moss);}
+    .auth-toggle{text-align:center;margin-top:.9rem;font-family:Arial,sans-serif;font-size:.83rem;color:var(--muted);}
+    .auth-toggle a{color:var(--forest);font-weight:bold;cursor:pointer;text-decoration:none;}
+    .auth-error{background:#fde8e8;color:#842029;border-radius:8px;padding:.5rem .8rem;font-size:.82rem;font-family:Arial,sans-serif;margin-bottom:.7rem;display:none;}
+    .auth-close{float:right;background:none;border:none;font-size:1.3rem;cursor:pointer;color:var(--muted);margin-top:-.3rem;}
+    /* Nav user state */
+    .nav-user{display:flex;align-items:center;gap:.6rem;font-family:Arial,sans-serif;font-size:.88rem;}
+    .nav-avatar{width:32px;height:32px;border-radius:50%;background:var(--forest);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:.85rem;cursor:pointer;}
+    .nav-user-menu{position:relative;}
+    .nav-dropdown{position:absolute;top:calc(100% + 8px);right:0;background:#fff;border:1px solid var(--border);border-radius:10px;box-shadow:var(--shadow-lg);min-width:160px;overflow:hidden;display:none;z-index:200;}
+    .nav-dropdown.open{display:block;}
+    .nav-dropdown a{display:block;padding:.65rem 1rem;font-family:Arial,sans-serif;font-size:.85rem;color:var(--text);text-decoration:none;cursor:pointer;}
+    .nav-dropdown a:hover{background:var(--cream);}
+    .nav-dropdown hr{border:none;border-top:1px solid var(--border);margin:0;}
+    /* Heart / save button */
+    .btn-heart{position:absolute;top:10px;right:10px;background:rgba(255,255,255,.85);border:none;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1rem;z-index:5;transition:transform .15s;}
+    .btn-heart:hover{transform:scale(1.15);}
+    .btn-heart.saved{color:#e05a5a;}
+    /* Saved trails section */
+    #saved-section{display:none;padding:2rem 2.5rem;}
+    #saved-section.visible{display:block;}
+    /* Reviews */
+    .reviews-list{margin-top:.5rem;display:flex;flex-direction:column;gap:.75rem;max-height:240px;overflow-y:auto;}
+    .review-item{background:#fff;border:1px solid var(--border);border-radius:10px;padding:.75rem 1rem;}
+    .review-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:.3rem;}
+    .review-user{font-family:Arial,sans-serif;font-size:.8rem;font-weight:bold;color:var(--bark);}
+    .review-stars{color:#d4a017;font-size:.85rem;}
+    .review-text{font-size:.85rem;color:var(--text);line-height:1.5;}
+    .review-form{margin-top:.8rem;display:flex;flex-direction:column;gap:.5rem;}
+    .review-form textarea{border:1px solid var(--border);border-radius:8px;padding:.6rem .8rem;font-size:.85rem;font-family:Arial,sans-serif;resize:vertical;min-height:70px;outline:none;}
+    .review-form textarea:focus{border-color:var(--moss);}
+    .star-picker{display:flex;gap:.3rem;font-size:1.4rem;cursor:pointer;}
+    .star-picker span{color:#ddd;transition:color .1s;}
+    .star-picker span.on{color:#d4a017;}
+    .btn-submit-review{background:var(--forest);color:#fff;border:none;border-radius:8px;padding:.55rem 1rem;font-family:Arial,sans-serif;font-size:.85rem;font-weight:bold;cursor:pointer;align-self:flex-start;}
+    .btn-submit-review:hover{background:var(--moss);}
+    .review-login-prompt{font-family:Arial,sans-serif;font-size:.83rem;color:var(--muted);text-align:center;padding:.5rem;}
+    .review-login-prompt a{color:var(--forest);cursor:pointer;font-weight:bold;}
+    .no-reviews{font-family:Arial,sans-serif;font-size:.83rem;color:var(--muted);font-style:italic;}
 
     /* ── Trail Detail Modal ── */
     #trail-modal{position:fixed;inset:0;z-index:1000;display:flex;align-items:flex-end;justify-content:center;background:rgba(30,20,10,.55);backdrop-filter:blur(4px);opacity:0;pointer-events:none;transition:opacity .25s;}
@@ -230,10 +282,40 @@
     PathFind
   </a>
   <div class="nav-links">
-    <a href="#">Explore</a><a href="#">Maps</a><a href="#">Community</a>
-    <a href="#" class="nav-cta">Sign Up Free</a>
+    <a href="#">Explore</a>
+    <a href="#" onclick="showSaved(event)">Saved</a>
+    <a href="#">Community</a>
+    <div id="nav-auth-area">
+      <a href="#" class="nav-cta" onclick="openAuthModal('signup');return false;">Sign Up Free</a>
+    </div>
   </div>
 </nav>
+
+<!-- Auth Modal -->
+<div id="auth-modal" onclick="handleAuthBgClick(event)">
+  <div class="auth-box">
+    <button class="auth-close" onclick="closeAuthModal()">✕</button>
+    <h2 id="auth-title">Create your account</h2>
+    <p id="auth-sub">Save trails and write reviews.</p>
+    <div class="auth-error" id="auth-error"></div>
+    <div class="auth-field" id="auth-name-field">
+      <label>Name</label>
+      <input type="text" id="auth-name" placeholder="Your name" />
+    </div>
+    <div class="auth-field">
+      <label>Email</label>
+      <input type="email" id="auth-email" placeholder="you@example.com" />
+    </div>
+    <div class="auth-field">
+      <label>Password</label>
+      <input type="password" id="auth-password" placeholder="••••••••" />
+    </div>
+    <button class="auth-submit" id="auth-submit-btn" onclick="submitAuth()">Create Account</button>
+    <div class="auth-toggle" id="auth-toggle">
+      Already have an account? <a onclick="switchAuthMode('login')">Log in</a>
+    </div>
+  </div>
+</div>
 
 <!-- NPS key banner — visible until key is pasted -->
 <div id="nps-banner">
@@ -363,6 +445,13 @@
   </div>
 </div>
 
+<!-- Saved Trails Section -->
+<section id="saved-section">
+  <div class="section-label">❤️ Your saved trails</div>
+  <div class="section-title" style="margin-bottom:1.5rem">Saved adventures</div>
+  <div class="trails-grid" id="saved-grid"></div>
+</section>
+
 <!-- Trail Detail Modal -->
 <div id="trail-modal" onclick="handleModalBgClick(event)">
   <div class="modal-panel" id="modal-panel">
@@ -394,7 +483,11 @@
         <strong id="modal-rating-val"></strong>
         <span class="rv" id="modal-reviews"></span>
       </div>
-      <div class="modal-section-title">3-Day Forecast</div>
+      <div class="modal-section-title">Reviews</div>
+      <div class="reviews-list" id="modal-reviews-list"><p class="no-reviews">No reviews yet.</p></div>
+      <div id="modal-review-form-area"></div>
+
+      <div class="modal-section-title" style="margin-top:1.2rem">3-Day Forecast</div>
       <div id="modal-weather"><div class="weather-loading">Loading forecast…</div></div>
       <div class="modal-section-title" style="margin-top:1.2rem">Map</div>
       <div class="modal-map"><iframe id="modal-map-frame" src="" loading="lazy"></iframe></div>
@@ -665,11 +758,11 @@ function osmReason(t, diff) {
 ═══════════════════════════════════════════════════════ */
 const _npsCache = {};
 async function fetchNPSParks(stateCode) {
-  if (!CONFIG.NPS_KEY || !stateCode) return [];
+  if (!stateCode) return [];
   if (_npsCache[stateCode]) return _npsCache[stateCode];
   try {
-    const url = `https://developer.nps.gov/api/v1/parks?stateCode=${stateCode}&limit=50&fields=images,activities&api_key=${CONFIG.NPS_KEY}`;
-    const r = await fetch(url);
+    // Call our serverless proxy (keeps NPS key server-side)
+    const r = await fetch(`/api/nps?stateCode=${stateCode}`);
     const d = await r.json();
     _npsCache[stateCode] = d.data || [];
     return _npsCache[stateCode];
@@ -855,11 +948,14 @@ function renderCard(t, showAI=false) {
   const imgSrc = t.npsImage || photoURL(t.photo);
   const distBadge = t._dist!==undefined ? `<span class="dist-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a7 7 0 0 1 7 7c0 5-7 13-7 13S5 14 5 9a7 7 0 0 1 7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>${t._dist} mi away</span>` : '';
   const liveTag = t._live ? `<span class="osm-tag">OSM LIVE</span>` : '';
+  const trailKey = t.id || t.osmId || t.name;
+  const isSaved = _savedIds.has(String(trailKey));
   const _key = _trailStore.push(t) - 1;
   return `<div class="trail-card" style="cursor:pointer" onclick="openTrailModal(_trailStore[${_key}])">`+`
-    <div class="trail-img">
+    <div class="trail-img" style="position:relative">
       <img src="${imgSrc}" alt="${t.name}" loading="lazy" onerror="this.parentElement.style.background='linear-gradient(135deg,#4a7c3f,#2d5a27)';this.style.display='none'"/>
       ${liveTag}
+      <button class="btn-heart${isSaved?' saved':''}" data-trail-key="${trailKey}" onclick="event.stopPropagation();toggleSave(this,_trailStore[${_key}])">${isSaved?'❤️':'🤍'}</button>
       <div class="trail-img-overlay">
         <span class="difficulty-badge ${dc}">${t.difficulty}</span>
         ${showAI ? `<span class="match-badge">⚡ ${t.match}%</span>` : ''}
@@ -1026,6 +1122,226 @@ function fillHint(el) { document.getElementById('search-input').value=el.textCon
 function handleKey(e) { if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();doSearch();} }
 function autoResize(el) { el.style.height='auto'; el.style.height=el.scrollHeight+'px'; }
 
+/* ═══════════════════════════════════════════════════════
+   SUPABASE INIT
+═══════════════════════════════════════════════════════ */
+const SUPA_URL = 'https://rxnhkrpytxkgxszlyzva.supabase.co';
+const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ4bmhrcnB5dHhrZ3hzemx5enZhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ0MDAwOTYsImV4cCI6MjA4OTk3NjA5Nn0.32EJ0PQBIYea9pgYqJeGiq-eMX92JK9Mx4nO6Iiumvw';
+const sb = window.supabase.createClient(SUPA_URL, SUPA_KEY);
+
+let _currentUser = null;
+let _savedIds = new Set(); // trail keys the user has saved
+
+/* ── Auth state listener ── */
+sb.auth.onAuthStateChange(async (event, session) => {
+  _currentUser = session?.user || null;
+  updateNavAuth();
+  if (_currentUser) {
+    await loadSavedIds();
+    reRenderVisibleCards();
+  } else {
+    _savedIds.clear();
+    reRenderVisibleCards();
+  }
+});
+
+function updateNavAuth() {
+  const area = document.getElementById('nav-auth-area');
+  if (_currentUser) {
+    const name = _currentUser.user_metadata?.name || _currentUser.email.split('@')[0];
+    const initial = name[0].toUpperCase();
+    area.innerHTML = `
+      <div class="nav-user-menu">
+        <div class="nav-avatar" onclick="toggleUserMenu()">${initial}</div>
+        <div class="nav-dropdown" id="nav-dropdown">
+          <a onclick="showSaved(event)">❤️ Saved Trails</a>
+          <hr/>
+          <a onclick="signOut()">Sign Out</a>
+        </div>
+      </div>`;
+  } else {
+    area.innerHTML = `<a href="#" class="nav-cta" onclick="openAuthModal('signup');return false;">Sign Up Free</a>`;
+  }
+}
+
+function toggleUserMenu() {
+  document.getElementById('nav-dropdown')?.classList.toggle('open');
+}
+document.addEventListener('click', e => {
+  if (!e.target.closest('.nav-user-menu')) document.getElementById('nav-dropdown')?.classList.remove('open');
+});
+
+/* ── Auth Modal ── */
+let _authMode = 'signup';
+function openAuthModal(mode='signup') {
+  _authMode = mode;
+  switchAuthMode(mode);
+  document.getElementById('auth-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeAuthModal() {
+  document.getElementById('auth-modal').classList.remove('open');
+  document.body.style.overflow = '';
+  document.getElementById('auth-error').style.display = 'none';
+}
+function handleAuthBgClick(e) { if (e.target===document.getElementById('auth-modal')) closeAuthModal(); }
+function switchAuthMode(mode) {
+  _authMode = mode;
+  const isSignup = mode === 'signup';
+  document.getElementById('auth-title').textContent = isSignup ? 'Create your account' : 'Welcome back';
+  document.getElementById('auth-sub').textContent = isSignup ? 'Save trails and write reviews.' : 'Log in to your PathFind account.';
+  document.getElementById('auth-name-field').style.display = isSignup ? '' : 'none';
+  document.getElementById('auth-submit-btn').textContent = isSignup ? 'Create Account' : 'Log In';
+  document.getElementById('auth-toggle').innerHTML = isSignup
+    ? `Already have an account? <a onclick="switchAuthMode('login')">Log in</a>`
+    : `New to PathFind? <a onclick="switchAuthMode('signup')">Sign up</a>`;
+  document.getElementById('auth-error').style.display = 'none';
+}
+async function submitAuth() {
+  const email = document.getElementById('auth-email').value.trim();
+  const password = document.getElementById('auth-password').value;
+  const name = document.getElementById('auth-name').value.trim();
+  const errEl = document.getElementById('auth-error');
+  errEl.style.display = 'none';
+  if (!email || !password) { errEl.textContent='Email and password required.'; errEl.style.display='block'; return; }
+  let error;
+  if (_authMode === 'signup') {
+    ({ error } = await sb.auth.signUp({ email, password, options:{ data:{ name } } }));
+    if (!error) { showToast('✅ Account created! Check your email to confirm.'); closeAuthModal(); return; }
+  } else {
+    ({ error } = await sb.auth.signInWithPassword({ email, password }));
+    if (!error) { showToast(`👋 Welcome back!`); closeAuthModal(); return; }
+  }
+  errEl.textContent = error.message; errEl.style.display = 'block';
+}
+async function signOut() {
+  await sb.auth.signOut();
+  showToast('Signed out.');
+  hideSaved();
+}
+
+/* ── Saved Trails ── */
+async function loadSavedIds() {
+  if (!_currentUser) return;
+  const { data } = await sb.from('saved_trails').select('trail_id').eq('user_id', _currentUser.id);
+  _savedIds = new Set((data||[]).map(r => r.trail_id));
+}
+
+async function toggleSave(btn, t) {
+  if (!_currentUser) { openAuthModal('signup'); return; }
+  const key = String(t.id || t.osmId || t.name);
+  if (_savedIds.has(key)) {
+    await sb.from('saved_trails').delete().eq('user_id', _currentUser.id).eq('trail_id', key);
+    _savedIds.delete(key);
+    btn.textContent = '🤍'; btn.classList.remove('saved');
+    showToast('Removed from saved trails.');
+  } else {
+    await sb.from('saved_trails').insert({
+      user_id: _currentUser.id, trail_id: key,
+      trail_name: t.name, trail_data: t
+    });
+    _savedIds.add(key);
+    btn.textContent = '❤️'; btn.classList.add('saved');
+    showToast('❤️ Trail saved!');
+  }
+}
+
+function reRenderVisibleCards() {
+  const rg = document.getElementById('trails-grid');
+  if (rg && currentResults.length) renderResults(currentResults);
+  const fg = document.getElementById('featured-grid');
+  if (fg) fg.innerHTML = localTrails.filter(t=>t.featured).map(t=>renderCard(t,false)).join('');
+}
+
+function showSaved(e) {
+  if (e) e.preventDefault();
+  if (!_currentUser) { openAuthModal('login'); return; }
+  document.getElementById('featured-section').style.display = 'none';
+  document.getElementById('results-section').classList.remove('visible');
+  loadAndShowSaved();
+  document.getElementById('saved-section').classList.add('visible');
+  document.getElementById('nav-dropdown')?.classList.remove('open');
+}
+function hideSaved() {
+  document.getElementById('saved-section').classList.remove('visible');
+  document.getElementById('featured-section').style.display = '';
+}
+
+async function loadAndShowSaved() {
+  const grid = document.getElementById('saved-grid');
+  grid.innerHTML = '<div style="font-family:Arial,sans-serif;color:var(--muted);padding:1rem">Loading…</div>';
+  const { data } = await sb.from('saved_trails').select('trail_data').eq('user_id', _currentUser.id).order('saved_at', { ascending: false });
+  if (!data || !data.length) {
+    grid.innerHTML = '<div style="font-family:Arial,sans-serif;color:var(--muted);padding:1rem">No saved trails yet — heart a trail to save it!</div>';
+    return;
+  }
+  grid.innerHTML = data.map(r => renderCard(r.trail_data, false)).join('');
+}
+
+/* ── Reviews ── */
+async function loadReviews(trailId) {
+  const container = document.getElementById('modal-reviews-list');
+  const { data } = await sb.from('reviews').select('*').eq('trail_id', String(trailId)).order('created_at', { ascending: false });
+  if (!data || !data.length) {
+    container.innerHTML = '<p class="no-reviews">No reviews yet — be the first!</p>'; return;
+  }
+  container.innerHTML = data.map(r => {
+    const stars = '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating);
+    const date = new Date(r.created_at).toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
+    return `<div class="review-item">
+      <div class="review-header">
+        <span class="review-user">${r.username || 'Hiker'}</span>
+        <span class="review-stars">${stars}</span>
+      </div>
+      <div class="review-text">${r.comment || ''}</div>
+      <div style="font-size:.72rem;color:var(--muted);font-family:Arial,sans-serif;margin-top:.25rem">${date}</div>
+    </div>`;
+  }).join('');
+}
+
+function renderReviewForm(trailId, trailName) {
+  const area = document.getElementById('modal-review-form-area');
+  if (!_currentUser) {
+    area.innerHTML = `<div class="review-login-prompt">
+      <a onclick="closeTrailModal();openAuthModal('login')">Log in</a> or
+      <a onclick="closeTrailModal();openAuthModal('signup')">sign up</a> to leave a review.
+    </div>`;
+    return;
+  }
+  let pickedRating = 0;
+  area.innerHTML = `<div class="review-form">
+    <div class="star-picker" id="star-picker">
+      ${[1,2,3,4,5].map(n=>`<span data-n="${n}" onclick="pickStar(${n})">☆</span>`).join('')}
+    </div>
+    <textarea id="review-text" placeholder="Share your experience…"></textarea>
+    <button class="btn-submit-review" onclick="submitReview('${trailId}','${trailName.replace(/'/g,"\\'")}')">Post Review</button>
+  </div>`;
+}
+
+function pickStar(n) {
+  document.querySelectorAll('#star-picker span').forEach((s,i) => {
+    s.textContent = i < n ? '★' : '☆';
+    s.classList.toggle('on', i < n);
+  });
+  document.getElementById('star-picker').dataset.rating = n;
+}
+
+async function submitReview(trailId, trailName) {
+  if (!_currentUser) return;
+  const rating = parseInt(document.getElementById('star-picker').dataset.rating || 0);
+  const comment = document.getElementById('review-text').value.trim();
+  if (!rating) { showToast('Please pick a star rating.'); return; }
+  const name = _currentUser.user_metadata?.name || _currentUser.email.split('@')[0];
+  const { error } = await sb.from('reviews').insert({
+    user_id: _currentUser.id, trail_id: String(trailId),
+    trail_name: trailName, rating, comment, username: name
+  });
+  if (error) { showToast('Error posting review. Try again.'); return; }
+  showToast('✅ Review posted!');
+  await loadReviews(trailId);
+  renderReviewForm(trailId, trailName);
+}
+
 buildStateGrid();
 document.getElementById('featured-grid').innerHTML = localTrails.filter(t=>t.featured).map(t=>renderCard(t,false)).join('');
 
@@ -1085,6 +1401,11 @@ function openTrailModal(t) {
   // Weather (Open-Meteo, free, no key needed)
   document.getElementById('modal-weather').innerHTML = '<div class="weather-loading">Loading forecast…</div>';
   if (lat && lng) fetchWeather(lat, lng);
+
+  // Reviews
+  const trailId = t.id || t.osmId || t.name;
+  loadReviews(trailId);
+  renderReviewForm(trailId, t.name);
 
   modal.classList.add('open');
   document.body.style.overflow = 'hidden';
