@@ -1016,6 +1016,30 @@ function getSummary(query, n, liveMode) {
   return summaries[key].replace('{n}',n).replace(/{loc}/g, locStr) + src + '.';
 }
 
+async function searchDB(params) {
+  const url = new URL('/api/search-trails', location.origin);
+  Object.entries(params).forEach(([k,v]) => { if (v !== undefined && v !== null) url.searchParams.set(k, v); });
+  const resp = await fetch(url);
+  if (!resp.ok) throw new Error(`DB search failed: ${resp.status}`);
+  const data = await resp.json();
+  return (data.trails || []).map(t => ({
+    id: t.id,
+    name: t.name,
+    location: t.location || '',
+    state: t.state || '',
+    lat: t.lat,
+    lng: t.lng,
+    distance: t.distance_mi ? `${t.distance_mi} mi` : null,
+    elevation: t.elevation_ft ? `${t.elevation_ft} ft` : null,
+    difficulty: t.difficulty || 'moderate',
+    tags: t.tags || [],
+    description: t.description || '',
+    photo: t.photo_type || 'mountain_green',
+    source: 'db',
+    _dist: t._dist,
+  }));
+}
+
 async function doSearch() {
   const query = document.getElementById('search-input').value.trim();
   if (!query) return;
@@ -1028,30 +1052,52 @@ async function doSearch() {
   setLoadingMsg('Searching trails…');
   setTimeout(() => document.getElementById('loading-cards').scrollIntoView({behavior:'smooth',block:'start'}), 80);
 
-  let liveMode = false;
   let results = [];
+  let dataSource = 'local'; // 'db', 'osm', 'local'
 
-  if (locationState.lat !== null) {
-    setLoadingMsg('⛰ Querying OpenStreetMap — fetching live trail data…');
+  // 1. Try Supabase database (nationwide full-text + geo)
+  try {
+    setLoadingMsg('🔍 Searching PathFind database…');
+    const params = { q: query, limit: 60 };
+    if (locationState.lat !== null) {
+      params.lat = locationState.lat;
+      params.lng = locationState.lng;
+      params.radius = locationState.radiusMi || 50;
+    }
+    const dbResults = await searchDB(params);
+    if (dbResults.length > 0) {
+      results = applyTypeFilter(dbResults);
+      dataSource = 'db';
+    }
+  } catch (err) {
+    console.warn('DB search failed, trying OSM:', err);
+  }
+
+  // 2. If location set and DB came up short, supplement with live OSM
+  if (locationState.lat !== null && results.length < 10) {
+    setLoadingMsg('⛰ Supplementing with live OpenStreetMap data…');
     try {
       const osm = await fetchOSMTrails(locationState.lat, locationState.lng, locationState.radiusMi || 50);
       if (osm.length > 0) {
-        liveMode = true;
-        results = applyTypeFilter(applyQueryFilter(osm, query));
-      } else {
-        setLoadingMsg('No OSM trails found — using curated database…');
+        const osmFiltered = applyTypeFilter(applyQueryFilter(osm, query));
+        // Merge: add OSM trails not already in DB results
+        const existingIds = new Set(results.map(r => r.id));
+        const newOsm = osmFiltered.filter(t => !existingIds.has(t.id));
+        results = [...results, ...newOsm];
+        if (dataSource !== 'db') dataSource = 'osm';
       }
     } catch (err) {
-      console.warn('Overpass failed, falling back:', err);
-      setLoadingMsg('Live query timed out — using curated database…');
+      console.warn('Overpass failed:', err);
     }
   }
 
-  if (!liveMode) {
+  // 3. Final fallback to local curated trails
+  if (results.length === 0) {
     results = applyTypeFilter(applyQueryFilter(filterLocal(localTrails), query));
+    dataSource = 'local';
   }
 
-  // enrich with NPS data if key is available
+  // Enrich with NPS data if key is available
   if (CONFIG.NPS_KEY && results.length > 0) {
     setLoadingMsg('Enriching results with NPS park data…');
     results = await enrichWithNPS(results);
@@ -1064,11 +1110,15 @@ async function doSearch() {
 
   // data source indicator
   const dsRow = document.getElementById('data-source-row');
-  dsRow.innerHTML = liveMode
-    ? `<span class="live-badge">Live OSM data</span> <span>${sorted.length} trails pulled from OpenStreetMap${CONFIG.NPS_KEY ? ' · NPS enriched' : ''}</span>`
-    : `<span class="local-badge">Curated database</span> <span>Set a location to search hundreds of thousands of live trails</span>`;
+  if (dataSource === 'db') {
+    dsRow.innerHTML = `<span class="live-badge" style="background:#2e7d52">PathFind Database</span> <span>${sorted.length} trails from our nationwide database${CONFIG.NPS_KEY ? ' · NPS enriched' : ''}</span>`;
+  } else if (dataSource === 'osm') {
+    dsRow.innerHTML = `<span class="live-badge">Live OSM data</span> <span>${sorted.length} trails from OpenStreetMap${CONFIG.NPS_KEY ? ' · NPS enriched' : ''}</span>`;
+  } else {
+    dsRow.innerHTML = `<span class="local-badge">Curated database</span> <span>Import trails to Supabase for nationwide search</span>`;
+  }
 
-  document.getElementById('ai-summary-text').innerHTML = getSummary(query, sorted.length, liveMode);
+  document.getElementById('ai-summary-text').innerHTML = getSummary(query, sorted.length, dataSource === 'osm');
   updateResultCount();
   renderResults(sorted);
   document.getElementById('results-section').classList.add('visible');
@@ -1104,12 +1154,38 @@ function buildStateGrid() {
   });
 }
 
-function showStateResults(stateCode) {
+async function showStateResults(stateCode) {
   document.getElementById('featured-section').style.display = 'none';
-  currentResults = filterLocal(localTrails);
-  const sorted = sortTrails(currentResults);
-  document.getElementById('data-source-row').innerHTML = `<span class="local-badge">Curated database</span> <span>Showing ${sorted.length} trails in ${stateNames[stateCode]||stateCode} — search with a city for live OSM data</span>`;
-  document.getElementById('ai-summary-text').innerHTML = `Showing <strong>${sorted.length} trail${sorted.length!==1?'s':''}</strong> in <strong>${stateNames[stateCode]||stateCode}</strong>. Use the search bar to filter by type or set a city for live trail data.`;
+  document.getElementById('results-section').classList.remove('visible');
+  document.getElementById('loading-cards').classList.add('visible');
+  setLoadingMsg(`🔍 Searching PathFind database for ${stateNames[stateCode]||stateCode} trails…`);
+
+  let results = [];
+  let fromDB = false;
+
+  try {
+    const dbResults = await searchDB({ state: stateCode, limit: 60 });
+    if (dbResults.length > 0) {
+      results = dbResults;
+      fromDB = true;
+    }
+  } catch (err) {
+    console.warn('DB state search failed, using local:', err);
+  }
+
+  if (!fromDB) {
+    results = filterLocal(localTrails);
+  }
+
+  currentResults = results;
+  const sorted = sortTrails(results);
+  document.getElementById('loading-cards').classList.remove('visible');
+
+  const stateName = stateNames[stateCode] || stateCode;
+  document.getElementById('data-source-row').innerHTML = fromDB
+    ? `<span class="live-badge" style="background:#2e7d52">PathFind Database</span> <span>Showing ${sorted.length} trails in ${stateName}</span>`
+    : `<span class="local-badge">Curated database</span> <span>Showing ${sorted.length} trails in ${stateName} — import OSM data for more</span>`;
+  document.getElementById('ai-summary-text').innerHTML = `Showing <strong>${sorted.length} trail${sorted.length!==1?'s':''}</strong> in <strong>${stateName}</strong>. Use the search bar to filter by name or difficulty.`;
   updateResultCount(); renderResults(sorted);
   document.getElementById('results-section').classList.add('visible');
   document.getElementById('results-section').scrollIntoView({behavior:'smooth',block:'start'});

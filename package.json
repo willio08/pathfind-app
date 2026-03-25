@@ -1,0 +1,11 @@
+{
+  "name": "pathfind-app",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "import-trails": "node scripts/import-trails.js"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.0"
+  }
+}
