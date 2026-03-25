@@ -138,20 +138,31 @@ function buildTrailTags(tags = {}, difficulty) {
   return result;
 }
 
-async function fetchStateTrails(stateCode, bbox) {
+async function fetchStateTrails(stateCode, bbox, attempt = 1) {
   const [s, w, n, e] = bbox;
-  const query = `[out:json][timeout:45];
+  const query = `[out:json][timeout:60];
 relation["route"="hiking"]["name"](${s},${w},${n},${e});
 out ${RESULTS_PER_STATE} tags center;`;
 
-  const resp = await fetch(OVERPASS, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    body: 'data=' + encodeURIComponent(query),
-  });
-  if (!resp.ok) throw new Error(`Overpass ${resp.status} for ${stateCode}`);
-  const data = await resp.json();
-  return data.elements || [];
+  try {
+    const resp = await fetch(OVERPASS, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: 'data=' + encodeURIComponent(query),
+      signal: AbortSignal.timeout(75000), // 75s client-side timeout
+    });
+    if (!resp.ok) throw new Error(`Overpass ${resp.status}`);
+    const data = await resp.json();
+    return data.elements || [];
+  } catch (err) {
+    if (attempt < 4) {
+      const wait = attempt * 8000; // 8s, 16s, 24s between retries
+      process.stdout.write(`⏳ retry ${attempt}/3 (waiting ${wait/1000}s)... `);
+      await sleep(wait);
+      return fetchStateTrails(stateCode, bbox, attempt + 1);
+    }
+    throw err;
+  }
 }
 
 function parseElements(elements, stateCode, stateName) {
@@ -190,15 +201,32 @@ async function upsertBatch(trails) {
 
 async function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 
+async function getImportedStates() {
+  const { data } = await sb.from('trails').select('state').limit(5000);
+  return new Set((data || []).map(r => r.state));
+}
+
 async function main() {
   const states = Object.entries(STATES);
   let totalInserted = 0;
+  const failed = [];
 
   console.log(`\n🏔  PathFind Trail Importer`);
   console.log(`📦  Fetching trails for ${states.length} US states from OpenStreetMap\n`);
 
+  // Check which states already have data so we can skip them
+  process.stdout.write('Checking which states already imported... ');
+  const alreadyDone = await getImportedStates();
+  console.log(`${alreadyDone.size} states already in DB, skipping those.\n`);
+
   for (let i = 0; i < states.length; i++) {
     const [code, { bbox, name }] = states[i];
+
+    if (alreadyDone.has(code)) {
+      console.log(`[${i+1}/${states.length}] ${name} (${code})... ⏭  already imported`);
+      continue;
+    }
+
     process.stdout.write(`[${i+1}/${states.length}] ${name} (${code})... `);
 
     try {
@@ -206,7 +234,6 @@ async function main() {
       const trails = parseElements(elements, code, name);
 
       if (trails.length > 0) {
-        // upsert in chunks
         for (let j = 0; j < trails.length; j += BATCH_SIZE) {
           await upsertBatch(trails.slice(j, j + BATCH_SIZE));
         }
@@ -216,18 +243,22 @@ async function main() {
         console.log(`⚠️  0 trails found`);
       }
     } catch (err) {
-      console.log(`❌ Error: ${err.message}`);
+      console.log(`❌ Failed: ${err.message}`);
+      failed.push(code);
     }
 
-    // Rate limit — be a good citizen to Overpass
     if (i < states.length - 1) await sleep(DELAY_MS);
   }
 
-  console.log(`\n🎉 Done! Total trails imported: ${totalInserted.toLocaleString()}`);
+  console.log(`\n🎉 Done! Newly imported: ${totalInserted.toLocaleString()} trails`);
 
-  // Final count from DB
+  if (failed.length > 0) {
+    console.log(`⚠️  ${failed.length} states failed after retries: ${failed.join(', ')}`);
+    console.log(`   Re-run the script to retry just those states.`);
+  }
+
   const { count } = await sb.from('trails').select('*', { count: 'exact', head: true });
-  console.log(`📊 Total trails now in database: ${count?.toLocaleString()}`);
+  console.log(`📊 Total trails in database: ${count?.toLocaleString()}`);
 }
 
 main().catch(err => { console.error('Fatal:', err); process.exit(1); });
