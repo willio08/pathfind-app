@@ -825,7 +825,18 @@ const cityCoords = {
   "moab":{lat:38.57,lng:-109.55,label:"Moab, UT"},
 };
 
-const stateNames = {AK:"Alaska",AZ:"Arizona",CA:"California",CO:"Colorado",FL:"Florida",GA:"Georgia",HI:"Hawaii",ID:"Idaho",IL:"Illinois",ME:"Maine",MT:"Montana",NC:"N. Carolina",NH:"New Hampshire",NM:"New Mexico",NV:"Nevada",NY:"New York",OR:"Oregon",TN:"Tennessee",TX:"Texas",UT:"Utah",VA:"Virginia",VT:"Vermont",WA:"Washington",WY:"Wyoming"};
+const stateNames = {
+  AL:"Alabama",AK:"Alaska",AZ:"Arizona",AR:"Arkansas",CA:"California",
+  CO:"Colorado",CT:"Connecticut",DE:"Delaware",FL:"Florida",GA:"Georgia",
+  HI:"Hawaii",ID:"Idaho",IL:"Illinois",IN:"Indiana",IA:"Iowa",
+  KS:"Kansas",KY:"Kentucky",LA:"Louisiana",ME:"Maine",MD:"Maryland",
+  MA:"Massachusetts",MI:"Michigan",MN:"Minnesota",MS:"Mississippi",MO:"Missouri",
+  MT:"Montana",NE:"Nebraska",NV:"Nevada",NH:"New Hampshire",NJ:"New Jersey",
+  NM:"New Mexico",NY:"New York",NC:"N. Carolina",ND:"N. Dakota",OH:"Ohio",
+  OK:"Oklahoma",OR:"Oregon",PA:"Pennsylvania",RI:"Rhode Island",SC:"S. Carolina",
+  SD:"S. Dakota",TN:"Tennessee",TX:"Texas",UT:"Utah",VT:"Vermont",
+  VA:"Virginia",WA:"Washington",WV:"W. Virginia",WI:"Wisconsin",WY:"Wyoming"
+};
 
 /* ═══════════════════════════════════════════════════════
    LOCATION FUNCTIONS
@@ -1135,25 +1146,53 @@ function setLoadingMsg(msg) {
 /* ═══════════════════════════════════════════════════════
    STATE EXPLORER
 ═══════════════════════════════════════════════════════ */
-function buildStateGrid() {
-  const counts = {};
-  localTrails.forEach(t => { counts[t.state]=(counts[t.state]||0)+1; });
+function buildStateChip(s, count) {
   const select = document.getElementById('state-select');
   const grid = document.getElementById('state-grid');
-  Object.keys(counts).sort().forEach(s => {
-    const opt = document.createElement('option'); opt.value=s; opt.textContent=`${stateNames[s]||s} (${counts[s]})`; select.appendChild(opt);
-    const chip = document.createElement('div'); chip.className='state-chip';
-    chip.innerHTML = `${stateNames[s]||s} <span class="count">${counts[s]}</span>`;
-    chip.addEventListener('click', () => {
-      document.querySelectorAll('.state-chip').forEach(c=>c.classList.remove('active'));
-      chip.classList.add('active');
-      document.getElementById('state-select').value = s;
-      onStateChange();
-      if (document.getElementById('search-input').value.trim()) doSearch();
-      else showStateResults(s);
-    });
-    grid.appendChild(chip);
+  const label = stateNames[s] || s;
+  const opt = document.createElement('option');
+  opt.value = s; opt.textContent = `${label} (${count})`; select.appendChild(opt);
+  const chip = document.createElement('div'); chip.className = 'state-chip';
+  chip.dataset.state = s;
+  chip.innerHTML = `${label} <span class="count">${count.toLocaleString()}</span>`;
+  chip.addEventListener('click', () => {
+    document.querySelectorAll('.state-chip').forEach(c=>c.classList.remove('active'));
+    chip.classList.add('active');
+    document.getElementById('state-select').value = s;
+    onStateChange();
+    if (document.getElementById('search-input').value.trim()) doSearch();
+    else showStateResults(s);
   });
+  grid.appendChild(chip);
+}
+
+async function buildStateGrid() {
+  const select = document.getElementById('state-select');
+  const grid = document.getElementById('state-grid');
+  select.innerHTML = '<option value="">All states</option>';
+  grid.innerHTML = '';
+
+  // Render all 50 states immediately with placeholder counts
+  const allCodes = Object.keys(stateNames).sort((a,b) => stateNames[a].localeCompare(stateNames[b]));
+  allCodes.forEach(s => buildStateChip(s, '…'));
+
+  // Then fetch real counts from DB and update
+  try {
+    const resp = await fetch('/api/state-counts');
+    if (resp.ok) {
+      const data = await resp.json();
+      const counts = data.counts || {};
+      allCodes.forEach(s => {
+        const chip = grid.querySelector(`[data-state="${s}"]`);
+        const opt = [...select.options].find(o => o.value === s);
+        const n = counts[s] || 0;
+        if (chip) chip.querySelector('.count').textContent = n.toLocaleString();
+        if (opt) opt.textContent = `${stateNames[s]} (${n.toLocaleString()})`;
+      });
+    }
+  } catch(e) {
+    // Keep placeholder counts if fetch fails
+  }
 }
 
 async function showStateResults(stateCode) {
