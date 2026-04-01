@@ -262,6 +262,13 @@
     .no-results h3{font-size:1.1rem;color:var(--muted);margin-bottom:.4rem;}
     .no-results p{font-family:Arial,sans-serif;font-size:.88rem;color:var(--muted);}
 
+    .pagination{display:flex;align-items:center;justify-content:center;gap:.5rem;margin-top:2rem;flex-wrap:wrap;}
+    .pagination button{padding:.45rem .85rem;border:1px solid var(--border);border-radius:8px;background:#fff;color:var(--forest);font-size:.88rem;cursor:pointer;transition:background .15s,border-color .15s;}
+    .pagination button:hover:not(:disabled){background:var(--sage);border-color:var(--forest);}
+    .pagination button.active{background:var(--forest);color:#fff;border-color:var(--forest);font-weight:600;}
+    .pagination button:disabled{opacity:.35;cursor:default;}
+    .pagination .page-info{font-family:Arial,sans-serif;font-size:.85rem;color:var(--muted);padding:0 .5rem;}
+
     footer{background:var(--earth);color:rgba(255,255,255,.75);text-align:center;padding:2rem;font-family:Arial,sans-serif;font-size:.85rem;}
     footer a{color:var(--leaf);text-decoration:none;}
 
@@ -420,6 +427,7 @@
       <button class="filter-btn" onclick="setTypeFilter('camp',this)">Camping</button>
     </div>
     <div class="trails-grid" id="trails-grid"></div>
+    <div class="pagination" id="pagination"></div>
   </section>
 
   <section id="featured-section">
@@ -793,6 +801,8 @@ async function enrichWithNPS(trailList) {
 let locationState = { type:null, label:'', lat:null, lng:null, stateCode:null, radiusMi:50 };
 let activeTypeFilter = 'all';
 let currentResults = [];
+let currentPage = 0;
+const PAGE_SIZE = 20;
 
 function haversine(lat1,lng1,lat2,lng2){
   const R=3958.8,dLat=(lat2-lat1)*Math.PI/180,dLng=(lng2-lng1)*Math.PI/180;
@@ -969,7 +979,7 @@ function renderCard(t, showAI=false) {
       <button class="btn-heart${isSaved?' saved':''}" data-trail-key="${trailKey}" onclick="event.stopPropagation();toggleSave(this,_trailStore[${_key}])">${isSaved?'❤️':'🤍'}</button>
       <div class="trail-img-overlay">
         <span class="difficulty-badge ${dc}">${t.difficulty}</span>
-        ${showAI ? `<span class="match-badge">⚡ ${t.match}%</span>` : ''}
+        ${showAI && t.match != null ? `<span class="match-badge">⚡ ${t.match}%</span>` : ''}
         ${distBadge}
       </div>
     </div>
@@ -990,10 +1000,47 @@ function renderCard(t, showAI=false) {
   </div>`;
 }
 
-function renderResults(list) {
-  document.getElementById('trails-grid').innerHTML = list.length === 0
-    ? `<div class="no-results"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg><h3>No trails found</h3><p>Try expanding the distance radius, clearing the location, or adjusting your filters.</p></div>`
-    : list.map(t => renderCard(t, true)).join('');
+function renderResults(list, resetPage = true) {
+  if (resetPage) currentPage = 0;
+  const totalPages = Math.ceil(list.length / PAGE_SIZE);
+  const page = currentResults._paginated = list; // store paginated list reference
+
+  const renderPage = (p) => {
+    currentPage = p;
+    const start = p * PAGE_SIZE;
+    const slice = list.slice(start, start + PAGE_SIZE);
+    document.getElementById('trails-grid').innerHTML = slice.length === 0
+      ? `<div class="no-results"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg><h3>No trails found</h3><p>Try expanding the distance radius, clearing the location, or adjusting your filters.</p></div>`
+      : slice.map(t => renderCard(t, true)).join('');
+
+    // Build pagination
+    const pg = document.getElementById('pagination');
+    if (totalPages <= 1) { pg.innerHTML = ''; return; }
+
+    let html = `<button onclick="goToPage(${p - 1})" ${p === 0 ? 'disabled' : ''}>← Prev</button>`;
+
+    // Show up to 7 page buttons, with ellipsis
+    const range = [];
+    for (let i = 0; i < totalPages; i++) {
+      if (i === 0 || i === totalPages - 1 || (i >= p - 2 && i <= p + 2)) range.push(i);
+      else if (range[range.length - 1] !== '…') range.push('…');
+    }
+    range.forEach(i => {
+      if (i === '…') html += `<span class="page-info">…</span>`;
+      else html += `<button class="${i === p ? 'active' : ''}" onclick="goToPage(${i})">${i + 1}</button>`;
+    });
+
+    html += `<button onclick="goToPage(${p + 1})" ${p === totalPages - 1 ? 'disabled' : ''}>Next →</button>`;
+    html += `<span class="page-info">Page ${p + 1} of ${totalPages} · ${list.length} trails</span>`;
+    pg.innerHTML = html;
+  };
+
+  window.goToPage = (p) => {
+    renderPage(p);
+    document.getElementById('results-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
+  renderPage(0);
 }
 
 /* ═══════════════════════════════════════════════════════
