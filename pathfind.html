@@ -966,7 +966,7 @@ const _trailStore = []; // global lookup so onclick can access full trail object
 function renderCard(t, showAI=false) {
   const dc = {easy:'diff-easy',moderate:'diff-moderate',hard:'diff-hard'}[t.difficulty];
   const stars = '★'.repeat(Math.round(t.rating))+'☆'.repeat(5-Math.round(t.rating));
-  const imgSrc = t.npsImage || photoURL(t.photo);
+  const imgSrc = t.npsImage || t.photo_url || photoURL(t.photo);
   const distBadge = t._dist!==undefined ? `<span class="dist-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a7 7 0 0 1 7 7c0 5-7 13-7 13S5 14 5 9a7 7 0 0 1 7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>${t._dist} mi away</span>` : '';
   const liveTag = t._live ? `<span class="osm-tag">OSM LIVE</span>` : '';
   const trailKey = t.id || t.osmId || t.name;
@@ -1093,6 +1093,7 @@ async function searchDB(params) {
     tags: t.tags || [],
     description: t.description || '',
     photo: t.photo_type || 'mountain_green',
+    photo_url: t.photo_url || null,
     rating: 0,
     reviews: 0,
     source: 'db',
