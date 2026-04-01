@@ -11,8 +11,10 @@ export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
   if (req.method === 'OPTIONS') return res.status(200).end();
 
-  const { q, state, lat, lng, radius, difficulty, limit = 60, count } = req.query;
-  const cap = Math.min(parseInt(limit), 100);
+  const { q, state, lat, lng, radius, difficulty, limit, count } = req.query;
+  // State-only browsing gets all trails; text/geo searches capped at 500
+  const defaultLimit = state && !q ? 2000 : 500;
+  const cap = Math.min(parseInt(limit) || defaultLimit, 2000);
 
   // Count-only mode for homepage badge
   if (count === '1') {

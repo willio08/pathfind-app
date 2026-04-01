@@ -1118,7 +1118,7 @@ async function doSearch() {
   // 1. Try Supabase database (nationwide full-text + geo)
   try {
     setLoadingMsg('🔍 Searching PathFind database…');
-    const params = { q: query, limit: 60 };
+    const params = { q: query };
     if (locationState.lat !== null) {
       params.lat = locationState.lat;
       params.lng = locationState.lng;
@@ -1252,7 +1252,7 @@ async function showStateResults(stateCode) {
   let fromDB = false;
 
   try {
-    const dbResults = await searchDB({ state: stateCode, limit: 60 });
+    const dbResults = await searchDB({ state: stateCode });
     if (dbResults.length > 0) {
       results = dbResults;
       fromDB = true;
