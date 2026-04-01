@@ -277,7 +277,7 @@
 <body>
 
 <nav>
-  <a class="nav-logo" href="#">
+  <a class="nav-logo" href="#" onclick="event.preventDefault();goHome()">
     <svg viewBox="0 0 28 28" fill="none"><path d="M14 3L7 13h4L8 25l12-14h-5Z" fill="#2d5a27"/><circle cx="14" cy="6" r="2.5" fill="#7aad6e"/></svg>
     PathFind
   </a>
@@ -428,7 +428,7 @@
     <div class="trails-grid" id="featured-grid"></div>
     <div style="margin-top:2.5rem">
       <div class="section-label">🗺 Browse by state</div>
-      <div class="section-title">Plan your next adventure</div>
+      <div class="section-title">Plan your next adventure — <span id="db-trail-count">9,000+</span> trails nationwide</div>
       <div class="state-grid" id="state-grid"></div>
     </div>
   </section>
@@ -439,7 +439,7 @@
     <div class="steps">
       <div class="step"><div class="step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 12h8M8 8h8M8 16h5"/></svg></div><h3>Describe it</h3><p>Tell us exactly what you want — scenery, difficulty, features, even the mood.</p></div>
       <div class="step"><div class="step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a7 7 0 0 1 7 7c0 5-7 13-7 13S5 14 5 9a7 7 0 0 1 7-7z"/><circle cx="12" cy="9" r="2.5"/></svg></div><h3>Set location</h3><p>Use GPS, type a city, or browse by state — plan from anywhere.</p></div>
-      <div class="step"><div class="step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h4M18 12h4M12 2v4M12 18v4"/></svg></div><h3>Live trail data</h3><p>Results pulled live from OpenStreetMap — 300k+ US trails, always up to date.</p></div>
+      <div class="step"><div class="step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h4M18 12h4M12 2v4M12 18v4"/></svg></div><h3>Live trail data</h3><p>Results from the PathFind database &amp; live OpenStreetMap — <span id="db-trail-count-2">9,000+</span> trails and growing.</p></div>
       <div class="step"><div class="step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></div><h3>Go & share</h3><p>Get maps, conditions, and share your experience with the community.</p></div>
     </div>
   </div>
@@ -1420,8 +1420,32 @@ async function submitReview(trailId, trailName) {
   renderReviewForm(trailId, trailName);
 }
 
+function goHome() {
+  document.getElementById('results-section').classList.remove('visible');
+  document.getElementById('saved-section').style.display = 'none';
+  document.getElementById('featured-section').style.display = '';
+  document.getElementById('search-input').value = '';
+  document.getElementById('location-input').value = '';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+async function fetchDBCount() {
+  try {
+    const resp = await fetch('/api/search-trails?count=1');
+    if (resp.ok) {
+      const data = await resp.json();
+      if (data.total) {
+        const label = data.total.toLocaleString() + '+';
+        document.getElementById('db-trail-count').textContent = label;
+        document.getElementById('db-trail-count-2').textContent = label;
+      }
+    }
+  } catch (e) { /* keep default text */ }
+}
+
 buildStateGrid();
 document.getElementById('featured-grid').innerHTML = localTrails.filter(t=>t.featured).map(t=>renderCard(t,false)).join('');
+fetchDBCount();
 
 /* ═══════════════════════════════════════════════════════
    TRAIL DETAIL MODAL

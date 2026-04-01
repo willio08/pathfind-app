@@ -11,8 +11,16 @@ export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
   if (req.method === 'OPTIONS') return res.status(200).end();
 
-  const { q, state, lat, lng, radius, difficulty, limit = 60 } = req.query;
+  const { q, state, lat, lng, radius, difficulty, limit = 60, count } = req.query;
   const cap = Math.min(parseInt(limit), 100);
+
+  // Count-only mode for homepage badge
+  if (count === '1') {
+    const { count: total, error } = await sb.from('trails').select('*', { count: 'exact', head: true });
+    if (error) return res.status(500).json({ error: error.message });
+    res.setHeader('Cache-Control', 's-maxage=3600, stale-while-revalidate');
+    return res.status(200).json({ total: total || 0 });
+  }
 
   try {
     let query = sb.from('trails').select('*').limit(cap);
